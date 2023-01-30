@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    body {
+        @apply bg-stone-100
+    }
+    
+    .required {
+        @apply text-red-700
+    }
+    .nav-link {
+        @apply mr-5 flex-initial
+    }
+
+    .modal {
+        @apply w-full sm:w-3/5 md:w-2/5 mt-40 sm:mt-52 md:mt-64 rounded-sm p-2 outline outline-2 outline-offset-4 outline-stone-500 bg-stone-500 text-stone-100
+    }
+
+    .rectangle-btn {
+        @apply inline-block w-48 bg-stone-300 p-2
+    }
+
+    .page-title {
+        @apply text-xl mb-1 border-b-2 border-stone-300
+    }
+
+    .form-label {
+        @apply block text-lg mb-0.5
+    }
+
+    .form-control {
+        @apply block w-full md:w-96 border border-amber-600/50
+    }
+
+    .form-song-list {
+        @apply bg-stone-200 pl-3 py-2.5 divide-y space-y-1.5 min-h-12 mb-2 lg:w-3/5
+    }
+
+    .pl-title {
+        @apply bg-stone-300 p-1.5 flex justify-between sm:justify-start
+    }
+
+    hr {
+        @apply my-4 border-stone-400
+    }
+}
+
+/* :root {
+  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+a {
+  font-weight: 500;
+  color: #646cff;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #535bf2;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: #646cff;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #747bff;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+} */

@@ -1,0 +1,24 @@
+{
+  "name": "setlist-react",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"cd client && npm run start\" \"cd server && npm run start\"",
+    "watch": "concurrently \"cd client && npm run dev\" \"cd server && npm run watch\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FinnStitcher/setlist-react.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/FinnStitcher/setlist-react/issues"
+  },
+  "homepage": "https://github.com/FinnStitcher/setlist-react#readme",
+  "dependencies": {
+    "concurrently": "^7.6.0"
+  }
+}
