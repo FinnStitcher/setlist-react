@@ -10,6 +10,7 @@
     .required {
         @apply text-red-700
     }
+    
     .nav-link {
         @apply mr-5 flex-initial
     }
