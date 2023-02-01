@@ -8,7 +8,7 @@ import Playlists from './pages/Playlists.jsx';
 import Login from './pages/Login.jsx';
 
 function App() {
-    const [user, setUser] = useState('hello world');
+    const [user, setUser] = useState(null);
 
 	return (
 		<BrowserRouter>

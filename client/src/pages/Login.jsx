@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { redirect } from 'react-router-dom';
+import UserContext from '../UserContext.jsx';
 
 function Login() {
 	const [formState, setFormState] = useState({
         username: '',
         password: ''
     });
+    const {setUser} = useContext(UserContext);
 
 	function onChangeHandler(event) {
 		const { name, value } = event.target;
@@ -31,6 +34,12 @@ function Login() {
         if (response.ok) {
             console.log('yay you did it');
             console.log(json);
+
+            // change context
+            setUser(formState);
+
+			// redirect
+			return redirect('/');
         } else {
             console.log('uh oh you didnt do it');
         }
