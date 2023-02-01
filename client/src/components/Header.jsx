@@ -1,6 +1,16 @@
-import {Link} from 'react-router-dom';
+import { useContext } from 'react';
+import UserContext from '../UserContext.jsx';
+import { Link } from 'react-router-dom';
 
 function Header() {
+    const {user} = useContext(UserContext);
+
+    async function logoutHandler() {
+        // make fetch request to log out the user
+
+        // change state
+    };
+
     return (
         <header className="bg-stone-400 py-2.5">
             <h1 className="text-xl text-center">SETLIST</h1>
@@ -12,7 +22,7 @@ function Header() {
                 <div className="nav-link">
                     <Link to="/add-song">Submit a Song</Link>
                 </div>
-                <div className="nav-link">
+                <div className="nav-link" onClick={logoutHandler}>
                     <button type="button" id="logout">Logout</button>
                 </div>
             </nav>
