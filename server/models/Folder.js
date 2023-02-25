@@ -1,40 +1,29 @@
 const {Schema, model} = require('mongoose');
 
-const PlaylistSchema = new Schema(
+const FolderSchema = new Schema(
     {
-        title: {
+        name: {
             type: String,
             required: true,
             trim: true
-        },
-        dateCreated: {
-            type: Date,
-            default: Date.now
-            // install luxon and make a dateFormat util
         },
         dateLastModified: {
             type: Date,
             default: Date.now
             // install luxon and make a dateFormat util
         },
-        songs: [{
+        playlists: [{
             type: Schema.Types.ObjectId,
-            ref: 'Song'
+            ref: 'Playlist'
         }],
         username: {
             type: String,
             ref: 'User',
             required: true
         }
-    },
-    {
-        toJSON: {
-            virtuals: true
-        },
-        id: false
     }
 );
 
-const Playlist = model('Playlist', PlaylistSchema);
+const Folder = model('Folder', FolderSchema);
 
-module.exports = Playlist;
+module.exports = Folder;

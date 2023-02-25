@@ -4,6 +4,7 @@ import Song from './Song.jsx';
 
 function Playlist({ playlist }) {
     const {_id, title, songs} = playlist;
+    console.log(songs);
 
     function togglePlaylist(e) {
         const {target} = e;
@@ -25,7 +26,7 @@ function Playlist({ playlist }) {
     };
 
     return (
-        <article className="border-2 border-stone-300 mb-3" key={_id}>
+        <article className="border-2 border-stone-300 mb-3">
             <div className="pl-title" onClick={togglePlaylist}>
                 <h3>{title}</h3>
                 <p className="ml-2 md:ml-4 pl-arrow">▼</p>

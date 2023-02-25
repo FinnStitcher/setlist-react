@@ -1,10 +1,10 @@
-const { Playlist, User } = require('../models');
+const { Playlist, User, Folder } = require('../models');
 const { checkUserOwnership } = require('../utils/utils.js');
 
 const playlistController = {
 	async getAllPlaylists(req, res) {
 		try {
-			const playlistDbRes = await Playlist.find({}).populate('songs');
+			const playlistDbRes = await Playlist.find({});
 
 			res.status(200).json(playlistDbRes);
 		} catch (err) {
@@ -41,10 +41,10 @@ const playlistController = {
 		const { title, dateCreated, dateLastModified, songs } = req.body;
 		const { user_id, username } = req.session;
 
-		// confirm user is logged-in
+		// confirm user is logged in
 		if (!user_id) {
 			res.status(401).json({
-				message: 'You need to be logged in to do this.'
+				message: 'You need to be logged in to do that.'
 			});
 			return;
 		}
@@ -65,9 +65,25 @@ const playlistController = {
 				{ _id: user_id },
 				{ $push: { playlists: _id } },
 				{ new: true }
-			).populate('playlists');
+			).populate({
+                path: 'playlists',
+                select: 'title'
+            });
 
-			res.status(200).json(userDbRes);
+            // add to relevant user's Unsorted folder
+            const folderDbRes = await Folder.findOneAndUpdate(
+                { _id: userDbRes.folders[0] },
+                { $push: { playlists: _id } },
+                { new: true }
+            ).populate({
+                path: 'playlists',
+                select: 'title'
+            });
+
+			res.status(200).json({
+                user: userDbRes,
+                folder: folderDbRes
+            });
 		} catch (err) {
 			console.log(err);
 
