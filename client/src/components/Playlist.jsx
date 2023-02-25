@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import Song from './Song.jsx';
 
@@ -33,7 +33,7 @@ function Playlist({ playlist }) {
             
             <div className="hidden">
                 <div className="border-t-2 border-stone-400">
-                    <a role="button" href={`/edit-playlist/${_id}`} className="rectangle-btn mr-1 w-36">Edit</a>
+                    <Link role="button" to={`/edit-playlist/${_id}`} className="rectangle-btn mr-1 w-36">Edit</Link>
 
                     <button type="button" data-id={_id} data-modal-btn="open-modal" data-btn-type="del-btn" className="rectangle-btn w-36 text-left">Delete</button>
                 </div>

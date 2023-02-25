@@ -5,6 +5,7 @@ import UserContext from './UserContext.jsx';
 import Header from './components/Header.jsx';
 import Landing from './pages/Landing.jsx';
 import ManagePlaylists from './pages/ManagePlaylists.jsx';
+import EditPlaylist from './pages/EditPlaylist.jsx';
 import Login from './pages/Login.jsx';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
 					<Routes>
 						<Route path="/" element={<Landing />} />
 						<Route path="/playlists" element={<ManagePlaylists />} />
+                        <Route path="/edit-playlist/:id" element={<EditPlaylist />} />
                         <Route path="/login" element={<Login />} />
 					</Routes>
 				</main>

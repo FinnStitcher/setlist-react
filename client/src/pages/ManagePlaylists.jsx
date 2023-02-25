@@ -7,7 +7,6 @@ import Folder from '../components/Folder.jsx';
 
 function ManagePlaylists() {
     const [folders, setFolders] = useState(null);
-
     const {user} = useContext(UserContext);
 
     // get data from db when the page first renders
@@ -52,9 +51,6 @@ function ManagePlaylists() {
             {folders && folders.map(element => (
                 <Folder key={element._id} folder={element} />
             ))}
-            {/* {playlists && playlists.map(element => (
-                <Playlist key={element._id} playlist={element} />
-            ))} */}
         </section>
         </>
     )
