@@ -4,7 +4,6 @@ import Song from './Song.jsx';
 
 function Playlist({ playlist }) {
     const {_id, title, songs} = playlist;
-    console.log(songs);
 
     function togglePlaylist(e) {
         const {target} = e;

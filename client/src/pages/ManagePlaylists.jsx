@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import UserContext from '../UserContext.jsx';
 
 import AuthFailed from './AuthFailed.jsx';
-import Playlist from '../components/Playlist.jsx';
+import Folder from '../components/Folder.jsx';
 
 function ManagePlaylists() {
-    const [playlists, setPlaylists] = useState(null);
+    const [folders, setFolders] = useState(null);
 
     const {user} = useContext(UserContext);
 
@@ -16,19 +16,19 @@ function ManagePlaylists() {
         if (user) {
             const {user_id} = user;
 
-            const getPlaylistData = async () => {
+            const getUserData = async () => {
                 const response = await fetch('/api/users/' + user_id);
                 const json = await response.json();
 
                 if (response.ok) {
-                    setPlaylists(json.playlists);
+                    setFolders(json.folders);
                 } else {
                     console.log('whoops');
                     console.log(json);
                 }
             };
 
-            getPlaylistData();            
+            getUserData();            
         }
     }, []);
 
@@ -44,12 +44,17 @@ function ManagePlaylists() {
             <Link role="button" to="/add-playlist" className="rectangle-btn">Create New +</Link>
 
             <button role="button" className="rectangle-btn mt-1 sm:mt-0 sm:ml-1 text-left" id="link-modal-btn" data-for-modal="link-modal">Share Profile</button>
+
+            {/* your folders */}
         </div>
 
-        <section id="playlist-container">
-            {playlists && playlists.map(element => (
-                <Playlist key={element._id} playlist={element} />
+        <section id="container">
+            {folders && folders.map(element => (
+                <Folder key={element._id} folder={element} />
             ))}
+            {/* {playlists && playlists.map(element => (
+                <Playlist key={element._id} playlist={element} />
+            ))} */}
         </section>
         </>
     )

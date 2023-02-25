@@ -26,7 +26,10 @@ const userController = {
                 select: '-__v -username',
                 populate: {
                     path: 'playlists',
-                    select: '-__v -username'
+                    select: '-__v -username',
+                    populate: {
+                        path: 'songs'
+                    }
                 }
             });
 
