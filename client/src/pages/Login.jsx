@@ -1,5 +1,5 @@
 import { useState, useContext } from 'react';
-import { redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 import UserContext from '../UserContext.jsx';
 
 function Login() {
@@ -7,19 +7,33 @@ function Login() {
         username: '',
         password: ''
     });
+    const [redirect, setRedirect] = useState(false);
+
     const {setUser} = useContext(UserContext);
+
+    if (redirect) {
+        return <Navigate to="/playlists" />
+    }
 
 	function onChangeHandler(event) {
 		const { name, value } = event.target;
 
 		setFormState({
 			...formState,
-			[name]: value
+			[name]: value.trim()
 		});
 	};
 
     async function onSubmitHandler(event) {
         event.preventDefault();
+
+        // validate
+        const {username, password} = formState;
+
+        if (!username || !password) {
+            console.log('whoops');
+            return;
+        }
 
         const response = await fetch('/api/users/login', {
             method: 'POST',
@@ -29,21 +43,25 @@ function Login() {
                 'Content-Type': 'application/json'
             }
         });
+        // returns session and user info
         const json = await response.json();
 
         if (response.ok) {
-            console.log('yay you did it');
-            console.log(json);
+            // update context
+            setUser({
+                user_id: json.session.user_id,
+                username: json.session.username
+            });
 
-            // change context
-            setUser(formState);
-
-			// redirect
-			return redirect('/');
+            // redirect
+            setTimeout(() => {
+                setRedirect(true);
+            }, 2000);
         } else {
             console.log('uh oh you didnt do it');
+            console.log(json);
         }
-    }
+    };
 
 	return (
 		<>

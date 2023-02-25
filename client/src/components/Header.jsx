@@ -1,10 +1,10 @@
 import { useContext } from 'react';
-import { redirect } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import UserContext from '../UserContext.jsx';
-import { Link } from 'react-router-dom';
 
 function Header() {
 	const { user, setUser } = useContext(UserContext);
+    const navigate = useNavigate();
 
 	async function logoutHandler() {
 		// make fetch request to log out the user
@@ -18,11 +18,11 @@ function Header() {
 			// change context
 			setUser(null);
 
-			// redirect
-			redirect('/');
+            // redirect
+            // for some reason return <Navigate /> doesn't work here
+            navigate('/');
 		} else {
 			console.log('oh no you didnt do it');
-			console.log(response);
 		}
 	}
 
