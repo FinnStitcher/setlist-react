@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/FinnStitcher/setlist-react#readme",
   "dependencies": {
+    "@dnd-kit/sortable": "^7.0.2",
     "concurrently": "^7.6.0"
   }
 }
