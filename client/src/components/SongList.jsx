@@ -16,9 +16,11 @@ function SongList({ id, items }) {
 			strategy={verticalListSortingStrategy}
 		>
 			<ul className="form-song-list" id={id} ref={setNodeRef}>
-				{items.map(item => (
-					<Song key={item._id} id={item._id} />
-				))}
+                {items.map(item => {
+                    const {_id, title, artist, album, year} = item;
+
+                    return <Song key={_id} id={_id} title={title} artist={artist} album={album} year={year} />
+                })}
 			</ul>
 		</SortableContext>
 	);

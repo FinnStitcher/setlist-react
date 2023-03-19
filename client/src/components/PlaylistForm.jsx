@@ -13,22 +13,52 @@ import { arrayMove, sortableKeyboardCoordinates } from '@dnd-kit/sortable';
 import SongList from './SongList.jsx';
 import Song from './Song.jsx';
 
-function PlaylistForm() {
+function PlaylistForm({ plData }) {
 	const [formState, setFormState] = useState({
-        title: '',
-        search: '',
-		selected: [{_id: 'one'}, {_id: 'two'}, {_id: 'three'}],
-		deselected: [{_id: 'four'}, {_id: 'five'}]
+		title: '',
+		search: '',
+		selected: [],
+		deselected: []
 	});
 	const [activeId, setActiveId] = useState('');
 
-    useEffect(() => {
-        console.log(formState);
-    }, [formState]);
+	// if we got data from the parent component, update state
+	useEffect(() => {
+		if (plData) {
+			setFormState({
+				...formState,
+				...plData
+			});
+		}
+	}, [plData]);
 
-    function onChangeHandler() {
-        console.log(formState);
-    }
+	// make searches when the search bar contents update
+	useEffect(() => {
+		async function getSearchResults() {
+			const response = await fetch(
+				'/api/songs/search/' + formState.search
+			);
+			const json = await response.json();
+
+			setFormState({
+				...formState,
+				deselected: [...json]
+			});
+		}
+
+		if (formState.search) {
+			getSearchResults();
+		}
+	}, [formState.search]);
+
+	function onChangeHandler(event) {
+		const { name, value } = event.target;
+
+		setFormState({
+			...formState,
+			[name]: value
+		});
+	}
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -40,29 +70,31 @@ function PlaylistForm() {
 	function findContainer(id) {
 		// id is present in formState; therefore, the id refers to a container, so we just return it
 		if (id in formState) {
-            console.log('id was in formState');
+			console.log('id was in formState');
 			return id;
 		}
 
-        // 1. break formState into a series of keys
-        // 2. check each key to see if it is an array
-            // if no, skip to next key
-            // if yes, continue to step 3
-        // 3. check if that array contains an object with id "id"
-            // if no, skip to next key
-            // if yes, return that array
-        const formStateKeys = Object.keys(formState);
+		// 1. break formState into a series of keys
+		// 2. check each key to see if it is an array
+		// if no, skip to next key
+		// if yes, continue to step 3
+		// 3. check if that array contains an object with id "id"
+		// if no, skip to next key
+		// if yes, return that array
+		const formStateKeys = Object.keys(formState);
 
-        const arrayKeys = formStateKeys.filter(el => Array.isArray(formState[el]));
+		const arrayKeys = formStateKeys.filter(el =>
+			Array.isArray(formState[el])
+		);
 
-        const targetContainer = arrayKeys.find(key => {
-            // locate this property in form state
-            const arr = formState[key];
-            // run a recursive .find() on it to locate an object with the correct id
-            return arr.find(el => el._id === id)
-        });
+		const targetContainer = arrayKeys.find(key => {
+			// locate this property in form state
+			const arr = formState[key];
+			// run a recursive .find() on it to locate an object with the correct id
+			return arr.find(el => el._id === id);
+		});
 
-        return targetContainer;
+		return targetContainer;
 	}
 
 	function handleDragStart(event) {
@@ -92,7 +124,9 @@ function PlaylistForm() {
 			const overItems = prev[overContainer];
 
 			// find indexes of the item being dragged and what its being dragged over
-			const activeIndex = activeItems.findIndex(el => el._id === activeId);
+			const activeIndex = activeItems.findIndex(
+				el => el._id === activeId
+			);
 			const overIndex = overItems.findIndex(el => el._id === overId);
 
 			// if the object isn't moving containers, just move items around
@@ -113,8 +147,7 @@ function PlaylistForm() {
 			let newIndex;
 
 			if (overId in prev) {
-				console.log('overId is in prev');
-				console.log(overId);
+				console.log('overId "' + overId + '" is in prev');
 				newIndex = overItems.length + 1;
 			} else {
 				// should we put this item at the bottom of the list?
@@ -133,7 +166,9 @@ function PlaylistForm() {
 			return {
 				...prev,
 				[activeContainer]: [
-					...prev[activeContainer].filter(item => item._id !== activeId)
+					...prev[activeContainer].filter(
+						item => item._id !== activeId
+					)
 					// activeContainer now contains everything it did before minus the active item
 				],
 				[overContainer]: [
@@ -167,21 +202,25 @@ function PlaylistForm() {
 			return;
 		}
 
-		const activeIndex = formState[activeContainer].findIndex(el => el._id === activeId);
-		const overIndex = formState[overContainer].findIndex(el => el._id === overId);
+		const activeIndex = formState[activeContainer].findIndex(
+			el => el._id === activeId
+		);
+		const overIndex = formState[overContainer].findIndex(
+			el => el._id === overId
+		);
 
 		if (activeIndex !== overIndex) {
-            setFormState(items => {
-                return ({
-                    ...items,
-                    [overContainer]: arrayMove(
-                        items[overContainer],
-                        activeIndex,
-                        overIndex
-                    )
-                })
-            });
-        }
+			setFormState(items => {
+				return {
+					...items,
+					[overContainer]: arrayMove(
+						items[overContainer],
+						activeIndex,
+						overIndex
+					)
+				};
+			});
+		}
 
 		setActiveId(null);
 	}
