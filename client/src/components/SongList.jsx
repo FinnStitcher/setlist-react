@@ -6,12 +6,8 @@ import {
 
 import Song from './Song.jsx';
 
-function SongList(props) {
-	const { id, items } = props;
-
-	const { setNodeRef } = useDroppable({
-		id
-	});
+function SongList({ id, items }) {
+	const { setNodeRef } = useDroppable({ id: id });
 
 	return (
 		<SortableContext
@@ -19,11 +15,11 @@ function SongList(props) {
 			items={items}
 			strategy={verticalListSortingStrategy}
 		>
-			<div className="form-song-list" ref={setNodeRef}>
-				{items.map(id => (
-					<Song key={id} id={id} />
+			<ul className="form-song-list" id={id} ref={setNodeRef}>
+				{items.map(item => (
+					<Song key={item._id} id={item._id} />
 				))}
-			</div>
+			</ul>
 		</SortableContext>
 	);
 }

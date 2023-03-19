@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
 function Song(props) {
-	//const { title, artist, year, album } = props.song;
+	// const { title, artist, year, album } = props.song;
 
 	const { attributes, listeners, setNodeRef, transform, transition } =
 		useSortable({ id: props.id });
@@ -13,7 +13,7 @@ function Song(props) {
 	};
 
 	return (
-		<div ref={setNodeRef} {...attributes} {...listeners}>
+		<div ref={setNodeRef} style={style} {...attributes} {...listeners}>
 			{props.id}
 		</div>
 	);

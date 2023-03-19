@@ -21,7 +21,7 @@ function EditPlaylist() {
             if (response.ok) {
                 setPlData({
                     title: json.title,
-                    songs: [...json.songs]
+                    selected: [...json.songs]
                 });
             } else {
                 console.log('whoops');

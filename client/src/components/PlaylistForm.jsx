@@ -14,11 +14,21 @@ import SongList from './SongList.jsx';
 import Song from './Song.jsx';
 
 function PlaylistForm() {
-	const [items, setItems] = useState({
-		selected: ['one', 'two', 'three'],
-		deselected: ['four', 'five']
+	const [formState, setFormState] = useState({
+        title: '',
+        search: '',
+		selected: [{_id: 'one'}, {_id: 'two'}, {_id: 'three'}],
+		deselected: [{_id: 'four'}, {_id: 'five'}]
 	});
 	const [activeId, setActiveId] = useState('');
+
+    useEffect(() => {
+        console.log(formState);
+    }, [formState]);
+
+    function onChangeHandler() {
+        console.log(formState);
+    }
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -28,13 +38,31 @@ function PlaylistForm() {
 	);
 
 	function findContainer(id) {
-		// id is present in items; therefore, the id refers to a container, so we just return it
-		if (id in items) {
+		// id is present in formState; therefore, the id refers to a container, so we just return it
+		if (id in formState) {
+            console.log('id was in formState');
 			return id;
 		}
 
-		// find the key of the container that includes this id
-		return Object.keys(items).find(key => items[key].includes(id));
+        // 1. break formState into a series of keys
+        // 2. check each key to see if it is an array
+            // if no, skip to next key
+            // if yes, continue to step 3
+        // 3. check if that array contains an object with id "id"
+            // if no, skip to next key
+            // if yes, return that array
+        const formStateKeys = Object.keys(formState);
+
+        const arrayKeys = formStateKeys.filter(el => Array.isArray(formState[el]));
+
+        const targetContainer = arrayKeys.find(key => {
+            // locate this property in form state
+            const arr = formState[key];
+            // run a recursive .find() on it to locate an object with the correct id
+            return arr.find(el => el._id === id)
+        });
+
+        return targetContainer;
 	}
 
 	function handleDragStart(event) {
@@ -50,8 +78,6 @@ function PlaylistForm() {
 		const { id: activeId } = active;
 		const { id: overId } = over;
 
-		console.log(activeId, overId);
-
 		// find what containers are involved
 		const activeContainer = findContainer(activeId);
 		const overContainer = findContainer(overId);
@@ -61,28 +87,28 @@ function PlaylistForm() {
 			return;
 		}
 
-		setItems(prev => {
+		setFormState(prev => {
 			const activeItems = prev[activeContainer];
 			const overItems = prev[overContainer];
 
 			// find indexes of the item being dragged and what its being dragged over
-			const activeIndex = activeItems.indexOf(activeId);
-			const overIndex = overItems.indexOf(overId);
+			const activeIndex = activeItems.findIndex(el => el._id === activeId);
+			const overIndex = overItems.findIndex(el => el._id === overId);
 
-            // if the object isn't moving containers, just move items around
+			// if the object isn't moving containers, just move items around
 			if (activeContainer === overContainer) {
 				// should make this only run if the indices are different
 				return {
-					...items,
+					...prev,
 					[activeContainer]: arrayMove(
-						items[activeContainer],
+						prev[activeContainer],
 						activeIndex,
 						overIndex
 					)
 				};
 			}
 
-            // item is moving containers, time to calculate where it should go
+			// item is moving containers, time to calculate where it should go
 
 			let newIndex;
 
@@ -107,12 +133,12 @@ function PlaylistForm() {
 			return {
 				...prev,
 				[activeContainer]: [
-					...prev[activeContainer].filter(item => item !== active.id)
-                    // activeContainer now contains everything it did before minus the active item
+					...prev[activeContainer].filter(item => item._id !== activeId)
+					// activeContainer now contains everything it did before minus the active item
 				],
 				[overContainer]: [
 					...prev[overContainer].slice(0, newIndex),
-					items[activeContainer][activeIndex],
+					formState[activeContainer][activeIndex],
 					...prev[overContainer].slice(
 						newIndex,
 						prev[overContainer].length
@@ -131,8 +157,8 @@ function PlaylistForm() {
 		const activeContainer = findContainer(activeId);
 		const overContainer = findContainer(overId);
 
-        // error handling
-        // note that handleDragOver continually updates the ids, so at the end of a drag, activeContainer and overContainer *should* be the same
+		// error handling
+		// note that handleDragOver continually updates the ids, so at the end of a drag, activeContainer and overContainer *should* be the same
 		if (
 			!activeContainer ||
 			!overContainer ||
@@ -141,19 +167,21 @@ function PlaylistForm() {
 			return;
 		}
 
-		const activeIndex = items[activeContainer].indexOf(activeId);
-		const overIndex = items[overContainer].indexOf(overId);
+		const activeIndex = formState[activeContainer].findIndex(el => el._id === activeId);
+		const overIndex = formState[overContainer].findIndex(el => el._id === overId);
 
 		if (activeIndex !== overIndex) {
-			setItems(items => ({
-				...items,
-				[overContainer]: arrayMove(
-					items[overContainer],
-					activeIndex,
-					overIndex
-				)
-			}));
-		}
+            setFormState(items => {
+                return ({
+                    ...items,
+                    [overContainer]: arrayMove(
+                        items[overContainer],
+                        activeIndex,
+                        overIndex
+                    )
+                })
+            });
+        }
 
 		setActiveId(null);
 	}
@@ -168,6 +196,24 @@ function PlaylistForm() {
 		>
 			<form id="pl-form">
 				<div>
+					<label htmlFor="title" className="form-label">
+						Title{' '}
+						<span className="required" title="Required">
+							*
+						</span>
+					</label>
+					<input
+						id="title"
+						name="title"
+						className="form-control"
+						value={formState.title}
+						onChange={onChangeHandler}
+					/>
+				</div>
+
+				<hr />
+
+				<div>
 					<label className="form-label">Songs</label>
 
 					<p>
@@ -175,9 +221,21 @@ function PlaylistForm() {
 						playlist.
 					</p>
 
-					<SongList id="selected" items={items.selected} />
-					<hr />
-					<SongList id="deselected" items={items.deselected} />
+					<SongList id="selected" items={formState.selected} />
+
+					<label htmlFor="search" className="block mb-0.5">
+						Search:
+					</label>
+					<input
+						id="search"
+						name="search"
+						className="form-control"
+						autoComplete="off"
+						value={formState.search}
+						onChange={onChangeHandler}
+					/>
+
+					<SongList id="deselected" items={formState.deselected} />
 					<DragOverlay>
 						{activeId ? <Song id={activeId} /> : null}
 					</DragOverlay>
@@ -195,6 +253,12 @@ function PlaylistForm() {
                         ))}
 					</ul> */}
 				</div>
+
+				<hr />
+
+				<button type="submit" className="rectangle-btn">
+					Submit
+				</button>
 			</form>
 		</DndContext>
 	);
