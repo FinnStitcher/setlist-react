@@ -41,16 +41,12 @@ function ManagePlaylists() {
         <div className="mb-4">
             <h2 className="page-title">Your Playlists</h2>
 
-            <Link role="button" to="/add-playlist" className="rectangle-btn">Create New +</Link>
+            <Link role="button" to="/new-playlist" className="rectangle-btn">Create New +</Link>
 
             <button role="button" className="rectangle-btn mt-1 sm:mt-0 sm:ml-1 text-left" id="link-modal-btn" data-for-modal="link-modal">Share Profile</button>
 
             {/* your folders */}
         </div>
-        
-        <Modal>
-            <p>test</p>
-        </Modal>
 
         <section id="container">
             {folders && folders.map(element => (

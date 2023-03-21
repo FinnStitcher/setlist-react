@@ -1,8 +1,4 @@
-import {useNavigate} from 'react-router-dom';
-
-function Modal({ setModal, modalMsg, handleNavigate }) {
-    const navigate = useNavigate();
-
+function Modal({ children, setModal, modalMsg, handleNavigate }) {
     function closeModal() {
         const $modal = document.querySelector('#modal');
 
@@ -17,6 +13,8 @@ function Modal({ setModal, modalMsg, handleNavigate }) {
     return (
         <dialog className="modal" id="modal">
             <p>{modalMsg}</p>
+
+            {children}
 
             <button className="font-semibold mt-0.5" onClick={closeModal}>Close</button>
         </dialog>

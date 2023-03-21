@@ -83,8 +83,6 @@ function PlaylistForm({ plData }) {
 			...formState,
 			[name]: value
 		});
-
-		console.log(formState);
 	}
 
 	async function onSubmitHandler(event) {
@@ -102,8 +100,6 @@ function PlaylistForm({ plData }) {
 			title: formState.title,
 			songs: formState.selected.map(el => el._id)
 		};
-
-		console.log(playlistObj);
 
 		// check - are we making an edit or a new playlist?
 		let editingBoolean = window.location.pathname.includes('edit');
@@ -146,9 +142,7 @@ function PlaylistForm({ plData }) {
 			return;
 		}
 
-		console.log(json);
-
-		openModal('Success! Your playlist has been updated. Redirecting...');
+		openModal(`Success! Your playlist has been ${editingBoolean ? 'updated' : 'created'}. Redirecting...`);
 
 		setTimeout(() => handleNavigate(), 2000);
 	}
