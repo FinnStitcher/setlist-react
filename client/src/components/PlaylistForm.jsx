@@ -9,11 +9,17 @@ import {
 	useSensors
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
+import { useNavigate } from 'react-router-dom';
 
-import {handleDragStart, handleDragOver, handleDragEnd} from '../utils/sortableListUtils';
+import {
+	handleDragStart,
+	handleDragOver,
+	handleDragEnd
+} from '../utils/sortableListUtils';
 
 import SongList from './SongList.jsx';
 import Song from './Song.jsx';
+import Modal from './Modal.jsx';
 
 function PlaylistForm({ plData }) {
 	const [formState, setFormState] = useState({
@@ -23,6 +29,11 @@ function PlaylistForm({ plData }) {
 		deselected: []
 	});
 	const [activeId, setActiveId] = useState('');
+
+	const [modal, setModal] = useState(false);
+	const [modalMsg, setModalMsg] = useState('');
+
+	const navigate = useNavigate();
 
 	// if we got data from the parent component, update state
 	useEffect(() => {
@@ -53,6 +64,18 @@ function PlaylistForm({ plData }) {
 		}
 	}, [formState.search]);
 
+	function openModal(message) {
+		const $modal = document.querySelector('#modal');
+
+		$modal.showModal();
+		setModal(true);
+		setModalMsg(message);
+	}
+
+	function handleNavigate() {
+		navigate('/playlists');
+	}
+
 	function onChangeHandler(event) {
 		const { name, value } = event.target;
 
@@ -69,8 +92,7 @@ function PlaylistForm({ plData }) {
 
 		// validate form state
 		if (!formState.title) {
-			// TODO: Display memo
-            console.log('no title');
+			openModal('Your playlist needs a title.');
 
 			return;
 		}
@@ -80,6 +102,8 @@ function PlaylistForm({ plData }) {
 			title: formState.title,
 			songs: formState.selected.map(el => el._id)
 		};
+
+		console.log(playlistObj);
 
 		// check - are we making an edit or a new playlist?
 		let editingBoolean = window.location.pathname.includes('edit');
@@ -110,21 +134,23 @@ function PlaylistForm({ plData }) {
 			});
 		}
 
-		if (!response.ok) {
-			// TODO: Memo
+		const json = await response.json();
 
-			console.log('something went wrong making the api call');
+		if (!response.ok) {
+			const { message: errMsg } = json;
+
+			openModal(errMsg);
+
 			console.log(response);
 
 			return;
 		}
 
-		const json = await response.json();
-
 		console.log(json);
 
-        // TODO: Memo
-        // TODO: Redirect
+		openModal('Success! Your playlist has been updated. Redirecting...');
+
+		setTimeout(() => handleNavigate(), 2000);
 	}
 
 	const sensors = useSensors(
@@ -134,82 +160,82 @@ function PlaylistForm({ plData }) {
 		})
 	);
 
-    function dragStart(event) {
-        handleDragStart(event, setActiveId);
-    }
-
-    // update the view as items are dragged around
-    function dragOver(event) {
-        handleDragOver(event, formState, setFormState);
-    }
-
-    function dragEnd(event) {
-        handleDragEnd(event, formState, setFormState, setActiveId);
-    }
-
 	return (
-		<DndContext
-			sensors={sensors}
-			collisionDetection={closestCorners}
-			onDragStart={dragStart}
-			onDragOver={dragOver}
-			onDragEnd={dragEnd}
-		>
-			<form id="pl-form" onSubmit={onSubmitHandler}>
-				<div>
-					<label htmlFor="title" className="form-label">
-						Title{' '}
-						<span className="required" title="Required">
-							*
-						</span>
-					</label>
-					<input
-						id="title"
-						name="title"
-						className="form-control"
-						value={formState.title}
-						onChange={onChangeHandler}
-					/>
-				</div>
+		<>
+			<DndContext
+				sensors={sensors}
+				collisionDetection={closestCorners}
+				onDragStart={e => {
+					handleDragStart(e, setActiveId);
+				}}
+				onDragOver={e => {
+					handleDragOver(e, formState, setFormState);
+				}}
+				onDragEnd={e =>
+					handleDragEnd(e, formState, setFormState, setActiveId)
+				}
+			>
+				<form id="pl-form" onSubmit={onSubmitHandler}>
+					<div>
+						<label htmlFor="title" className="form-label">
+							Title{' '}
+							<span className="required" title="Required">
+								*
+							</span>
+						</label>
+						<input
+							id="title"
+							name="title"
+							className="form-control"
+							value={formState.title}
+							onChange={onChangeHandler}
+						/>
+					</div>
 
-				<hr />
+					<hr />
 
-				<div>
-					<label className="form-label">Songs</label>
+					<div>
+						<label className="form-label">Songs</label>
 
-					<p>
-						Click and drag to sort and move songs in and out of your
-						playlist.
-					</p>
+						<p>
+							Click and drag to sort and move songs in and out of
+							your playlist.
+						</p>
 
-					<SongList id="selected" items={formState.selected} />
+						<SongList id="selected" items={formState.selected} />
 
-					<label htmlFor="search" className="block mb-0.5">
-						Search:
-					</label>
-					<input
-						id="search"
-						name="search"
-						className="form-control"
-						autoComplete="off"
-						value={formState.search}
-						onChange={onChangeHandler}
-					/>
+						<label htmlFor="search" className="block mb-0.5">
+							Search:
+						</label>
+						<input
+							id="search"
+							name="search"
+							className="form-control"
+							autoComplete="off"
+							value={formState.search}
+							onChange={onChangeHandler}
+						/>
 
-					<SongList id="deselected" items={formState.deselected} />
+						<SongList
+							id="deselected"
+							items={formState.deselected}
+						/>
 
-					<DragOverlay>
-						{activeId ? <Song id={activeId} /> : null}
-					</DragOverlay>
-				</div>
+						<DragOverlay>
+							{activeId ? <Song id={activeId} /> : null}
+						</DragOverlay>
+					</div>
 
-				<hr />
+					<hr />
 
-				<button type="submit" className="rectangle-btn">
-					Submit
-				</button>
-			</form>
-		</DndContext>
+					<button type="submit" className="rectangle-btn">
+						Submit
+					</button>
+				</form>
+			</DndContext>
+
+			<Modal setModal={setModal} modalMsg={modalMsg} handleNavigate={handleNavigate} />
+		</>
 	);
 }
 

@@ -4,6 +4,7 @@ import UserContext from '../UserContext.jsx';
 
 import AuthFailed from './AuthFailed.jsx';
 import Folder from '../components/Folder.jsx';
+import Modal from '../components/Modal.jsx';
 
 function ManagePlaylists() {
     const [folders, setFolders] = useState(null);
@@ -46,6 +47,10 @@ function ManagePlaylists() {
 
             {/* your folders */}
         </div>
+        
+        <Modal>
+            <p>test</p>
+        </Modal>
 
         <section id="container">
             {folders && folders.map(element => (
