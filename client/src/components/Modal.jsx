@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 function Modal({ children, id, state, setState, modalMsg, navTo }) {
 	const modalRef = useRef();
-    console.log(modalRef.current);
 
 	const navigate = useNavigate();
 

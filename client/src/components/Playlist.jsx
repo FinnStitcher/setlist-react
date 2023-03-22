@@ -23,7 +23,7 @@ function Playlist({ playlist }) {
 			arrow.textContent = '▼';
 		}
 
-		// should animate it to rotate rather than just swapping
+		// TODO: animate it to rotate rather than just swapping
 	}
 
 	return (

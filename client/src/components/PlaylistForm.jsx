@@ -127,8 +127,6 @@ function PlaylistForm({ plData }) {
             setModal(true);
             setModalMsg(message);
 
-			console.log(response);
-
 			return;
 		}
 
