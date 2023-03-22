@@ -67,9 +67,7 @@ function Login() {
 			}, 2000);
 		} catch (err) {
 			setModal(true);
-			setModalMsg(
-				`There was an error logging you in. (${err.name})`
-			);
+			setModalMsg(`${err.name}: ${err.message}`);
 
 			console.log(err);
 		}

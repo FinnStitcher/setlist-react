@@ -49,8 +49,8 @@ function Signup() {
 			const json = await response.json();
 
 			if (!response.ok) {
-                const {message} = json;
-                
+				const { message } = json;
+
 				throw Error(message);
 			}
 
@@ -71,7 +71,8 @@ function Signup() {
 			}, 3000);
 		} catch (err) {
 			setModal(true);
-			setModalMsg(`There was an error in signing you up. (${err.name})`);
+
+			setModalMsg(`${err.name}: ${err.message}`);
 
 			console.log(err);
 		}
