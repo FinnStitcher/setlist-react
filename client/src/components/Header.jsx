@@ -4,7 +4,7 @@ import UserContext from '../UserContext.jsx';
 
 function Header() {
 	const { user, setUser } = useContext(UserContext);
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 
 	async function logoutHandler() {
 		// make fetch request to log out the user
@@ -12,18 +12,16 @@ function Header() {
 			method: 'DELETE'
 		});
 
-		if (response.ok) {
-			console.log('yay you did it');
-
-			// change context
-			setUser(null);
-
-            // redirect
-            // for some reason return <Navigate /> doesn't work here
-            navigate('/');
-		} else {
-			console.log('oh no you didnt do it');
+		if (!response.ok) {
+			console.log(response);
+			return;
 		}
+
+		// change context
+		setUser(null);
+
+		// redirect
+		navigate('/');
 	}
 
 	return (
@@ -57,6 +55,9 @@ function Header() {
 						</div>
 					</>
 				)}
+				<div className="nav-link">
+					<Link to="/reach-out">Reach Out</Link>
+				</div>
 			</nav>
 		</header>
 	);

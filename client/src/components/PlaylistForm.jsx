@@ -65,16 +65,16 @@ function PlaylistForm({ plData }) {
 					deselected: [...json]
 				});
 			}
+
+			if (formState.search) {
+				getSearchResults();
+			}
 		} catch (err) {
 			setFormState({
 				deselected: ['Something went wrong with this search.']
 			});
 
 			console.log(err);
-		}
-
-		if (formState.search) {
-			getSearchResults();
 		}
 	}, [formState.search]);
 
@@ -93,7 +93,7 @@ function PlaylistForm({ plData }) {
 		// validate form state
 		if (!formState.title) {
 			setModal({
-                ...modal,
+				...modal,
 				active: 'modal',
 				msg: 'Your playlist needs a title.',
 				navTo: '/'
@@ -142,32 +142,32 @@ function PlaylistForm({ plData }) {
 
 			if (!response.ok) {
 				const { message } = json;
-                
-                throw Error(message);
+
+				throw Error(message);
 			}
 
-            setModal({
-                ...modal,
-                active: 'modal',
-                msg: `Success! Your playlist has been ${
+			setModal({
+				...modal,
+				active: 'modal',
+				msg: `Success! Your playlist has been ${
 					editingBoolean ? 'updated' : 'created'
 				}. Redirecting...`,
-                navTo: '/playlists'
-            });
+				navTo: '/playlists'
+			});
 
 			setTimeout(() => {
 				navigate('/playlists');
 			}, 2000);
 		} catch (err) {
-            setModal({
-                ...modal,
-                active: 'modal',
-                msg: `${err.name}: ${err.message}`,
-                navTo: '/'
-            });
+			setModal({
+				...modal,
+				active: 'modal',
+				msg: `${err.name}: ${err.message}`,
+				navTo: '/'
+			});
 
-            console.log(err);
-        }
+			console.log(err);
+		}
 	}
 
 	const sensors = useSensors(

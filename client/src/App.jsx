@@ -9,6 +9,7 @@ import NewPlaylist from './pages/NewPlaylist.jsx';
 import EditPlaylist from './pages/EditPlaylist.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
+import ReachOut from './pages/ReachOut.jsx';
 
 import Header from './components/Header.jsx';
 import Modal from './components/Modal';
@@ -44,6 +45,7 @@ function App() {
 							/>
 							<Route path="/login" element={<Login />} />
 							<Route path="/signup" element={<Signup />} />
+                            <Route path="/reach-out" element={<ReachOut />} />
 						</Routes>
 					</main>
 
