@@ -53,7 +53,9 @@ function Signup() {
 			const json = await response.json();
 
 			if (!response.ok) {
-				throw Error(json);
+				const { message } = json;
+
+				throw Error(message);
 			}
 
 			// update context
@@ -133,8 +135,6 @@ function Signup() {
 					Submit
 				</button>
 			</form>
-
-			<Modal id="modal" />
 		</>
 	);
 }

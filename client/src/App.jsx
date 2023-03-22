@@ -26,6 +26,7 @@ function App() {
 			<UserContext.Provider value={{ user, setUser }}>
 				<ModalContext.Provider value={{ modal, setModal }}>
 					<Header />
+                    
 					<main className="px-6 py-4">
 						<Routes>
 							<Route path="/" element={<Landing />} />
@@ -45,6 +46,7 @@ function App() {
 							<Route path="/signup" element={<Signup />} />
 						</Routes>
 					</main>
+
                     <Modal id='modal' state={modal} setState={setModal} />
 				</ModalContext.Provider>
 			</UserContext.Provider>

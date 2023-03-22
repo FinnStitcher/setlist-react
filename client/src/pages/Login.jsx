@@ -53,7 +53,9 @@ function Login() {
 			const json = await response.json();
 
 			if (!response.ok) {
-				throw Error(json);
+				const { message } = json;
+
+				throw Error(message);
 			}
 
 			// update context
@@ -133,8 +135,6 @@ function Login() {
 					Submit
 				</button>
 			</form>
-
-			<Modal id="modal" />
 		</>
 	);
 }
