@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import UserContext from '../UserContext.jsx';
+import ModalContext from '../ModalContext.jsx';
 
 import AuthFailed from './AuthFailed.jsx';
 import Folder from '../components/Folder.jsx';
@@ -8,14 +9,12 @@ import Modal from '../components/Modal.jsx';
 
 function ManagePlaylists() {
 	const [folders, setFolders] = useState(null);
-	const [confDelModal, setConfDelModal] = useState(false);
-    const [compDelModal, setCompDelModal] = useState(false);
-	const [modalMsg, setModalMsg] = useState('');
-
-	const delBtnRef = useRef();
-    const delPlaylistRef = useRef();
 
 	const { user } = useContext(UserContext);
+	const { modal, setModal } = useContext(ModalContext);
+
+	const delBtnRef = useRef();
+	const delPlaylistRef = useRef();
 
 	// get data from db when the page first renders
 	// read context (session data) to get data for only this user
@@ -24,20 +23,39 @@ function ManagePlaylists() {
 			const { user_id } = user;
 
 			const getUserData = async () => {
-				const response = await fetch('/api/users/' + user_id);
-				const json = await response.json();
+                try {
+                    const response = await fetch('/api/users/' + user_id);
+                    const json = await response.json();
 
-                if (!response.ok) {
-					console.log('whoops');
-					console.log(json);
+                    if (!response.ok) {
+                        const { message } = json;
+
+                        throw Error(message);
+                    }
+
+                    setFolders(json.folders);
+                } catch (err) {
+                    setModal({
+                        ...modal,
+                        active: 'modal',
+                        msg: `${err.name}: ${err.message}`
+                    });
+        
+                    console.log(err);
                 }
-				
-                setFolders(json.folders);
 			};
 
 			getUserData();
 		}
 	}, []);
+
+	function getLinkHandler() {
+		setModal({
+			...modal,
+			active: 'link-modal',
+			msg: 'To share your profile with others, copy this link.'
+		});
+	}
 
 	// listens for clicks on the delete button in the Playlist component
 	function deleteHandler(e) {
@@ -50,12 +68,13 @@ function ManagePlaylists() {
 
 		// storing the button that was clicked in the ref and its playlist so we can access it later
 		delBtnRef.current = target;
-        delPlaylistRef.current = target.closest('article');
+		delPlaylistRef.current = target.closest('article');
 
-		setConfDelModal(true);
-		setModalMsg(
-			"Are you sure you want to delete this playlist? If you want it back, you'll have to completely remake it."
-		);
+		setModal({
+			...modal,
+			active: 'conf-del-modal',
+			msg: "Are you sure you want to delete this playlist? If you want it back, you'll have to completely remake it."
+		});
 	}
 
 	async function deleteConfirmedHandler() {
@@ -63,31 +82,40 @@ function ManagePlaylists() {
 		const playlistID = delBtnRef.current.getAttribute('data-id');
 
 		// make database call
-        const response = await fetch('/api/playlists/' + playlistID, {
-            method: 'DELETE',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json'
-            }
-        });
-        const json = await response.json();
+		try {
+			const response = await fetch('/api/playlists/' + playlistID, {
+				method: 'DELETE',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json'
+				}
+			});
+			const json = await response.json();
 
-        if (!response.ok) {
-            const {message} = json;
+			if (!response.ok) {
+				const { message } = json;
 
-            // swap modals and display error message
-            setConfDelModal(false);
-            setCompDelModal(true);
-            setModalMsg(message);
-        }
+				throw Error(message);
+			}
 
-		// swap modals
-        setConfDelModal(false);
-        setCompDelModal(true);
-        setModalMsg('Your playlist was successfully deleted.');
+			// swap modals
+			setModal({
+				...modal,
+				active: 'comp-del-modal',
+				msg: 'Your playlist was successfully deleted.'
+			});
 
-        // remove this playlist from the dom
-        delPlaylistRef.current.remove();
+			// remove this playlist from the dom
+			delPlaylistRef.current.remove();
+		} catch (err) {
+			setModal({
+				...modal,
+				active: 'modal',
+				msg: `${err.name}: ${err.message}`
+			});
+
+			console.log(err);
+		}
 	}
 
 	if (!user) {
@@ -110,8 +138,7 @@ function ManagePlaylists() {
 				<button
 					role="button"
 					className="rectangle-btn mt-1 sm:mt-0 sm:ml-1 text-left"
-					id="link-modal-btn"
-					data-for-modal="link-modal"
+					onClick={getLinkHandler}
 				>
 					Share Profile
 				</button>
@@ -126,12 +153,7 @@ function ManagePlaylists() {
 					))}
 			</section>
 
-			<Modal
-                id='conf-del-modal'
-                state={confDelModal}
-                setState={setConfDelModal}
-				modalMsg={modalMsg}
-			>
+			<Modal id="conf-del-modal">
 				<button
 					className="block font-semibold mt-0.5"
 					onClick={deleteConfirmedHandler}
@@ -140,7 +162,17 @@ function ManagePlaylists() {
 				</button>
 			</Modal>
 
-            <Modal id='comp-del-modal' state={compDelModal} setState={setCompDelModal} modalMsg={modalMsg} navTo='/playlists' />
+			<Modal id="comp-del-modal" />
+
+			<Modal id="link-modal">
+				<p className="mx-3 my-2 bg-stone-300 text-stone-800 rounded-md p-1">
+					<Link
+						to={`${window.location.origin}/users/${user.user_id}`}
+					>
+						{window.location.origin}/users/{user.user_id}
+					</Link>
+				</p>
+			</Modal>
 		</>
 	);
 }

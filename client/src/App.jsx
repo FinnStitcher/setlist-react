@@ -47,7 +47,7 @@ function App() {
 						</Routes>
 					</main>
 
-                    <Modal id='modal' state={modal} setState={setModal} />
+                    <Modal id='modal' />
 				</ModalContext.Provider>
 			</UserContext.Provider>
 		</BrowserRouter>

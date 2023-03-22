@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import {
 	DndContext,
 	DragOverlay,
@@ -9,7 +9,7 @@ import {
 	useSensors
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import {useNavigate} from 'react-router';
+import { useNavigate } from 'react-router';
 
 import {
 	handleDragStart,
@@ -17,9 +17,10 @@ import {
 	handleDragEnd
 } from '../utils/sortableListUtils';
 
+import ModalContext from '../ModalContext.jsx';
+
 import SongList from './SongList.jsx';
 import Song from './Song.jsx';
-import Modal from './Modal.jsx';
 
 function PlaylistForm({ plData }) {
 	const [formState, setFormState] = useState({
@@ -30,10 +31,9 @@ function PlaylistForm({ plData }) {
 	});
 	const [activeId, setActiveId] = useState('');
 
-	const [modal, setModal] = useState(false);
-	const [modalMsg, setModalMsg] = useState('');
+	const { modal, setModal } = useContext(ModalContext);
 
-    const navigate = useNavigate();
+	const navigate = useNavigate();
 
 	// if we got data from the parent component, update state
 	useEffect(() => {
@@ -47,16 +47,30 @@ function PlaylistForm({ plData }) {
 
 	// make searches when the search bar contents update
 	useEffect(() => {
-		async function getSearchResults() {
-			const response = await fetch(
-				'/api/songs/search/' + formState.search
-			);
-			const json = await response.json();
+		try {
+			async function getSearchResults() {
+				const response = await fetch(
+					'/api/songs/search/' + formState.search
+				);
+				const json = await response.json();
 
+				if (!response.ok) {
+					const { message } = json;
+
+					throw Error(message);
+				}
+
+				setFormState({
+					...formState,
+					deselected: [...json]
+				});
+			}
+		} catch (err) {
 			setFormState({
-				...formState,
-				deselected: [...json]
+				deselected: ['Something went wrong with this search.']
 			});
+
+			console.log(err);
 		}
 
 		if (formState.search) {
@@ -78,8 +92,12 @@ function PlaylistForm({ plData }) {
 
 		// validate form state
 		if (!formState.title) {
-            setModal(true);
-            setModalMsg('Your playlist needs a title.')
+			setModal({
+                ...modal,
+				active: 'modal',
+				msg: 'Your playlist needs a title.',
+				navTo: '/'
+			});
 
 			return;
 		}
@@ -95,45 +113,61 @@ function PlaylistForm({ plData }) {
 
 		let response = null;
 
-		if (editingBoolean) {
-			const playlistId = window.location.pathname.split('/')[2];
+		try {
+			if (editingBoolean) {
+				const playlistId = window.location.pathname.split('/')[2];
 
-			// make api call to update
-			response = await fetch('/api/playlists/' + playlistId, {
-				method: 'PUT',
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(playlistObj)
-			});
-		} else {
-			// make api call to create new
-			response = await fetch('/api/playlists', {
-				method: 'POST',
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(playlistObj)
-			});
-		}
+				// make api call to update
+				response = await fetch('/api/playlists/' + playlistId, {
+					method: 'PUT',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(playlistObj)
+				});
+			} else {
+				// make api call to create new
+				response = await fetch('/api/playlists', {
+					method: 'POST',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(playlistObj)
+				});
+			}
 
-		const json = await response.json();
+			const json = await response.json();
 
-		if (!response.ok) {
-			const { message } = json;
+			if (!response.ok) {
+				const { message } = json;
+                
+                throw Error(message);
+			}
 
-            setModal(true);
-            setModalMsg(message);
+            setModal({
+                ...modal,
+                active: 'modal',
+                msg: `Success! Your playlist has been ${
+					editingBoolean ? 'updated' : 'created'
+				}. Redirecting...`,
+                navTo: '/playlists'
+            });
 
-			return;
-		}
+			setTimeout(() => {
+				navigate('/playlists');
+			}, 2000);
+		} catch (err) {
+            setModal({
+                ...modal,
+                active: 'modal',
+                msg: `${err.name}: ${err.message}`,
+                navTo: '/'
+            });
 
-        setModal(true);
-        setModalMsg(`Success! Your playlist has been ${editingBoolean ? 'updated' : 'created'}. Redirecting...`);
-
-		setTimeout(() => {navigate('/playlists')}, 2000);
+            console.log(err);
+        }
 	}
 
 	const sensors = useSensors(
@@ -216,8 +250,6 @@ function PlaylistForm({ plData }) {
 					</button>
 				</form>
 			</DndContext>
-
-			<Modal id='modal' state={modal} setState={setModal} modalMsg={modalMsg} navTo='/playlists' />
 		</>
 	);
 }

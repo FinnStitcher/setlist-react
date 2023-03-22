@@ -9,15 +9,13 @@ function Modal({ children, id }) {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		modal.active === id
+		modal.active === id && modalRef.current.open === false
 			? modalRef.current.showModal()
 			: modalRef.current.close();
 	}, [modal]);
 
 	function closeHandler() {
-		if (modal.msg.toLowerCase().includes('redirect')) {
-			navigate(modal.navTo);
-		}
+        const {msg} = modal;
 
 		setModal({
 			...modal,
@@ -25,6 +23,10 @@ function Modal({ children, id }) {
 			msg: '',
 			navTo: '/'
 		});
+
+		if (msg.toLowerCase().includes('redirect')) {
+			navigate(modal.navTo);
+		}
 	}
 
 	return (

@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import UserContext from '../UserContext.jsx';
 import ModalContext from '../ModalContext.jsx';
 
-import Modal from '../components/Modal';
-
 function Signup() {
 	const [formState, setFormState] = useState({
 		username: '',
