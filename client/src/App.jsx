@@ -8,6 +8,7 @@ import ManagePlaylists from './pages/ManagePlaylists.jsx';
 import NewPlaylist from './pages/NewPlaylist.jsx';
 import EditPlaylist from './pages/EditPlaylist.jsx';
 import Login from './pages/Login.jsx';
+import Signup from './pages/Signup.jsx';
 
 function App() {
     const [user, setUser] = useState(null);
@@ -23,6 +24,7 @@ function App() {
                         <Route path="/new-playlist" element={<NewPlaylist />} />
                         <Route path="/edit-playlist/:id" element={<EditPlaylist />} />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/signup" element={<Signup />} />
 					</Routes>
 				</main>
 			</UserContext.Provider>

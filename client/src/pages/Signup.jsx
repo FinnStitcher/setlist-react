@@ -4,7 +4,7 @@ import UserContext from '../UserContext.jsx';
 
 import Modal from '../components/Modal';
 
-function Login() {
+function Signup() {
 	const [formState, setFormState] = useState({
 		username: '',
 		password: ''
@@ -37,7 +37,7 @@ function Login() {
 		}
 
 		try {
-			const response = await fetch('/api/users/login', {
+			const response = await fetch('/api/users', {
 				method: 'POST',
 				body: JSON.stringify(formState),
 				headers: {
@@ -45,11 +45,13 @@ function Login() {
 					'Content-Type': 'application/json'
 				}
 			});
-			// returns session and user info
+			// return session and user info
 			const json = await response.json();
 
 			if (!response.ok) {
-				throw Error(json);
+                const {message} = json;
+                
+				throw Error(message);
 			}
 
 			// update context
@@ -59,17 +61,17 @@ function Login() {
 			});
 
 			setModal(true);
-			setModalMsg("You're logged in! Redirecting...");
+			setModalMsg(
+				"You're all signed up! We've automatically logged you in. Redirecting..."
+			);
 
 			// redirect
 			setTimeout(() => {
 				navigate('/playlists');
-			}, 2000);
+			}, 3000);
 		} catch (err) {
 			setModal(true);
-			setModalMsg(
-				`There was an error logging you in. (${err.name})`
-			);
+			setModalMsg(`There was an error in signing you up. (${err.name})`);
 
 			console.log(err);
 		}
@@ -78,7 +80,7 @@ function Login() {
 	return (
 		<>
 			<div className="mb-4">
-				<h2 className="page-title">Log In to Setlist</h2>
+				<h2 className="page-title">Sign Up</h2>
 			</div>
 
 			<form id="user-form" onSubmit={onSubmitHandler}>
@@ -129,4 +131,4 @@ function Login() {
 	);
 }
 
-export default Login;
+export default Signup;

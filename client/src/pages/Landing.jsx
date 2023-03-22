@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom';
+
 function Landing() {
 	return (
 		<>
@@ -7,23 +9,25 @@ function Landing() {
 				</h2>
 
 				<p className="mb-4 text-center">
-					Setlist is the new home for your playlists. Create an account to start making playlists, using a database of songs submitted by users like you.
+					Setlist is the new home for your playlists. Create an
+					account to start making playlists, using a database of songs
+					submitted by users like you.
 				</p>
 			</div>
 
 			<div className="w-72 m-auto border-4 border-stone-300 text-center py-1">
-				<a href="/login" className="text-lg">
+				<Link to="/login" className="text-lg">
 					Log In
-				</a>
+				</Link>
 
 				<p>or</p>
 
-				<a href="/signup" className="text-lg">
+				<Link to="/signup" className="text-lg">
 					Sign Up
-				</a>
+				</Link>
 			</div>
 		</>
 	);
-};
+}
 
 export default Landing;

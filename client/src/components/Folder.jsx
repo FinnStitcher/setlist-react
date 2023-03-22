@@ -5,14 +5,11 @@ function Folder({ folder }) {
 
 	function toggleFolder(e) {
 		const { target } = e;
-        console.log(target);
 
 		// get the ul associated with this title div
 		const folderBody = target.closest('.fl-title').nextElementSibling;
 		// get the arrow
 		const arrow = target.closest('.fl-title').querySelector('.fl-arrow');
-
-        console.log(folderBody);
 
 		if (folderBody.matches('.hidden')) {
 			folderBody.className = 'pl-3 py-2.5 space-y-3 block';

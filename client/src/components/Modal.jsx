@@ -13,7 +13,7 @@ function Modal({ children, id, state, setState, modalMsg, navTo }) {
 	function closeHandler() {
 		setState(false);
 
-		if (modalMsg.toLowerCase().includes('success')) {
+		if (modalMsg.toLowerCase().includes('redirect')) {
 			navigate(navTo);
             setState(false);
 		}

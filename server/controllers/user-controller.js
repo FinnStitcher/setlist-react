@@ -5,7 +5,7 @@ require('dotenv').config();
 const userController = {
     async getAllUsers(req, res) {
         try {
-            const dbRes = await User.find({}).select('-__v');
+            const dbRes = await User.find({}).select('-__v -password');
             res.status(200).json(dbRes);
         } catch (err) {
             // catch server errors
@@ -21,6 +21,7 @@ const userController = {
             const dbRes = await User.findOne({
                 _id: searchTerm
             })
+            .select('-__v -password')
             .populate({
                 path: 'folders',
                 select: '-__v -username',
@@ -71,7 +72,8 @@ const userController = {
                 username,
                 password,
                 folders: [unsortedFolderId]
-            });
+            })
+            .select('-__v -password');
 
             // add user data to session
             req.session.save(() => {
@@ -124,7 +126,12 @@ const userController = {
                 req.session.loggedIn = true;
 
                 res.status(200).json({
-                    user: dbRes,
+                    user: {
+                        _id: dbRes._id,
+                        username: dbRes.username,
+                        playlists: dbRes.playlists,
+                        folders: dbRes.folders
+                    },
                     session: req.session,
                     message: 'You\'re logged in.'
                 });
