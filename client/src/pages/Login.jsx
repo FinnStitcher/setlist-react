@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../UserContext.jsx';
+import ModalContext from '../ModalContext.jsx';
 
 import Modal from '../components/Modal';
 
@@ -9,9 +10,9 @@ function Login() {
 		username: '',
 		password: ''
 	});
-	const [modal, setModal] = useState(false);
-	const [modalMsg, setModalMsg] = useState('');
 	const { setUser } = useContext(UserContext);
+	const { modal, setModal } = useContext(ModalContext);
+    
 	const navigate = useNavigate();
 
 	function onChangeHandler(event) {
@@ -30,8 +31,11 @@ function Login() {
 		const { username, password } = formState;
 
 		if (!username || !password) {
-			setModal(true);
-			setModalMsg('A username and password are required.');
+			setModal({
+				...modal,
+				active: 'modal',
+				msg: 'A username and password are required.'
+			});
 
 			return;
 		}
@@ -58,18 +62,30 @@ function Login() {
 				username: json.session.username
 			});
 
-			setModal(true);
-			setModalMsg("You're logged in! Redirecting...");
+			setModal({
+				...modal,
+				active: 'modal',
+				msg: "You're logged in! Redirecting...",
+				navTo: '/playlists'
+			});
 
 			// redirect
 			setTimeout(() => {
+				setModal({
+					...modal,
+					active: '',
+					msg: '',
+					navTo: ''
+				});
+
 				navigate('/playlists');
 			}, 2000);
 		} catch (err) {
-			setModal(true);
-			setModalMsg(
-				`There was an error logging you in. (${err.name})`
-			);
+			setModal({
+				...modal,
+				active: 'modal',
+				msg: `${err.name}: ${err.message}`
+			});
 
 			console.log(err);
 		}
@@ -118,13 +134,7 @@ function Login() {
 				</button>
 			</form>
 
-			<Modal
-				id="modal"
-				state={modal}
-				setState={setModal}
-				modalMsg={modalMsg}
-				navTo="/playlists"
-			/>
+			<Modal id="modal" />
 		</>
 	);
 }

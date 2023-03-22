@@ -1,27 +1,35 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ModalContext from '../ModalContext.jsx';
 
-function Modal({ children, id, state, setState, modalMsg, navTo }) {
+function Modal({ children, id }) {
+	const { modal, setModal } = useContext(ModalContext);
 	const modalRef = useRef();
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		state ? modalRef.current.showModal() : modalRef.current.close();
-	}, [state]);
+		modal.active === id
+			? modalRef.current.showModal()
+			: modalRef.current.close();
+	}, [modal]);
 
 	function closeHandler() {
-		setState(false);
-
-		if (modalMsg.toLowerCase().includes('redirect')) {
-			navigate(navTo);
-            setState(false);
+		if (modal.msg.toLowerCase().includes('redirect')) {
+			navigate(modal.navTo);
 		}
+
+		setModal({
+			...modal,
+			active: '',
+			msg: '',
+			navTo: '/'
+		});
 	}
 
 	return (
 		<dialog className="modal" id={id} ref={modalRef}>
-			<p>{modalMsg}</p>
+			<p>{modal.msg}</p>
 
 			{children}
 

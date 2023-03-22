@@ -1,6 +1,7 @@
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UserContext from '../UserContext.jsx';
+import ModalContext from '../ModalContext.jsx';
 
 import Modal from '../components/Modal';
 
@@ -9,9 +10,9 @@ function Signup() {
 		username: '',
 		password: ''
 	});
-	const [modal, setModal] = useState(false);
-	const [modalMsg, setModalMsg] = useState('');
 	const { setUser } = useContext(UserContext);
+	const { modal, setModal } = useContext(ModalContext);
+
 	const navigate = useNavigate();
 
 	function onChangeHandler(event) {
@@ -30,8 +31,11 @@ function Signup() {
 		const { username, password } = formState;
 
 		if (!username || !password) {
-			setModal(true);
-			setModalMsg('A username and password are required.');
+			setModal({
+				...modal,
+				active: 'modal',
+				msg: 'A username and password are required.'
+			});
 
 			return;
 		}
@@ -49,9 +53,7 @@ function Signup() {
 			const json = await response.json();
 
 			if (!response.ok) {
-                const {message} = json;
-                
-				throw Error(message);
+				throw Error(json);
 			}
 
 			// update context
@@ -60,18 +62,30 @@ function Signup() {
 				username: json.session.username
 			});
 
-			setModal(true);
-			setModalMsg(
-				"You're all signed up! We've automatically logged you in. Redirecting..."
-			);
+			setModal({
+				...modal,
+				active: 'modal',
+				msg: "You're all signed up! We've automatically logged you in. Redirecting...",
+				navTo: '/playlists'
+			});
 
 			// redirect
 			setTimeout(() => {
+				setModal({
+					...modal,
+					active: '',
+					msg: '',
+					navTo: ''
+				});
+
 				navigate('/playlists');
 			}, 3000);
 		} catch (err) {
-			setModal(true);
-			setModalMsg(`There was an error in signing you up. (${err.name})`);
+			setModal({
+				...modal,
+				active: 'modal',
+				msg: `${err.name}: ${err.message}`
+			});
 
 			console.log(err);
 		}
@@ -120,13 +134,7 @@ function Signup() {
 				</button>
 			</form>
 
-			<Modal
-				id="modal"
-				state={modal}
-				setState={setModal}
-				modalMsg={modalMsg}
-				navTo="/playlists"
-			/>
+			<Modal id="modal" />
 		</>
 	);
 }

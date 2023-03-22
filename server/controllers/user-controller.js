@@ -72,8 +72,7 @@ const userController = {
                 username,
                 password,
                 folders: [unsortedFolderId]
-            })
-            .select('-__v -password');
+            });
 
             // add user data to session
             req.session.save(() => {
@@ -82,7 +81,11 @@ const userController = {
                 req.session.loggedIn = true;
 
                 res.status(201).json({
-                    user: userDbRes,
+                    user: {
+                        _id: userDbRes._id,
+                        username: userDbRes.username,
+                        folders: userDbRes.folders
+                    },
                     session: req.session,
                     message: 'You\'re logged in.'
                 });
