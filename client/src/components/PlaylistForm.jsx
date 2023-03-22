@@ -9,7 +9,7 @@ import {
 	useSensors
 } from '@dnd-kit/core';
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { useNavigate } from 'react-router-dom';
+import {useNavigate} from 'react-router';
 
 import {
 	handleDragStart,
@@ -33,7 +33,7 @@ function PlaylistForm({ plData }) {
 	const [modal, setModal] = useState(false);
 	const [modalMsg, setModalMsg] = useState('');
 
-	const navigate = useNavigate();
+    const navigate = useNavigate();
 
 	// if we got data from the parent component, update state
 	useEffect(() => {
@@ -64,18 +64,6 @@ function PlaylistForm({ plData }) {
 		}
 	}, [formState.search]);
 
-	function openModal(message) {
-		const $modal = document.querySelector('#modal');
-
-		$modal.showModal();
-		setModal(true);
-		setModalMsg(message);
-	}
-
-	function handleNavigate() {
-		navigate('/playlists');
-	}
-
 	function onChangeHandler(event) {
 		const { name, value } = event.target;
 
@@ -90,7 +78,8 @@ function PlaylistForm({ plData }) {
 
 		// validate form state
 		if (!formState.title) {
-			openModal('Your playlist needs a title.');
+            setModal(true);
+            setModalMsg('Your playlist needs a title.')
 
 			return;
 		}
@@ -133,18 +122,20 @@ function PlaylistForm({ plData }) {
 		const json = await response.json();
 
 		if (!response.ok) {
-			const { message: errMsg } = json;
+			const { message } = json;
 
-			openModal(errMsg);
+            setModal(true);
+            setModalMsg(message);
 
 			console.log(response);
 
 			return;
 		}
 
-		openModal(`Success! Your playlist has been ${editingBoolean ? 'updated' : 'created'}. Redirecting...`);
+        setModal(true);
+        setModalMsg(`Success! Your playlist has been ${editingBoolean ? 'updated' : 'created'}. Redirecting...`);
 
-		setTimeout(() => handleNavigate(), 2000);
+		setTimeout(() => {navigate('/playlists')}, 2000);
 	}
 
 	const sensors = useSensors(
@@ -228,7 +219,7 @@ function PlaylistForm({ plData }) {
 				</form>
 			</DndContext>
 
-			<Modal setModal={setModal} modalMsg={modalMsg} handleNavigate={handleNavigate} />
+			<Modal id='modal' state={modal} setState={setModal} modalMsg={modalMsg} navTo='/playlists' />
 		</>
 	);
 }

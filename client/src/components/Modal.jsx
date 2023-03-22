@@ -1,24 +1,36 @@
-function Modal({ children, setModal, modalMsg, handleNavigate }) {
-    function closeModal() {
-        const $modal = document.querySelector('#modal');
+import { useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-        $modal.close();
-        setModal(false);
+function Modal({ children, id, state, setState, modalMsg, navTo }) {
+	const modalRef = useRef();
+    console.log(modalRef.current);
 
-        if (modalMsg.includes('Success')) {
-            handleNavigate();
-        }
-    }
+	const navigate = useNavigate();
 
-    return (
-        <dialog className="modal" id="modal">
-            <p>{modalMsg}</p>
+	useEffect(() => {
+		state ? modalRef.current.showModal() : modalRef.current.close();
+	}, [state]);
 
-            {children}
+	function closeHandler() {
+		setState(false);
 
-            <button className="font-semibold mt-0.5" onClick={closeModal}>Close</button>
-        </dialog>
-    )
+		if (modalMsg.toLowerCase().includes('success')) {
+			navigate(navTo);
+            setState(false);
+		}
+	}
+
+	return (
+		<dialog className="modal" id={id} ref={modalRef}>
+			<p>{modalMsg}</p>
+
+			{children}
+
+			<button className="font-semibold mt-0.5" onClick={closeHandler}>
+				Close
+			</button>
+		</dialog>
+	);
 }
 
 export default Modal;
