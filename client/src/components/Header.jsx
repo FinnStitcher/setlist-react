@@ -37,6 +37,9 @@ function Header() {
 							<Link to="/playlists">My Playlists</Link>
 						</div>
 						<div className="nav-link">
+							<Link to="/folders">My Folders</Link>
+						</div>
+						<div className="nav-link">
 							<Link to="/add-song">Submit a Song</Link>
 						</div>
 						<div className="nav-link" onClick={logoutHandler}>

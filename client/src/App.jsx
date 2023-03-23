@@ -5,6 +5,7 @@ import ModalContext from './ModalContext.jsx';
 
 import Landing from './pages/Landing.jsx';
 import ManagePlaylists from './pages/ManagePlaylists.jsx';
+import ManageFolders from './pages/ManageFolders.jsx';
 import NewPlaylist from './pages/NewPlaylist.jsx';
 import EditPlaylist from './pages/EditPlaylist.jsx';
 import Login from './pages/Login.jsx';
@@ -35,6 +36,7 @@ function App() {
 								path="/playlists"
 								element={<ManagePlaylists />}
 							/>
+                            <Route path="/folders" element={<ManageFolders />} />
 							<Route
 								path="/new-playlist"
 								element={<NewPlaylist />}
