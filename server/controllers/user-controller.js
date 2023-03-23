@@ -5,7 +5,7 @@ require('dotenv').config();
 const userController = {
     async getAllUsers(req, res) {
         try {
-            const dbRes = await User.find({}).select('-__v -password');
+            const dbRes = await User.find({}).select('-__v');
             res.status(200).json(dbRes);
         } catch (err) {
             // catch server errors
@@ -21,16 +21,12 @@ const userController = {
             const dbRes = await User.findOne({
                 _id: searchTerm
             })
-            .select('-__v -password')
             .populate({
                 path: 'folders',
                 select: '-__v -username',
                 populate: {
                     path: 'playlists',
-                    select: '-__v -username',
-                    populate: {
-                        path: 'songs'
-                    }
+                    select: '-__v -username'
                 }
             });
 
@@ -46,6 +42,78 @@ const userController = {
             console.log(err);
             res.status(500).json(err);
         }
+    },
+
+    async getOneUserPlaylists(req, res) {
+        const searchTerm = req.params.id;
+
+        try {
+            const dbRes = await User.findOne({
+                _id: searchTerm
+            })
+            .select('playlists')
+            .populate({
+                path: 'playlists'
+            });
+
+            // user was not found
+            if (!dbRes) {
+                res.status(404).json({message: 'User not found.'});
+                return;
+            }
+
+            res.status(200).json(dbRes);
+        } catch (err) {
+            console.log(err);
+            res.status(500).json(err);
+        }
+    },
+
+    async getOneUserUnsorted(req, res) {
+        const searchTerm = req.params.id;
+
+        try {
+            const dbRes = await User.findOne({
+                _id: searchTerm
+            })
+            .select('folders')
+            .populate({
+                path: 'folders',
+                populate: {
+                    path: 'playlists',
+                    select: '_id title songs'
+                }
+            });
+
+            // user was not found
+            if (!dbRes) {
+                res.status(404).json({message: 'User not found.'});
+                return;
+            }
+
+            // folders[0] should always be 'Unsorted'
+            // might benefit from some error handling here later
+            const unsortedFolder = dbRes.folders[0];
+
+            res.status(200).json(unsortedFolder);
+        } catch (err) {
+            console.log(err);
+            res.statsu(500).json(err);
+        }
+    },
+
+    async getThisUserId(req, res) {
+        // if this function is called by someone not logged in, do nothing
+        // else, there should be a user_id attached to the session
+        // return that user id
+        const {loggedIn} = req.session;
+
+        if (!loggedIn) {
+            res.status(401).json({message: 'No session.'});
+            return;
+        }
+        
+        res.status(200).json(req.session.user_id);
     },
 
     async postUser(req, res) {
@@ -65,7 +133,8 @@ const userController = {
             // create 'Unsorted' folder for this user
             const { _id: unsortedFolderId } = await Folder.create({
                 name: 'Unsorted',
-                username
+                username,
+                isUnsorted: true
             });
 
             const userDbRes = await User.create({
@@ -81,11 +150,7 @@ const userController = {
                 req.session.loggedIn = true;
 
                 res.status(201).json({
-                    user: {
-                        _id: userDbRes._id,
-                        username: userDbRes.username,
-                        folders: userDbRes.folders
-                    },
+                    user: userDbRes,
                     session: req.session,
                     message: 'You\'re logged in.'
                 });
@@ -129,12 +194,7 @@ const userController = {
                 req.session.loggedIn = true;
 
                 res.status(200).json({
-                    user: {
-                        _id: dbRes._id,
-                        username: dbRes.username,
-                        playlists: dbRes.playlists,
-                        folders: dbRes.folders
-                    },
+                    user: dbRes,
                     session: req.session,
                     message: 'You\'re logged in.'
                 });

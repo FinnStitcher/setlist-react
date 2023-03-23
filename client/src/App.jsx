@@ -4,13 +4,17 @@ import UserContext from './UserContext.jsx';
 import ModalContext from './ModalContext.jsx';
 
 import Landing from './pages/Landing.jsx';
-import ManagePlaylists from './pages/ManagePlaylists.jsx';
-import ManageFolders from './pages/ManageFolders.jsx';
-import NewPlaylist from './pages/NewPlaylist.jsx';
-import EditPlaylist from './pages/EditPlaylist.jsx';
 import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import ReachOut from './pages/ReachOut.jsx';
+
+import ManagePlaylists from './pages/ManagePlaylists.jsx';
+import NewPlaylist from './pages/NewPlaylist.jsx';
+import EditPlaylist from './pages/EditPlaylist.jsx';
+
+import ManageFolders from './pages/ManageFolders.jsx';
+import NewFolder from './pages/NewFolder.jsx';
+import EditFolder from './pages/EditFolder.jsx';
 
 import Header from './components/Header.jsx';
 import Modal from './components/Modal';
@@ -44,6 +48,14 @@ function App() {
 							<Route
 								path="/edit-playlist/:id"
 								element={<EditPlaylist />}
+							/>
+							<Route
+								path="/new-folder"
+								element={<NewFolder />}
+							/>
+							<Route
+								path="/edit-folder/:id"
+								element={<EditFolder />}
 							/>
 							<Route path="/login" element={<Login />} />
 							<Route path="/signup" element={<Signup />} />

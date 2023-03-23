@@ -16,22 +16,21 @@ const playlistController = {
 	async getOnePlaylist(req, res) {
 		const searchTerm = req.params.id;
 
-        try {
-            const playlistDbRes = await Playlist.findOne({
-                _id: searchTerm
-            })
-                .populate({
-                    path: 'songs',
-                    select: '-__v'
-                });
+		try {
+			const playlistDbRes = await Playlist.findOne({
+				_id: searchTerm
+			}).populate({
+				path: 'songs',
+				select: '-__v'
+			});
 
-            if (!playlistDbRes) {
-                res.status(404).json({ message: 'No playlist with that ID.' });
-                return;
-            }
+			if (!playlistDbRes) {
+				res.status(404).json({ message: 'No playlist with that ID.' });
+				return;
+			}
 
-            res.status(200).json(playlistDbRes);
-        } catch (err) {
+			res.status(200).json(playlistDbRes);
+		} catch (err) {
 			console.log(err);
 			res.status(500).json(err);
 		}
@@ -66,24 +65,24 @@ const playlistController = {
 				{ $push: { playlists: _id } },
 				{ new: true }
 			).populate({
-                path: 'playlists',
-                select: 'title'
-            });
+				path: 'playlists',
+				select: 'title'
+			});
 
-            // add to relevant user's Unsorted folder
-            const folderDbRes = await Folder.findOneAndUpdate(
-                { _id: userDbRes.folders[0] },
-                { $push: { playlists: _id } },
-                { new: true }
-            ).populate({
-                path: 'playlists',
-                select: 'title'
-            });
+			// add to relevant user's Unsorted folder
+			const folderDbRes = await Folder.findOneAndUpdate(
+				{ _id: userDbRes.folders[0] },
+				{ $push: { playlists: _id } },
+				{ new: true }
+			).populate({
+				path: 'playlists',
+				select: 'title'
+			});
 
 			res.status(200).json({
-                user: userDbRes,
-                folder: folderDbRes
-            });
+				user: userDbRes,
+				folder: folderDbRes
+			});
 		} catch (err) {
 			console.log(err);
 
@@ -159,6 +158,92 @@ const playlistController = {
 			// generic error
 			res.status(500).json(err);
 		}
+	},
+
+	async updatePlaylistFolders(req, res) {
+		const playlistId = req.params.id;
+		const desiredFolderId = req.body.folderId;
+
+        try {
+            // check that both ids are valid
+            const testPlaylistIdRes = await Playlist.findOne({
+                _id: playlistId
+            });
+            const testFolderIdRes = await Folder.findOne({
+                _id: desiredFolderId
+            });
+            
+            if (!testPlaylistIdRes || !testFolderIdRes) {
+                res.status(404).json({message: 'Either the playlist ID or folder ID was invalid.'});
+                return;
+            }
+
+            // test that the desired folder actually contains this playlist
+            const testFolderOwnershipRes = testFolderIdRes.playlists.includes(playlistId);
+
+            if (!testFolderOwnershipRes) {
+                res.status(400).json({message: 'The desired folder doesn\'t contain this playlist. Process was aborted.'});
+                return;
+            }
+
+            // now we can proceed with the update
+            const folderDbRes = await Folder.updateMany(
+                { _id: { $ne: desiredFolderId } },
+                { $pull: { playlists: playlistId } }
+            );
+
+            res.status(200).json(folderDbRes);
+        } catch (err) {
+            console.log(err);
+            res.status(500).json(err);
+        }
+	},
+
+	async movePlaylistToUnsorted(req, res) {
+        const {user_id} = req.session;
+		const playlistId = req.params.id;
+
+        try {
+            // check that playlist id is valid
+            const testPlaylistIdRes = await Playlist.findOne({
+                _id: playlistId
+            });
+            
+            if (!testPlaylistIdRes) {
+                res.status(404).json({message: 'The playlist ID was invalid.'});
+                return;
+            }
+
+            // get id of this user's unsorted folder
+            const userFolderData = await User.findOne({
+                _id: user_id
+            }).select('folders').populate({
+                path: 'folders',
+                select: '_id'
+            });
+
+            const {_id: unsortedFolderId} = userFolderData.folders[0];
+            
+            // add to unsorted
+            const addToUnsortedRes = await Folder.findOneAndUpdate(
+                { _id: unsortedFolderId },
+                { $addToSet: {playlists: playlistId} }
+            );
+
+            // remove from all other playlists
+            const folderDbRes = await Folder.updateMany(
+                { _id: { $ne: unsortedFolderId } },
+                { $pull: { playlists: playlistId } }
+            );
+
+            res.status(200).json({
+                addToUnsortedRes,
+                folderDbRes
+            });
+        } catch (err) {
+            console.log(err);
+            res.status(500).json(err);
+        }
 	},
 
 	async deletePlaylist(req, res) {

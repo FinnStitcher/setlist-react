@@ -57,13 +57,10 @@ function Playlist({ playlist }) {
 				<div className="pl-3 py-2.5">
 					<ul className="divide-y space-y-1.5">
 						{songs &&
-							songs.map(el => (
+							songs.map(element => (
 								<Song
-									key={el._id}
-									title={el.title}
-									artist={el.artist}
-									year={el.year}
-									album={el.album}
+									key={element._id}
+                                    song={element}
 								/>
 							))}
 					</ul>

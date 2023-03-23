@@ -4,9 +4,9 @@ import {
 	verticalListSortingStrategy
 } from '@dnd-kit/sortable';
 
-import SongDraggable from './SongDraggable.jsx';
+import PlaylistDraggable from './PlaylistDraggable.jsx';
 
-function SongList({ id, items }) {
+function PlaylistList({ id, items }) {
 	const { setNodeRef } = useDroppable({ id: id });
 
 	return (
@@ -17,13 +17,13 @@ function SongList({ id, items }) {
 		>
 			<ul className="form-song-list" id={id} ref={setNodeRef}>
                 {items.map(item => {
-                    const {_id, title, artist, album, year} = item;
+                    const {_id, title, songs} = item;
 
-                    return <SongDraggable key={_id} id={_id} title={title} artist={artist} album={album} year={year} />
+                    return <PlaylistDraggable key={_id} id={_id} title={title} trackNumber={songs.length} />
                 })}
 			</ul>
 		</SortableContext>
 	);
 }
 
-export default SongList;
+export default PlaylistList;
