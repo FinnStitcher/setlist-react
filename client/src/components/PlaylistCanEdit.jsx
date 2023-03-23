@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 import Song from './Song.jsx';
 
-function Playlist({ playlist }) {
+function PlaylistCanEdit({ playlist }) {
 	const { _id, title, songs } = playlist;
 
 	function togglePlaylist(e) {
@@ -58,10 +58,7 @@ function Playlist({ playlist }) {
 					<ul className="divide-y space-y-1.5">
 						{songs &&
 							songs.map(element => (
-								<Song
-									key={element._id}
-                                    song={element}
-								/>
+								<Song key={element._id} song={element} />
 							))}
 					</ul>
 
@@ -78,4 +75,4 @@ function Playlist({ playlist }) {
 	);
 }
 
-export default Playlist;
+export default PlaylistCanEdit;

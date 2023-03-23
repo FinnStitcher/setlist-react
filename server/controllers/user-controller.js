@@ -5,7 +5,7 @@ require('dotenv').config();
 const userController = {
     async getAllUsers(req, res) {
         try {
-            const dbRes = await User.find({}).select('-__v');
+            const dbRes = await User.find({}).select('-__v -password');
             res.status(200).json(dbRes);
         } catch (err) {
             // catch server errors
@@ -21,12 +21,17 @@ const userController = {
             const dbRes = await User.findOne({
                 _id: searchTerm
             })
+            .select('-__v -password')
             .populate({
                 path: 'folders',
                 select: '-__v -username',
                 populate: {
                     path: 'playlists',
-                    select: '-__v -username'
+                    select: '-__v -username',
+                    populate: {
+                        path: 'songs',
+                        select: '-__v'
+                    }
                 }
             });
 

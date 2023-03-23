@@ -34,7 +34,8 @@ function EditFolder() {
 
                 setFlData({
                     name: json.name,
-                    selected: [...json.playlists]
+                    selected: [...json.playlists],
+                    deselected: []
                 });
             } catch (err) {
                 setModal({

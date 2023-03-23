@@ -1,6 +1,6 @@
 import PlaylistCanEdit from './PlaylistCanEdit.jsx';
 
-function Folder({ folder }) {
+function FolderSlim({ folder }) {
     const {name, playlists} = folder;
 
 	function toggleFolder(e) {
@@ -41,4 +41,4 @@ function Folder({ folder }) {
     )
 };
 
-export default Folder;
+export default FolderSlim;

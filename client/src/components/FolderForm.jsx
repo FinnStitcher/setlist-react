@@ -36,17 +36,7 @@ function FolderForm({ flData }) {
 
 	const navigate = useNavigate();
 
-	// if we got data from the parent component, update state
-	useEffect(() => {
-		if (flData) {
-			setFormState({
-				...formState,
-				...flData
-			});
-		}
-	}, [flData]);
-
-	// get this user's unsorted playlists
+	// get data and set state
 	useEffect(() => {
 		async function getUnsortedPlaylists() {
 			const { user_id } = user;
@@ -63,8 +53,10 @@ function FolderForm({ flData }) {
 					throw Error(message);
 				}
 
+                // include any data received from the parent component
 				setFormState({
 					...formState,
+                    ...flData,
 					deselected: [...json.playlists]
 				});
 			} catch (err) {
@@ -73,7 +65,7 @@ function FolderForm({ flData }) {
 		}
 
 		getUnsortedPlaylists();
-	}, []);
+	}, [flData]);
 
 	function onChangeHandler(event) {
 		const { name, value } = event.target;
@@ -86,7 +78,6 @@ function FolderForm({ flData }) {
 		console.log(formState);
 	}
 
-	// TODO: Incorporate code for shuffling playlists around between folders
 	async function onSubmitHandler(event) {
 		event.preventDefault();
 
@@ -112,9 +103,6 @@ function FolderForm({ flData }) {
 		let editingBoolean = window.location.pathname.includes('edit');
 
 		let response = null;
-
-		// TODO: Run updatePlaylistFolders on all selected
-		// TODO: Run movePlaylistToUnsorted on all deselected
 
 		try {
 			if (editingBoolean) {
