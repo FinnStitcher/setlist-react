@@ -32,10 +32,10 @@ const songController = {
 		}
 	},
 
-	async getSongsByUser(req, res) {
+	async getSongsByTitleThisUser(req, res) {
 		// making this route accept an id in the body for dev purposes
-		const { user_id } = req.session || req.body;
-		const { search } = req.query;
+		const { user_id } = req.session;
+		const { title } = req.query;
 
 		if (!user_id) {
 			res.status(400).json({
@@ -45,14 +45,14 @@ const songController = {
 		}
 
 		// convert search into regex
-		const searchRegex = search
-			? new RegExp('\\b' + search, 'i')
+		const searchRegex = title
+			? new RegExp('\\b' + title, 'i')
 			: new RegExp('.');
 
 		try {
 			const songDbRes = await Song.find({
 				uploadedBy: user_id,
-				$or: [{ title: searchRegex }, { artist: searchRegex }]
+				title: searchRegex
 			});
 
 			if (!songDbRes) {

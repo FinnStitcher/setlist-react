@@ -31,7 +31,7 @@ function NewSong() {
 				if (!response.ok) {
 					const { message } = json;
 
-					throw Error(message);
+					throw new Error(message);
 				}
 
 				setFormState({
@@ -44,10 +44,11 @@ function NewSong() {
 				getSearchResults();
 			}
 		} catch (err) {
+            // TODO: Better error handling
 			setModal({
 				...modal,
 				active: "modal",
-				msg: `${err.name}: ${err.message}`
+				msg: `Something went wrong with this search. ${err.name}: ${err.message}`
 			});
 
 			console.log(err);
@@ -66,7 +67,7 @@ function NewSong() {
 	async function onSubmitHandler(event) {
 		event.preventDefault();
 
-		const { title, artist, year } = formState;
+		const { title, artist, album, year } = formState;
 		const today = new Date();
 
 		// validate
@@ -91,6 +92,13 @@ function NewSong() {
 		}
 
 		try {
+            const songObj = {
+                title: title,
+                artist: artist,
+                album: album,
+                year: parseInt(year)
+            };
+
 			// make database call
 			const response = await fetch("/api/songs", {
 				method: "POST",
@@ -98,7 +106,7 @@ function NewSong() {
 					Accept: "application/json",
 					"Content-Type": "application/json"
 				},
-				body: JSON.stringify(formState)
+				body: JSON.stringify(songObj)
 			});
 			const json = await response.json();
 
@@ -113,6 +121,14 @@ function NewSong() {
 				active: "modal",
 				msg: "Your submission was a success!"
 			});
+
+            setFormState({
+                title: "",
+                artist: "",
+                album: "",
+                year: "",
+                suggestions: []
+            })
 		} catch (err) {
 			setModal({
 				...modal,
@@ -130,65 +146,65 @@ function NewSong() {
 
 	return (
 		<>
-			<div class="mb-4">
-				<h2 class="page-title">Submit a Song</h2>
+			<div className="mb-4">
+				<h2 className="page-title">Submit a Song</h2>
 			</div>
 
 			<form onSubmit={onSubmitHandler}>
-				<label for="title" class="block text-lg mb-0.5">
+				<label htmlFor="title" className="block text-lg mb-0.5">
 					Title{" "}
-					<span class="required" title="Required">
+					<span className="required" title="Required">
 						*
 					</span>
 				</label>
 				<input
 					id="title"
 					name="title"
-					class="form-control"
+					className="form-control"
 					value={formState.title}
 					onChange={onChangeHandler}
 				/>
 
-				<label for="artist" class="block text-lg mb-0.5">
+				<label htmlFor="artist" className="block text-lg mb-0.5">
 					Artist{" "}
-					<span class="required" title="Required">
+					<span className="required" title="Required">
 						*
 					</span>
 				</label>
 				<input
 					id="artist"
 					name="artist"
-					class="form-control"
+					className="form-control"
 					value={formState.artist}
 					onChange={onChangeHandler}
 				/>
 
-				<label for="album" class="block text-lg mb-0.5">
+				<label htmlFor="album" className="block text-lg mb-0.5">
 					Album
 				</label>
 				<input
 					id="album"
 					name="album"
-					class="form-control"
+					className="form-control"
 					value={formState.album}
 					onChange={onChangeHandler}
 				/>
 
-				<label for="year" class="block text-lg mb-0.5">
+				<label htmlFor="year" className="block text-lg mb-0.5">
 					Year
 				</label>
 				<input
 					id="year"
 					name="year"
 					type="number"
-					class="form-control"
+					className="form-control"
 					value={formState.year}
 					onChange={onChangeHandler}
 				/>
 
-				<hr class="border-stone-400/50" />
+				<hr className="border-stone-400/50" />
 
-				<button type="submit" class="rectangle-btn">
+				<button type="submit" className="rectangle-btn">
 					Submit
 				</button>
 			</form>
@@ -196,9 +212,9 @@ function NewSong() {
 			<hr />
 
 			<div>
-				<h3 class="text-lg">Are you thinking of...?</h3>
+				<h3 className="text-lg">Are you thinking of...?</h3>
 
-				<ul class="form-song-list">
+				<ul className="form-song-list">
 					{formState.suggestions[0] &&
 						formState.suggestions.map((element) => (
 							<Song key={element._id} song={element} />

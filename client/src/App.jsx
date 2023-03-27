@@ -17,7 +17,7 @@ import NewFolder from './pages/NewFolder.jsx';
 import EditFolder from './pages/EditFolder.jsx';
 
 import NewSong from './pages/NewSong.jsx';
-//import EditSong from './pages/EditSong.jsx';
+import EditSong from './pages/EditSong.jsx';
 
 import Header from './components/Header.jsx';
 import Modal from './components/Modal';
@@ -63,6 +63,10 @@ function App() {
 							<Route
 								path="/new-song"
 								element={<NewSong />}
+							/>
+							<Route
+								path="/edit-song"
+								element={<EditSong />}
 							/>
 							<Route path="/login" element={<Login />} />
 							<Route path="/signup" element={<Signup />} />

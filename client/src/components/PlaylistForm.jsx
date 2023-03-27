@@ -73,8 +73,11 @@ function PlaylistForm({ plData }) {
 				getSearchResults();
 			}
 		} catch (err) {
-			setFormState({
-				deselected: ['Something went wrong with this search.']
+            // TODO: Better error handling
+			setModal({
+				...modal,
+				active: "modal",
+				msg: `Something went wrong with this search. ${err.name}: ${err.message}`
 			});
 
 			console.log(err);

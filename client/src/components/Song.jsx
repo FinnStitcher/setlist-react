@@ -1,8 +1,8 @@
 function Song({song}) {
-    const {title, artist, album, year} = song;
+    const {_id, title, artist, album, year} = song;
 
 	return (
-	    <li className="my-0">
+	    <li className="my-0" id={_id}>
 	        <p className="font-medium">{title}</p>
 
 	        <p className="text-neutral-700 font-normal">
