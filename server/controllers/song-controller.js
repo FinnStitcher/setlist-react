@@ -68,10 +68,10 @@ const songController = {
 		}
 	},
 
-	async searchSongs(req, res) {
-		// used on create-playlist and edit-playlist pages
+	async getSongsByTitle(req, res) {
+        // used to find songs so the user can add them to a playlist
 
-		const searchTerm = req.params.search;
+		const searchTerm = req.query.title;
 		// convert searchTerm into a regexp
 		// requires a word boundary at the start of the search term
 		const searchRegex = new RegExp('\\b' + searchTerm, 'i');
@@ -95,9 +95,8 @@ const songController = {
 		}
 	},
 
-	async matchSongs(req, res) {
-		// runs on the submit a song page
-		// returns songs that the user might be typing in a duplicate of
+	async getSongsByTitleAndArtist(req, res) {
+        // used to find songs that might be duplicates of the one the user is trying to create
 
 		// turn query params into regexps
 		const titleRegex = req.query.title

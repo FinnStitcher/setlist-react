@@ -6,16 +6,16 @@ const {
     getAllSongs,
     getOneSong,
     getSongsByUser,
-    searchSongs,
-    matchSongs,
+    getSongsByTitle,
+    getSongsByTitleAndArtist,
     postSong,
     putSong
 } = require('../../controllers/song-controller');
 
 router.route('/').get(getAllSongs).post(postSong);
-router.route('/match').get(matchSongs);
+router.route('/search/title').get(getSongsByTitle);
+router.route('/search/title/artist').get(getSongsByTitleAndArtist);
 router.route('/search/user').get(getSongsByUser);
-router.route('/search/:search').get(searchSongs);
 router.route('/:id').get(getOneSong).put(putSong);
 
 module.exports = router;

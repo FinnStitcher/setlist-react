@@ -49,8 +49,11 @@ function PlaylistForm({ plData }) {
 	useEffect(() => {
 		try {
 			async function getSearchResults() {
+                // create query param with the search value
+                const query = `?title=${formState.search}`;
+
 				const response = await fetch(
-					'/api/songs/search/' + formState.search
+					'/api/songs/search/title' + query
 				);
 				const json = await response.json();
 

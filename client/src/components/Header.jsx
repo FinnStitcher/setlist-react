@@ -40,7 +40,7 @@ function Header() {
 							<Link to="/folders">My Folders</Link>
 						</div>
 						<div className="nav-link">
-							<Link to="/add-song">Submit a Song</Link>
+							<Link to="/new-song">Submit a Song</Link>
 						</div>
 						<div className="nav-link" onClick={logoutHandler}>
 							<button type="button" id="logout">
