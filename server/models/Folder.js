@@ -16,8 +16,8 @@ const FolderSchema = new Schema(
             type: Schema.Types.ObjectId,
             ref: 'Playlist'
         }],
-        username: {
-            type: String,
+        uploadedBy: {
+            type: Schema.Types.ObjectId,
             ref: 'User',
             required: true
         }

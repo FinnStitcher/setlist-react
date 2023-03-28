@@ -54,7 +54,8 @@ const playlistController = {
 				dateCreated,
 				dateLastModified,
 				songs,
-				username
+                uploadedBy: user_id,
+                uploaderUsername: username
 			});
 
 			const { _id } = playlistDbRes;
@@ -284,11 +285,11 @@ const playlistController = {
 				return;
 			}
 
-			const { username } = playlistDbRes;
+			const { uploadedBy: user_id } = playlistDbRes;
 
 			// remove playlist from relevant user's profile
 			const userDbRes = await User.findOneAndUpdate(
-				{ username: username },
+				{ _id: user_id },
 				{ $pull: { playlists: playlistId } },
 				{ new: true }
 			).populate('playlists');

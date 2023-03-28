@@ -56,10 +56,9 @@ function PlaylistCanEdit({ playlist }) {
 
 				<div className="pl-3 py-2.5">
 					<ul className="divide-y space-y-1.5">
-						{songs &&
-							songs.map(element => (
+						{songs[0] ? songs.map(element => (
 								<Song key={element._id} song={element} />
-							))}
+							)) : <p>This playlist is empty.</p>}
 					</ul>
 
 					<hr />

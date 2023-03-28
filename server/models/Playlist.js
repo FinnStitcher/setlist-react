@@ -10,21 +10,25 @@ const PlaylistSchema = new Schema(
         dateCreated: {
             type: Date,
             default: Date.now
-            // install luxon and make a dateFormat util
+            // TODO: install luxon and make a dateFormat util
         },
         dateLastModified: {
             type: Date,
             default: Date.now
-            // install luxon and make a dateFormat util
+            // TODO: install luxon and make a dateFormat util
         },
         songs: [{
             type: Schema.Types.ObjectId,
             ref: 'Song'
         }],
-        username: {
-            type: String,
+        uploadedBy: {
+            type: Schema.Types.ObjectId,
             ref: 'User',
             required: true
+        },
+        uploaderUsername: {
+            type: String,
+            ref: 'User'
         }
     },
     {

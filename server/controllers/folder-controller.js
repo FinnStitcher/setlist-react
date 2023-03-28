@@ -38,7 +38,7 @@ const folderController = {
 
 	async postFolder(req, res) {
 		const { name, dateLastModified, playlists } = req.body;
-		const { user_id, username } = req.session;
+		const { user_id } = req.session;
 
 		// confirm user is logged in
 		if (!user_id) {
@@ -53,7 +53,7 @@ const folderController = {
 				name,
 				dateLastModified,
 				playlists,
-				username
+                uploadedBy: user_id
 			});
 
 			const { _id } = folderDbRes;
