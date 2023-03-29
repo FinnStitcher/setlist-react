@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import UserContext from '../UserContext.jsx';
-import ModalContext from '../ModalContext.jsx';
+import UserContext from '../../UserContext.jsx';
+import ModalContext from '../../ModalContext.jsx';
 
 function Header() {
 	const { user, setUser } = useContext(UserContext);

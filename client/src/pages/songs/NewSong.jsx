@@ -1,9 +1,9 @@
 import { useState, useEffect, useContext } from "react";
-import UserContext from "../UserContext";
-import ModalContext from "../ModalContext";
+import UserContext from "../../UserContext";
+import ModalContext from "../../ModalContext";
 
-import Song from "../components/Song";
-import AuthFailed from "./AuthFailed";
+import Song from "../../components/songs/Song";
+import AuthFailed from "../error_pages/AuthFailed";
 
 function NewSong() {
 	const [formState, setFormState] = useState({

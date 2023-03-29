@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import UserContext from '../UserContext.jsx';
+import UserContext from '../../UserContext.jsx';
 
-import AuthFailed from './AuthFailed.jsx';
-import FolderForm from '../components/FolderForm.jsx';
+import AuthFailed from '../error_pages/AuthFailed.jsx';
+import FolderForm from '../../components/folders/FolderForm.jsx';
 
 function NewFolder() {
 	const { user } = useContext(UserContext);

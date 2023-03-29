@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-import Song from './Song.jsx';
+import Song from "../songs/Song.jsx";
+import EditButton from "../generic/EditButton";
+import DeleteButton from "../generic/DeleteButton";
 
 function PlaylistCanEdit({ playlist }) {
 	const { _id, title, songs } = playlist;
@@ -9,18 +11,18 @@ function PlaylistCanEdit({ playlist }) {
 		const { target } = e;
 
 		// get the ul associated with this title div
-		const playlistBody = target.closest('.pl-title').nextElementSibling;
+		const playlistBody = target.closest(".pl-title").nextElementSibling;
 		// get the arrow
-		const arrow = target.closest('.pl-title').querySelector('.pl-arrow');
+		const arrow = target.closest(".pl-title").querySelector(".pl-arrow");
 
-		if (playlistBody.matches('.hidden')) {
-			playlistBody.className = 'block';
+		if (playlistBody.matches(".hidden")) {
+			playlistBody.className = "block";
 
-			arrow.textContent = '▲';
-		} else if (playlistBody.matches('.block')) {
-			playlistBody.className = 'hidden';
+			arrow.textContent = "▲";
+		} else if (playlistBody.matches(".block")) {
+			playlistBody.className = "hidden";
 
-			arrow.textContent = '▼';
+			arrow.textContent = "▼";
 		}
 
 		// TODO: animate it to rotate rather than just swapping
@@ -35,30 +37,20 @@ function PlaylistCanEdit({ playlist }) {
 
 			<div className="hidden">
 				<div className="border-t-2 border-stone-400">
-					<Link
-						role="button"
-						to={`/edit-playlist/${_id}`}
-						className="rectangle-btn mr-1 w-36"
-					>
-						Edit
-					</Link>
+					<EditButton url={`/edit-playlist/${_id}`} />
 
-					<button
-						type="button"
-						data-id={_id}
-						data-modal-btn="open-modal"
-						data-btn-type="del-btn"
-						className="rectangle-btn w-36 text-left"
-					>
-						Delete
-					</button>
+					<DeleteButton id={_id} />
 				</div>
 
 				<div className="pl-3 py-2.5">
 					<ul className="divide-y space-y-1.5">
-						{songs[0] ? songs.map(element => (
+						{songs[0] ? (
+							songs.map((element) => (
 								<Song key={element._id} song={element} />
-							)) : <p>This playlist is empty.</p>}
+							))
+						) : (
+							<p>This playlist is empty.</p>
+						)}
 					</ul>
 
 					<hr />

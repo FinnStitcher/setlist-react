@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import UserContext from '../UserContext.jsx';
+import UserContext from '../../UserContext.jsx';
 
-import AuthFailed from './AuthFailed.jsx';
-import PlaylistForm from '../components/PlaylistForm.jsx';
+import AuthFailed from '../error_pages/AuthFailed.jsx';
+import PlaylistForm from '../../components/playlists/PlaylistForm.jsx';
 
 function NewPlaylist() {
 	const { user } = useContext(UserContext);

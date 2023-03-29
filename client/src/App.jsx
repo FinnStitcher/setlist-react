@@ -8,22 +8,22 @@ import Login from './pages/Login.jsx';
 import Signup from './pages/Signup.jsx';
 import ReachOut from './pages/ReachOut.jsx';
 
-import ManagePlaylists from './pages/ManagePlaylists.jsx';
-import NewPlaylist from './pages/NewPlaylist.jsx';
-import EditPlaylist from './pages/EditPlaylist.jsx';
+import ManagePlaylists from './pages/playlists/ManagePlaylists.jsx';
+import NewPlaylist from './pages/playlists/NewPlaylist.jsx';
+import EditPlaylist from './pages/playlists/EditPlaylist.jsx';
 
-import ManageFolders from './pages/ManageFolders.jsx';
-import NewFolder from './pages/NewFolder.jsx';
-import EditFolder from './pages/EditFolder.jsx';
+import ManageFolders from './pages/folders/ManageFolders.jsx';
+import NewFolder from './pages/folders/NewFolder.jsx';
+import EditFolder from './pages/folders/EditFolder.jsx';
 
-import NewSong from './pages/NewSong.jsx';
-import EditSong from './pages/EditSong.jsx';
+import NewSong from './pages/songs/NewSong.jsx';
+import EditSong from './pages/songs/EditSong.jsx';
 
-import SinglePlaylist from './pages/SinglePlaylist.jsx';
+import SinglePlaylist from './pages/playlists/SinglePlaylist.jsx';
 import SingleUser from './pages/SingleUser.jsx';
 
-import Header from './components/Header.jsx';
-import Modal from './components/Modal';
+import Header from './components/layout/Header.jsx';
+import Modal from './components/layout/Modal';
 
 function App() {
 	const [user, setUser] = useState(null);

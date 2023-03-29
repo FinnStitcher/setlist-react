@@ -15,35 +15,45 @@ import {
 	handleDragStart,
 	handleDragOver,
 	handleDragEnd
-} from '../utils/sortableListUtils';
+} from '../../utils/sortableListUtils';
 
-import UserContext from '../UserContext.jsx';
-import ModalContext from '../ModalContext.jsx';
+import ModalContext from '../../ModalContext.jsx';
 
-import PlaylistList from './PlaylistList.jsx';
-import PlaylistDraggable from './PlaylistDraggable.jsx';
+import SongList from '../songs/SongList.jsx';
+import SongDraggable from '../songs/SongDraggable.jsx';
 
-function FolderForm({ flData }) {
+function PlaylistForm({ plData }) {
 	const [formState, setFormState] = useState({
-		name: '',
+		title: '',
+		search: '',
 		selected: [],
 		deselected: []
 	});
 	const [activeId, setActiveId] = useState('');
 
-	const { user } = useContext(UserContext);
 	const { modal, setModal } = useContext(ModalContext);
 
 	const navigate = useNavigate();
 
-	// get data and set state
+	// if we got data from the parent component, update state
 	useEffect(() => {
-		async function getUnsortedPlaylists() {
-			const { user_id } = user;
+		if (plData) {
+			setFormState({
+				...formState,
+				...plData
+			});
+		}
+	}, [plData]);
 
-			try {
+	// make searches when the search bar contents update
+	useEffect(() => {
+		try {
+			async function getSearchResults() {
+                // create query param with the search value
+                const query = `?title=${formState.search}`;
+
 				const response = await fetch(
-					'/api/users/' + user_id + '/playlists/unsorted'
+					'/api/songs/search/title' + query
 				);
 				const json = await response.json();
 
@@ -53,25 +63,26 @@ function FolderForm({ flData }) {
 					throw Error(message);
 				}
 
-                // include any data received from the parent component
 				setFormState({
 					...formState,
-                    ...flData,
-					deselected: [...json.playlists]
+					deselected: [...json]
 				});
-			} catch (err) {
-                setModal({
-                    ...modal,
-                    active: 'modal',
-                    msg: `${err.name}: ${err.message}`
-                });
-                
-				console.log(err);
 			}
-		}
 
-		getUnsortedPlaylists();
-	}, [flData]);
+			if (formState.search) {
+				getSearchResults();
+			}
+		} catch (err) {
+            // TODO: Better error handling
+			setModal({
+				...modal,
+				active: "modal",
+				msg: `Something went wrong with this search. ${err.name}: ${err.message}`
+			});
+
+			console.log(err);
+		}
+	}, [formState.search]);
 
 	function onChangeHandler(event) {
 		const { name, value } = event.target;
@@ -86,11 +97,11 @@ function FolderForm({ flData }) {
 		event.preventDefault();
 
 		// validate form state
-		if (!formState.name) {
+		if (!formState.title) {
 			setModal({
 				...modal,
 				active: 'modal',
-				msg: 'Your folder needs a name.',
+				msg: 'Your playlist needs a title.',
 				navTo: '/'
 			});
 
@@ -98,40 +109,41 @@ function FolderForm({ flData }) {
 		}
 
 		// create object to send to db
-		const folderObj = {
-			name: formState.name,
-			playlists: formState.selected.map(el => el._id)
+		const playlistObj = {
+			title: formState.title,
+			songs: formState.selected.map(el => el._id)
 		};
 
-		// check - are we making an edit or a new folder?
+		// check - are we making an edit or a new playlist?
 		let editingBoolean = window.location.pathname.includes('edit');
 
 		let response = null;
 
 		try {
 			if (editingBoolean) {
-				const folderId = window.location.pathname.split('/')[2];
+				const playlistId = window.location.pathname.split('/')[2];
 
 				// make api call to update
-				response = await fetch('/api/folders/' + folderId, {
+				response = await fetch('/api/playlists/' + playlistId, {
 					method: 'PUT',
 					headers: {
 						Accept: 'application/json',
 						'Content-Type': 'application/json'
 					},
-					body: JSON.stringify(folderObj)
+					body: JSON.stringify(playlistObj)
 				});
 			} else {
 				// make api call to create new
-				response = await fetch('/api/folders', {
+				response = await fetch('/api/playlists', {
 					method: 'POST',
 					headers: {
 						Accept: 'application/json',
 						'Content-Type': 'application/json'
 					},
-					body: JSON.stringify(folderObj)
+					body: JSON.stringify(playlistObj)
 				});
 			}
+
 			const json = await response.json();
 
 			if (!response.ok) {
@@ -140,70 +152,24 @@ function FolderForm({ flData }) {
 				throw Error(message);
 			}
 
-			// remove selected playlists from any other folders
-			formState.selected.forEach(async element => {
-				const folderId = window.location.pathname.split('/')[2];
-
-				const updateResponse = await fetch(
-					'/api/playlists/' + element._id + '/update-folders',
-					{
-						method: 'PUT',
-						headers: {
-							Accept: 'application/json',
-							'Content-Type': 'application/json'
-						},
-						body: JSON.stringify({ folderId: folderId })
-					}
-				);
-				const updateJson = await updateResponse.json();
-
-				if (!response.ok) {
-					const { message } = updateJson;
-
-					throw Error(message);
-				}
-			});
-
-			// make sure deselected playlists are in Unsorted
-			formState.deselected.forEach(async element => {
-				const updateResponse = await fetch(
-					'/api/playlists/' +
-						element._id +
-						'/update-folders/unsorted',
-					{
-						method: 'PUT',
-						headers: {
-							Accept: 'application/json',
-							'Content-Type': 'application/json'
-						}
-					}
-				);
-				const updateJson = await updateResponse.json();
-
-				if (!response.ok) {
-					const { message } = updateJson;
-
-					throw Error(message);
-				}
-			});
-
 			setModal({
 				...modal,
 				active: 'modal',
-				msg: `Success! Your folder has been ${
+				msg: `Success! Your playlist has been ${
 					editingBoolean ? 'updated' : 'created'
 				}. Redirecting...`,
-				navTo: '/folders'
+				navTo: '/playlists'
 			});
 
 			setTimeout(() => {
-				navigate('/folders');
+				navigate('/playlists');
 			}, 2000);
 		} catch (err) {
 			setModal({
 				...modal,
 				active: 'modal',
-				msg: `${err.name}: ${err.message}`
+				msg: `${err.name}: ${err.message}`,
+				navTo: '/'
 			});
 
 			console.log(err);
@@ -234,17 +200,17 @@ function FolderForm({ flData }) {
 			>
 				<form id="pl-form" onSubmit={onSubmitHandler}>
 					<div>
-						<label htmlFor="name" className="form-label">
-							Name{' '}
+						<label htmlFor="title" className="form-label">
+							Title{' '}
 							<span className="required" title="Required">
 								*
 							</span>
 						</label>
 						<input
-							id="name"
-							name="name"
+							id="title"
+							name="title"
 							className="form-control"
-							value={formState.name}
+							value={formState.title}
 							onChange={onChangeHandler}
 						/>
 					</div>
@@ -252,21 +218,16 @@ function FolderForm({ flData }) {
 					<hr />
 
 					<div>
-						<label className="form-label">Playlists</label>
+						<label className="form-label">Songs</label>
 
 						<p>
-							Click and drag to sort playlists, and move them in
-							and out of this folder.
+							Click and drag to sort and move songs in and out of
+							your playlist.
 						</p>
 
-						<PlaylistList
-							id="selected"
-							items={formState.selected}
-						/>
+						<SongList id="selected" items={formState.selected} />
 
-						<hr />
-
-						{/* <label htmlFor="search" className="block mb-0.5">
+						<label htmlFor="search" className="block mb-0.5">
 							Search:
 						</label>
 						<input
@@ -276,17 +237,15 @@ function FolderForm({ flData }) {
 							autoComplete="off"
 							value={formState.search}
 							onChange={onChangeHandler}
-						/> */}
+						/>
 
-						<PlaylistList
+						<SongList
 							id="deselected"
 							items={formState.deselected}
 						/>
 
 						<DragOverlay>
-							{activeId ? (
-								<PlaylistDraggable id={activeId} />
-							) : null}
+							{activeId ? <SongDraggable id={activeId} /> : null}
 						</DragOverlay>
 					</div>
 
@@ -301,4 +260,4 @@ function FolderForm({ flData }) {
 	);
 }
 
-export default FolderForm;
+export default PlaylistForm;

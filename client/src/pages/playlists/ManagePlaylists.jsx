@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext, useRef, Suspense } from "react";
 import { Link } from "react-router-dom";
-import UserContext from "../UserContext.jsx";
-import ModalContext from "../ModalContext.jsx";
+import UserContext from "../../UserContext.jsx";
+import ModalContext from "../../ModalContext.jsx";
 
-import AuthFailed from "./AuthFailed.jsx";
-import FolderSlim from "../components/FolderSlim.jsx";
-import Modal from "../components/Modal.jsx";
+import AuthFailed from "../error_pages/AuthFailed.jsx";
+import FolderSlim from "../../components/folders/FolderSlim.jsx";
+import Modal from "../../components/layout/Modal.jsx";
 
 function ManagePlaylists() {
 	const [folders, setFolders] = useState(null);

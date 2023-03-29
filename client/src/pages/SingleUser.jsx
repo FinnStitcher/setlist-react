@@ -2,7 +2,7 @@ import { useState, useEffect, useContext } from "react";
 import { useParams } from "react-router-dom";
 import ModalContext from "../ModalContext.jsx";
 
-import FolderSlim from '../components/FolderSlim.jsx';
+import FolderSlim from '../components/folders/FolderSlim.jsx';
 
 function SingleUser() {
 	const [data, setData] = useState({});

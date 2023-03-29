@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import UserContext from '../UserContext.jsx';
-import ModalContext from '../ModalContext.jsx';
+import UserContext from '../../UserContext.jsx';
+import ModalContext from '../../ModalContext.jsx';
 
-import AuthFailed from './AuthFailed.jsx';
-import FolderCanEdit from '../components/FolderCanEdit.jsx';
-import Modal from '../components/Modal.jsx';
+import AuthFailed from '../error_pages/AuthFailed.jsx';
+import FolderCanEdit from '../../components/folders/FolderCanEdit.jsx';
+import Modal from '../../components/layout/Modal.jsx';
 
 function ManageFolders() {
 	const [folders, setFolders] = useState(null);

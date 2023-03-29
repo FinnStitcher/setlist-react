@@ -1,11 +1,11 @@
 import { useState, useEffect, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import UserContext from '../UserContext.jsx';
-import ModalContext from '../ModalContext.jsx';
+import UserContext from '../../UserContext.jsx';
+import ModalContext from '../../ModalContext.jsx';
 
-import AuthFailed from './AuthFailed.jsx';
-import Forbidden from './Forbidden.jsx';
-import PlaylistForm from '../components/PlaylistForm.jsx';
+import AuthFailed from '../error_pages/AuthFailed.jsx';
+import Forbidden from '../error_pages/Forbidden.jsx';
+import PlaylistForm from '../../components/playlists/PlaylistForm.jsx';
 
 function EditPlaylist() {
 	const [plData, setPlData] = useState(null);

@@ -1,10 +1,10 @@
 import { useState, useEffect, useContext } from "react";
 import { Link, useParams } from "react-router-dom";
-import UserContext from "../UserContext";
-import ModalContext from "../ModalContext.jsx";
+import UserContext from "../../UserContext";
+import ModalContext from "../../ModalContext.jsx";
 
-import Song from "../components/Song.jsx";
-import Modal from '../components/Modal.jsx';
+import Song from "../../components/songs/Song.jsx";
+import Modal from '../../components/layout/Modal.jsx';
 
 function SinglePlaylist() {
 	const [data, setData] = useState();
