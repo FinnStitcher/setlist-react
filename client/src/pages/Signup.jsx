@@ -68,18 +68,6 @@ function Signup() {
 				msg: "You're all signed up! We've automatically logged you in. Redirecting...",
 				navTo: '/playlists'
 			});
-
-			// redirect
-			setTimeout(() => {
-				setModal({
-					...modal,
-					active: '',
-					msg: '',
-					navTo: ''
-				});
-
-				navigate('/playlists');
-			}, 3000);
 		} catch (err) {
 			setModal({
 				...modal,

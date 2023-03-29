@@ -68,18 +68,6 @@ function Login() {
 				msg: "You're logged in! Redirecting...",
 				navTo: '/playlists'
 			});
-
-			// redirect
-			setTimeout(() => {
-				setModal({
-					...modal,
-					active: '',
-					msg: '',
-					navTo: ''
-				});
-
-				navigate('/playlists');
-			}, 2000);
 		} catch (err) {
 			setModal({
 				...modal,

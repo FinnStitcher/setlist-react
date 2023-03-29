@@ -30,7 +30,7 @@ function App() {
 	const [modal, setModal] = useState({
 		active: '',
 		msg: '',
-        navTo: '/'
+        navTo: ''
 	});
 
 	return (

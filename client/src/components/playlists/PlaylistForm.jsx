@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from "react";
 import {
 	DndContext,
 	DragOverlay,
@@ -7,29 +7,29 @@ import {
 	PointerSensor,
 	useSensor,
 	useSensors
-} from '@dnd-kit/core';
-import { sortableKeyboardCoordinates } from '@dnd-kit/sortable';
-import { useNavigate } from 'react-router';
+} from "@dnd-kit/core";
+import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
+import { useNavigate } from "react-router";
 
 import {
 	handleDragStart,
 	handleDragOver,
 	handleDragEnd
-} from '../../utils/sortableListUtils';
+} from "../../utils/sortableListUtils";
 
-import ModalContext from '../../ModalContext.jsx';
+import ModalContext from "../../ModalContext.jsx";
 
-import SongList from '../songs/SongList.jsx';
-import SongDraggable from '../songs/SongDraggable.jsx';
+import SongList from "../songs/SongList.jsx";
+import SongDraggable from "../songs/SongDraggable.jsx";
 
 function PlaylistForm({ plData }) {
 	const [formState, setFormState] = useState({
-		title: '',
-		search: '',
+		title: "",
+		search: "",
 		selected: [],
 		deselected: []
 	});
-	const [activeId, setActiveId] = useState('');
+	const [activeId, setActiveId] = useState("");
 
 	const { modal, setModal } = useContext(ModalContext);
 
@@ -49,12 +49,10 @@ function PlaylistForm({ plData }) {
 	useEffect(() => {
 		try {
 			async function getSearchResults() {
-                // create query param with the search value
-                const query = `?title=${formState.search}`;
+				// create query param with the search value
+				const query = `?title=${formState.search}`;
 
-				const response = await fetch(
-					'/api/songs/search/title' + query
-				);
+				const response = await fetch("/api/songs/search/title" + query);
 				const json = await response.json();
 
 				if (!response.ok) {
@@ -73,7 +71,7 @@ function PlaylistForm({ plData }) {
 				getSearchResults();
 			}
 		} catch (err) {
-            // TODO: Better error handling
+			// TODO: Better error handling
 			setModal({
 				...modal,
 				active: "modal",
@@ -100,9 +98,9 @@ function PlaylistForm({ plData }) {
 		if (!formState.title) {
 			setModal({
 				...modal,
-				active: 'modal',
-				msg: 'Your playlist needs a title.',
-				navTo: '/'
+				active: "modal",
+				msg: "Your playlist needs a title.",
+				navTo: ""
 			});
 
 			return;
@@ -111,34 +109,34 @@ function PlaylistForm({ plData }) {
 		// create object to send to db
 		const playlistObj = {
 			title: formState.title,
-			songs: formState.selected.map(el => el._id)
+			songs: formState.selected.map((el) => el._id)
 		};
 
 		// check - are we making an edit or a new playlist?
-		let editingBoolean = window.location.pathname.includes('edit');
+		let editingBoolean = window.location.pathname.includes("edit");
 
 		let response = null;
 
 		try {
 			if (editingBoolean) {
-				const playlistId = window.location.pathname.split('/')[2];
+				const playlistId = window.location.pathname.split("/")[2];
 
 				// make api call to update
-				response = await fetch('/api/playlists/' + playlistId, {
-					method: 'PUT',
+				response = await fetch("/api/playlists/" + playlistId, {
+					method: "PUT",
 					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json'
+						Accept: "application/json",
+						"Content-Type": "application/json"
 					},
 					body: JSON.stringify(playlistObj)
 				});
 			} else {
 				// make api call to create new
-				response = await fetch('/api/playlists', {
-					method: 'POST',
+				response = await fetch("/api/playlists", {
+					method: "POST",
 					headers: {
-						Accept: 'application/json',
-						'Content-Type': 'application/json'
+						Accept: "application/json",
+						"Content-Type": "application/json"
 					},
 					body: JSON.stringify(playlistObj)
 				});
@@ -154,22 +152,18 @@ function PlaylistForm({ plData }) {
 
 			setModal({
 				...modal,
-				active: 'modal',
+				active: "modal",
 				msg: `Success! Your playlist has been ${
-					editingBoolean ? 'updated' : 'created'
+					editingBoolean ? "updated" : "created"
 				}. Redirecting...`,
-				navTo: '/playlists'
+				navTo: "/playlists"
 			});
-
-			setTimeout(() => {
-				navigate('/playlists');
-			}, 2000);
 		} catch (err) {
 			setModal({
 				...modal,
-				active: 'modal',
+				active: "modal",
 				msg: `${err.name}: ${err.message}`,
-				navTo: '/'
+				navTo: ""
 			});
 
 			console.log(err);
@@ -188,20 +182,20 @@ function PlaylistForm({ plData }) {
 			<DndContext
 				sensors={sensors}
 				collisionDetection={closestCorners}
-				onDragStart={e => {
+				onDragStart={(e) => {
 					handleDragStart(e, setActiveId);
 				}}
-				onDragOver={e => {
+				onDragOver={(e) => {
 					handleDragOver(e, formState, setFormState);
 				}}
-				onDragEnd={e =>
+				onDragEnd={(e) =>
 					handleDragEnd(e, formState, setFormState, setActiveId)
 				}
 			>
 				<form id="pl-form" onSubmit={onSubmitHandler}>
 					<div>
 						<label htmlFor="title" className="form-label">
-							Title{' '}
+							Title{" "}
 							<span className="required" title="Required">
 								*
 							</span>

@@ -91,7 +91,7 @@ function FolderForm({ flData }) {
 				...modal,
 				active: 'modal',
 				msg: 'Your folder needs a name.',
-				navTo: '/'
+				navTo: ''
 			});
 
 			return;
@@ -195,10 +195,6 @@ function FolderForm({ flData }) {
 				}. Redirecting...`,
 				navTo: '/folders'
 			});
-
-			setTimeout(() => {
-				navigate('/folders');
-			}, 2000);
 		} catch (err) {
 			setModal({
 				...modal,
