@@ -36,17 +36,17 @@ app.use(morgan('dev'));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-//app.use(express.static(path.join(__dirname, 'src')));
+app.use(express.static(path.join(__dirname, '../client/dist')));
 app.use(session(sessionObj));
 
 app.use(routes);
 
 if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/build')));
+    app.use(express.static(path.join(__dirname, '../client/dist/index.html')));
 }
   
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build/index.html'));
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
 // 127.0.0.1:27017
