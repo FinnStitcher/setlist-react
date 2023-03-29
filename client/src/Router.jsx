@@ -1,3 +1,4 @@
+import { lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import Landing from "./pages/Landing.jsx";
@@ -5,19 +6,23 @@ import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import ReachOut from "./pages/ReachOut.jsx";
 
-import SingleUser from "./pages/SingleUser.jsx";
+const SingleUser = lazy(() => import("./pages/SingleUser.jsx"));
 
-import ManagePlaylists from "./pages/playlists/ManagePlaylists.jsx";
-import NewPlaylist from "./pages/playlists/NewPlaylist.jsx";
-import EditPlaylist from "./pages/playlists/EditPlaylist.jsx";
-import SinglePlaylist from "./pages/playlists/SinglePlaylist.jsx";
+const ManagePlaylists = lazy(() =>
+	import("./pages/playlists/ManagePlaylists.jsx")
+);
+const NewPlaylist = lazy(() => import("./pages/playlists/NewPlaylist.jsx"));
+const EditPlaylist = lazy(() => import("./pages/playlists/EditPlaylist.jsx"));
+const SinglePlaylist = lazy(() =>
+	import("./pages/playlists/SinglePlaylist.jsx")
+);
 
-import ManageFolders from "./pages/folders/ManageFolders.jsx";
-import NewFolder from "./pages/folders/NewFolder.jsx";
-import EditFolder from "./pages/folders/EditFolder.jsx";
+const ManageFolders = lazy(() => import("./pages/folders/ManageFolders.jsx"));
+const NewFolder = lazy(() => import("./pages/folders/NewFolder.jsx"));
+const EditFolder = lazy(() => import("./pages/folders/EditFolder.jsx"));
 
-import NewSong from "./pages/songs/NewSong.jsx";
-import EditSong from "./pages/songs/EditSong.jsx";
+const NewSong = lazy(() => import("./pages/songs/NewSong.jsx"));
+const EditSong = lazy(() => import("./pages/songs/EditSong.jsx"));
 
 function Router() {
 	return (
@@ -33,9 +38,9 @@ function Router() {
 			</>
 			<>
 				<Route path="/playlists" element={<ManagePlaylists />} />
-				<Route path="/playlists/:id" element={<SinglePlaylist />} />
 				<Route path="/new-playlist" element={<NewPlaylist />} />
 				<Route path="/edit-playlist/:id" element={<EditPlaylist />} />
+				<Route path="/playlists/:id" element={<SinglePlaylist />} />
 			</>
 			<>
 				<Route path="/folders" element={<ManageFolders />} />
