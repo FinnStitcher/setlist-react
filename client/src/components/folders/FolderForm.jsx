@@ -113,7 +113,7 @@ function FolderForm({ flData, formState, setFormState }) {
 
 			// remove selected playlists from any other folders
 			formState.selected.forEach(async (element) => {
-				const folderId = json.folder._id;
+				const folderId = json._id;
 
 				const updateResponse = await fetch("/api/playlists/" + element._id + "/update-folders", {
 					method: "PUT",

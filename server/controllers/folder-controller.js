@@ -37,8 +37,8 @@ const folderController = {
 	},
 
 	async postFolder(req, res) {
-		const { name, dateLastModified, playlists } = req.body;
-		const { user_id } = req.session;
+		const { name, playlists } = req.body;
+		const { user_id, username } = req.session;
 
 		// confirm user is logged in
 		if (!user_id) {
@@ -51,9 +51,9 @@ const folderController = {
 		try {
 			const folderDbRes = await Folder.create({
 				name,
-				dateLastModified,
 				playlists,
-                uploadedBy: user_id
+                uploadedBy: user_id,
+                uploaderUsername: username
 			});
 
 			const { _id } = folderDbRes;
@@ -65,10 +65,9 @@ const folderController = {
 				{ new: true }
 			).select('_id username');
 
-			res.status(200).json({
-				folder: folderDbRes,
-				user: userDbRes
-			});
+			res.status(200).json(
+				folderDbRes
+			);
 		} catch (err) {
 			console.log(err);
 
@@ -87,7 +86,7 @@ const folderController = {
 
 	async editFolder(req, res) {
 		const folderId = req.params.id;
-		const { name, dateLastModified, playlists } = req.body;
+		const { name, playlists } = req.body;
 		const { loggedIn, user_id } = req.session;
 
 		// check that user is logged in
@@ -118,7 +117,7 @@ const folderController = {
 				{ _id: folderId },
 				{
 					name: name,
-					dateLastModified: dateLastModified,
+					dateLastModified: new Date,
 					playlists: [...playlists]
 				},
 				{ new: true }

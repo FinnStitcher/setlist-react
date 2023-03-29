@@ -79,6 +79,7 @@ function PlaylistForm({ plData, formState, setFormState }) {
 		}
 
 		// create object to send to db
+        // timestamps handled on backend
 		const playlistObj = {
 			title: formState.title,
 			songs: formState.selected.map((el) => el._id)

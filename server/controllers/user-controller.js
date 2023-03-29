@@ -150,7 +150,7 @@ const userController = {
 			// add uploadedBy property to unsorted folder
 			await Folder.findOneAndUpdate(
 				{ _id: unsortedFolderId },
-				{ uploadedBy: userDbRes._id }
+				{ uploadedBy: userDbRes._id, uploaderUsername: userDbRes.username }
 			);
 
 			// add user data to session

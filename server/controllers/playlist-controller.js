@@ -37,7 +37,7 @@ const playlistController = {
 	},
 
 	async postPlaylist(req, res) {
-		const { title, dateCreated, dateLastModified, songs } = req.body;
+		const { title, songs } = req.body;
 		const { user_id, username } = req.session;
 
 		// confirm user is logged in
@@ -51,8 +51,6 @@ const playlistController = {
 		try {
 			const playlistDbRes = await Playlist.create({
 				title,
-				dateCreated,
-				dateLastModified,
 				songs,
                 uploadedBy: user_id,
                 uploaderUsername: username
@@ -102,7 +100,7 @@ const playlistController = {
 
 	async editPlaylist(req, res) {
 		const playlistId = req.params.id;
-		const { title, dateLastModified, songs } = req.body;
+		const { title, songs } = req.body;
 		const { loggedIn, user_id } = req.session;
 
 		// check that user is logged in
@@ -133,7 +131,7 @@ const playlistController = {
 				{ _id: playlistId },
 				{
 					title: title,
-					dateLastModified: dateLastModified,
+					dateLastModified: new Date,
 					songs: [...songs]
 				},
 				{ new: true }

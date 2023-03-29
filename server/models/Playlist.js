@@ -9,12 +9,14 @@ const PlaylistSchema = new Schema(
         },
         dateCreated: {
             type: Date,
-            default: Date.now
+            default: new Date,
+            required: true
             // TODO: install luxon and make a dateFormat util
         },
         dateLastModified: {
             type: Date,
-            default: Date.now
+            default: new Date,
+            required: true
             // TODO: install luxon and make a dateFormat util
         },
         songs: [{
@@ -28,7 +30,8 @@ const PlaylistSchema = new Schema(
         },
         uploaderUsername: {
             type: String,
-            ref: 'User'
+            ref: 'User',
+            required: true
         }
     },
     {
