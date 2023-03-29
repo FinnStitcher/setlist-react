@@ -27,7 +27,8 @@ const sessionObj = {
     }),
     cookie: {
         sameSite: true,
-        secure: process.env.NODE_ENV === 'production',
+        secure: false, // i would like to set this to true, but it kinda breaks everything
+        httpOnly: true,
         maxAge: parseInt(process.env.SESSION_LIFETIME)
     }
 };
