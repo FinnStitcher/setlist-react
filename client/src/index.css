@@ -24,6 +24,10 @@
     }
 
     .page-title {
+        @apply mb-4
+    }
+
+    .page-title h2 {
         @apply text-xl mb-1 border-b-2 border-stone-300
     }
 

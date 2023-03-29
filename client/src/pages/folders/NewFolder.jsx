@@ -13,8 +13,8 @@ function NewFolder() {
 
 	return (
 		<>
-			<div className="mb-4">
-                <h2 className="page-title">Create Folder</h2>
+			<div className="page-title">
+                <h2>Create Folder</h2>
             </div>
 
             <FolderForm />

@@ -48,7 +48,7 @@ function FolderCanEdit({ folder }) {
 
 				<div className="pl-3 py-2.5">
 					<ul className="divide-y space-y-1.5">
-						{playlists ? (
+						{playlists[0] ? (
 							playlists.map((element) => (
 								<PlaylistSlim
 									key={element._id}

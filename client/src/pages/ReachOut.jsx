@@ -73,8 +73,8 @@ function ReachOut() {
 
 	return (
 		<>
-			<div className="mb-4">
-				<h2 className="page-title">Contact and Support</h2>
+			<div className="page-title">
+				<h2>Contact and Support</h2>
 			</div>
 
 			<div className="flex flex-row flex-wrap">

@@ -1,13 +1,15 @@
 function AuthFailed() {
-    return (
-        <>
-        <h2 className="page-title">Not Logged In</h2>
+	return (
+		<>
+			<div className="page-title">
+				<h2>Not Logged In</h2>
+			</div>
 
-        <p>You need to be logged in to view this page!</p>
+			<p>You need to be logged in to view this page!</p>
 
-        {/* links will go here */}
-        </>
-    )
-};
+			{/* links will go here */}
+		</>
+	);
+}
 
 export default AuthFailed;

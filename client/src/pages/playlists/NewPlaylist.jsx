@@ -13,8 +13,8 @@ function NewPlaylist() {
 
 	return (
 		<>
-			<div className="mb-4">
-                <h2 className="page-title">Create Playlist</h2>
+			<div className="page-title">
+                <h2>Create Playlist</h2>
             </div>
 
             <PlaylistForm />

@@ -56,8 +56,8 @@ function EditFolder() {
 
 	return (
 		<>
-			<div className="mb-4">
-				<h2 className="page-title">Update Folder</h2>
+			<div className="page-title">
+				<h2>Update Folder</h2>
 			</div>
 
 			{flData && <FolderForm flData={flData} />}

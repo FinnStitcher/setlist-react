@@ -33,7 +33,7 @@ function FolderSlim({ folder }) {
             </div>
 
             <div className="pl-3 py-2.5 space-y-3 block">
-                {playlists ? playlists.map(element => (
+                {playlists[0] ? playlists.map(element => (
                     <PlaylistCanEdit key={element._id} playlist={element} />
                 )) : <p>This folder is empty.</p>}
             </div>

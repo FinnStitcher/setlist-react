@@ -27,7 +27,7 @@ function EditPlaylist() {
                 }
 
                 // check user ownership
-                if (user.username !== json.username) {
+                if (user.user_id !== json.uploadedBy) {
                     const forbidden = "edit someone else's playlist";
                     return <Forbidden forbidden={forbidden} />;
                 }
@@ -55,8 +55,8 @@ function EditPlaylist() {
 
 	return (
 		<>
-			<div className="mb-4">
-				<h2 className="page-title">Update Playlist</h2>
+			<div className="page-title">
+				<h2>Update Playlist</h2>
 			</div>
 
 			{plData && <PlaylistForm plData={plData} />}

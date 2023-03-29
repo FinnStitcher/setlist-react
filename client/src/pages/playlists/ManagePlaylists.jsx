@@ -1,11 +1,13 @@
-import { useState, useEffect, useContext, useRef, Suspense } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import { Link } from "react-router-dom";
-import UserContext from "../../UserContext.jsx";
-import ModalContext from "../../ModalContext.jsx";
+import UserContext from "../../UserContext";
+import ModalContext from "../../ModalContext";
 
-import AuthFailed from "../error_pages/AuthFailed.jsx";
-import FolderSlim from "../../components/folders/FolderSlim.jsx";
-import Modal from "../../components/layout/Modal.jsx";
+import AuthFailed from "../error_pages/AuthFailed";
+import FolderSlim from "../../components/folders/FolderSlim";
+import MngLinkBtn from '../../components/generic/MngLinkBtn';
+import PageTitle from '../../components/layout/PageTitle';
+import Modal from "../../components/layout/Modal";
 
 function ManagePlaylists() {
 	const [folders, setFolders] = useState(null);
@@ -124,16 +126,12 @@ function ManagePlaylists() {
 
 	return (
 		<>
-			<div className="mb-4">
-				<h2 className="page-title">Your Playlists</h2>
+			<div className="page-title">
+				<h2>Your Playlists</h2>
 
-				<Link to="/new-playlist" className="rectangle-btn">
-					Create New +
-				</Link>
+                <MngLinkBtn url="/new-playlist" text="Create New +" />
 
-				<Link to="/folders" className="rectangle-btn">
-					Your Folders
-				</Link>
+                <MngLinkBtn url="/folders" text="Your Folders" />
 
 				<button
 					role="button"

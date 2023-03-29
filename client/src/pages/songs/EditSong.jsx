@@ -206,8 +206,8 @@ function EditSong() {
 
 	return (
 		<>
-			<div className="mb-4">
-				<h2 className="page-title">Edit a Song</h2>
+			<div className="page-title">
+				<h2>Edit a Song</h2>
 				<p>Note that you can only edit songs you yourself submitted.</p>
 			</div>
 

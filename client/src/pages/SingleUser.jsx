@@ -39,8 +39,8 @@ function SingleUser() {
 		data && (
 			<>
 				{" "}
-				<div className="mb-4">
-					<h2 className="page-title">User: {data.username}</h2>
+				<div className="page-title">
+					<h2>User: {data.username}</h2>
 				</div>
 				<section>
 					{data.folders &&

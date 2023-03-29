@@ -91,8 +91,8 @@ function SinglePlaylist() {
 	return (
 		data && (
 			<>
-				<div className="mb-4">
-					<h2 className="page-title">{data.title}</h2>
+				<div className="page-title">
+					<h2>{data.title}</h2>
 
 					{belongsToThisUser && (
 						<div>

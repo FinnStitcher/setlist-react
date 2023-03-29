@@ -93,8 +93,8 @@ function Signup() {
 
 	return (
 		<>
-			<div className="mb-4">
-				<h2 className="page-title">Sign Up</h2>
+			<div className="page-title">
+				<h2>Sign Up</h2>
 			</div>
 
 			<form id="user-form" onSubmit={onSubmitHandler}>

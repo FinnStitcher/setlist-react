@@ -1,11 +1,12 @@
-import { useState, useEffect, useContext, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import UserContext from '../../UserContext.jsx';
-import ModalContext from '../../ModalContext.jsx';
+import { useState, useEffect, useContext, useRef } from "react";
+import { Link } from "react-router-dom";
+import UserContext from "../../UserContext.jsx";
+import ModalContext from "../../ModalContext.jsx";
 
-import AuthFailed from '../error_pages/AuthFailed.jsx';
-import FolderCanEdit from '../../components/folders/FolderCanEdit.jsx';
-import Modal from '../../components/layout/Modal.jsx';
+import AuthFailed from "../error_pages/AuthFailed.jsx";
+import FolderCanEdit from "../../components/folders/FolderCanEdit.jsx";
+import MngLinkBtn from "../../components/generic/MngLinkBtn";
+import Modal from "../../components/layout/Modal.jsx";
 
 function ManageFolders() {
 	const [folders, setFolders] = useState(null);
@@ -22,7 +23,7 @@ function ManageFolders() {
 
 			const getUserData = async () => {
 				try {
-					const response = await fetch('/api/users/' + user_id);
+					const response = await fetch("/api/users/" + user_id);
 					const json = await response.json();
 
 					if (!response.ok) {
@@ -35,7 +36,7 @@ function ManageFolders() {
 				} catch (err) {
 					setModal({
 						...modal,
-						active: 'modal',
+						active: "modal",
 						msg: `${err.name}: ${err.message}`
 					});
 
@@ -47,37 +48,37 @@ function ManageFolders() {
 		}
 	}, []);
 
-    // listens for clicks on the delete button in the folder component
-    function deleteHandler(e) {
+	// listens for clicks on the delete button in the folder component
+	function deleteHandler(e) {
 		const { target } = e;
-		const btnType = target.getAttribute('data-btn-type');
+		const btnType = target.getAttribute("data-btn-type");
 
-		if (btnType !== 'del-btn') {
+		if (btnType !== "del-btn") {
 			return;
 		}
 
 		// storing the button that was clicked in the ref and its playlist so we can access it later
 		delBtnRef.current = target;
-		delFolderRef.current = target.closest('article');
+		delFolderRef.current = target.closest("article");
 
 		setModal({
 			...modal,
-			active: 'conf-del-modal',
+			active: "conf-del-modal",
 			msg: "Are you sure you want to delete this folder? If you want it back, you'll have to completely remake it."
 		});
 	}
 
 	async function deleteConfirmedHandler() {
 		// getting the id from the delete button
-		const folderID = delBtnRef.current.getAttribute('data-id');
+		const folderID = delBtnRef.current.getAttribute("data-id");
 
 		// make database call
 		try {
-			const response = await fetch('/api/folders/' + folderID, {
-				method: 'DELETE',
+			const response = await fetch("/api/folders/" + folderID, {
+				method: "DELETE",
 				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json'
+					Accept: "application/json",
+					"Content-Type": "application/json"
 				}
 			});
 			const json = await response.json();
@@ -91,8 +92,8 @@ function ManageFolders() {
 			// swap modals
 			setModal({
 				...modal,
-				active: 'comp-del-modal',
-				msg: 'This folder was successfully deleted.'
+				active: "comp-del-modal",
+				msg: "This folder was successfully deleted."
 			});
 
 			// remove this playlist from the dom
@@ -100,7 +101,7 @@ function ManageFolders() {
 		} catch (err) {
 			setModal({
 				...modal,
-				active: 'modal',
+				active: "modal",
 				msg: `${err.name}: ${err.message}`
 			});
 
@@ -108,32 +109,28 @@ function ManageFolders() {
 		}
 	}
 
-
 	if (!user) {
 		return <AuthFailed />;
 	}
 
 	return (
 		<>
-			<div className="mb-4">
-				<h2 className="page-title">Your Folders</h2>
+			<div className="page-title">
+				<h2>Your Folders</h2>
 
-                <Link to="/new-folder" className="rectangle-btn">
-                    Create New +
-                </Link>
+				<MngLinkBtn url="/new-folder" text="Create New +" />
 
-                <Link to="/playlists" className="rectangle-btn">
-                    Your Playlists
-                </Link>
+				<MngLinkBtn url="/playlists" text="Your Playlists" />
 			</div>
 
 			<section id="container" onClick={deleteHandler}>
-                {folders && folders.map(element => (
-                    <FolderCanEdit key={element._id} folder={element} />
-                ))}
-            </section>
+				{folders &&
+					folders.map((element) => (
+						<FolderCanEdit key={element._id} folder={element} />
+					))}
+			</section>
 
-            <Modal id="conf-del-modal">
+			<Modal id="conf-del-modal">
 				<button
 					className="block font-semibold mt-0.5"
 					onClick={deleteConfirmedHandler}
