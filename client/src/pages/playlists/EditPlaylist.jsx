@@ -5,7 +5,7 @@ import ModalContext from '../../ModalContext.jsx';
 
 import AuthFailed from '../error_pages/AuthFailed.jsx';
 import Forbidden from '../error_pages/Forbidden.jsx';
-import PlaylistForm from '../../components/playlists/PlaylistForm.jsx';
+import PlaylistFormWrapper from '../../components/playlists/PlaylistFormWrapper.jsx';
 
 function EditPlaylist() {
 	const [plData, setPlData] = useState(null);
@@ -59,7 +59,7 @@ function EditPlaylist() {
 				<h2>Update Playlist</h2>
 			</div>
 
-			{plData && <PlaylistForm plData={plData} />}
+			{plData && <PlaylistFormWrapper plData={plData} />}
 		</>
 	);
 }

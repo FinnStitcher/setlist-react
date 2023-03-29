@@ -1,39 +1,11 @@
-import { useState, useEffect, useContext } from "react";
-import {
-	DndContext,
-	DragOverlay,
-	closestCorners,
-	KeyboardSensor,
-	PointerSensor,
-	useSensor,
-	useSensors
-} from "@dnd-kit/core";
-import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
-import { useNavigate } from "react-router";
-
-import {
-	handleDragStart,
-	handleDragOver,
-	handleDragEnd
-} from "../../utils/sortableListUtils";
+import { useEffect, useContext } from "react";
 
 import ModalContext from "../../ModalContext.jsx";
 
 import SongList from "../songs/SongList.jsx";
-import SongDraggable from "../songs/SongDraggable.jsx";
 
-function PlaylistForm({ plData }) {
-	const [formState, setFormState] = useState({
-		title: "",
-		search: "",
-		selected: [],
-		deselected: []
-	});
-	const [activeId, setActiveId] = useState("");
-
+function PlaylistForm({ plData, formState, setFormState }) {
 	const { modal, setModal } = useContext(ModalContext);
-
-	const navigate = useNavigate();
 
 	// if we got data from the parent component, update state
 	useEffect(() => {
@@ -153,9 +125,7 @@ function PlaylistForm({ plData }) {
 			setModal({
 				...modal,
 				active: "modal",
-				msg: `Success! Your playlist has been ${
-					editingBoolean ? "updated" : "created"
-				}. Redirecting...`,
+				msg: `Success! Your playlist has been ${editingBoolean ? "updated" : "created"}. Redirecting...`,
 				navTo: "/playlists"
 			});
 		} catch (err) {
@@ -169,88 +139,41 @@ function PlaylistForm({ plData }) {
 			console.log(err);
 		}
 	}
-
-	const sensors = useSensors(
-		useSensor(PointerSensor),
-		useSensor(KeyboardSensor, {
-			coordinateGetter: sortableKeyboardCoordinates
-		})
-	);
-
 	return (
-		<>
-			<DndContext
-				sensors={sensors}
-				collisionDetection={closestCorners}
-				onDragStart={(e) => {
-					handleDragStart(e, setActiveId);
-				}}
-				onDragOver={(e) => {
-					handleDragOver(e, formState, setFormState);
-				}}
-				onDragEnd={(e) =>
-					handleDragEnd(e, formState, setFormState, setActiveId)
-				}
-			>
-				<form id="pl-form" onSubmit={onSubmitHandler}>
-					<div>
-						<label htmlFor="title" className="form-label">
-							Title{" "}
-							<span className="required" title="Required">
-								*
-							</span>
-						</label>
-						<input
-							id="title"
-							name="title"
-							className="form-control"
-							value={formState.title}
-							onChange={onChangeHandler}
-						/>
-					</div>
+		<form onSubmit={onSubmitHandler}>
+			<div>
+				<label htmlFor="title" className="form-label">
+					Title{" "}
+					<span className="required" title="Required">
+						*
+					</span>
+				</label>
+				<input id="title" name="title" className="form-control" value={formState.title} onChange={onChangeHandler} />
+			</div>
 
-					<hr />
+			<hr />
 
-					<div>
-						<label className="form-label">Songs</label>
+			<div>
+				<label className="form-label">Songs</label>
 
-						<p>
-							Click and drag to sort and move songs in and out of
-							your playlist.
-						</p>
+				<p>Click and drag to sort and move songs in and out of your playlist.</p>
 
-						<SongList id="selected" items={formState.selected} />
+				<SongList id="selected" items={formState.selected} />
 
-						<label htmlFor="search" className="block mb-0.5">
-							Search:
-						</label>
-						<input
-							id="search"
-							name="search"
-							className="form-control"
-							autoComplete="off"
-							value={formState.search}
-							onChange={onChangeHandler}
-						/>
+				<label htmlFor="search" className="block mb-0.5">
+					Search:
+				</label>
+				<input id="search" name="search" className="form-control" autoComplete="off" value={formState.search} onChange={onChangeHandler} />
 
-						<SongList
-							id="deselected"
-							items={formState.deselected}
-						/>
+				<SongList id="deselected" items={formState.deselected} />
+			</div>
 
-						<DragOverlay>
-							{activeId ? <SongDraggable id={activeId} /> : null}
-						</DragOverlay>
-					</div>
+			<hr />
 
-					<hr />
-
-					<button type="submit" className="rectangle-btn">
-						Submit
-					</button>
-				</form>
-			</DndContext>
-		</>
+			<button type="submit" className="rectangle-btn">
+				Submit
+			</button>
+		</form>
 	);
 }
 

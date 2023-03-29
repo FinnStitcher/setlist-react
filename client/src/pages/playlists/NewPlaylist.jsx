@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import UserContext from '../../UserContext.jsx';
 
 import AuthFailed from '../error_pages/AuthFailed.jsx';
-import PlaylistForm from '../../components/playlists/PlaylistForm.jsx';
+import PlaylistFormWrapper from '../../components/playlists/PlaylistFormWrapper.jsx';
 
 function NewPlaylist() {
 	const { user } = useContext(UserContext);
@@ -17,7 +17,7 @@ function NewPlaylist() {
                 <h2>Create Playlist</h2>
             </div>
 
-            <PlaylistForm />
+			<PlaylistFormWrapper />
 		</>
 	);
 }
