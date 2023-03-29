@@ -3,7 +3,6 @@ import { arrayMove } from '@dnd-kit/sortable';
 function findContainer(id, state) {
     // id is present in formState; therefore, the id refers to a container, so we just return it
     if (id in state) {
-        console.log('id was in state');
         return id;
     }
 
@@ -75,7 +74,6 @@ export function handleDragOver(event, state, setState) {
         let newIndex;
 
         if (overId in prev) {
-            console.log('overId "' + overId + '" is in prev');
             newIndex = overItems.length + 1;
         } else {
             // should we put this item at the bottom of the list?

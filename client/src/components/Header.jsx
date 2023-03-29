@@ -1,9 +1,11 @@
 import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import UserContext from '../UserContext.jsx';
+import ModalContext from '../ModalContext.jsx';
 
 function Header() {
 	const { user, setUser } = useContext(UserContext);
+    const {setModal} = useContext(ModalContext);
 	const navigate = useNavigate();
 
 	async function logoutHandler() {
@@ -13,7 +15,14 @@ function Header() {
 		});
 
 		if (!response.ok) {
-			console.log(response);
+            setModal({
+                ...modal,
+                active: 'modal',
+                msg: `Something went wrong when logging you out.`
+            });
+
+            console.log(response);
+            
 			return;
 		}
 

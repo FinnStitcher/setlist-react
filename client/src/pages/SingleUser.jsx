@@ -22,8 +22,6 @@ function SingleUser() {
 				}
 
 				setData({ ...json });
-
-				console.log(data);
 			} catch (err) {
 				setModal({
 					active: "modal",

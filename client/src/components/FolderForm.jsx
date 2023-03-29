@@ -60,6 +60,12 @@ function FolderForm({ flData }) {
 					deselected: [...json.playlists]
 				});
 			} catch (err) {
+                setModal({
+                    ...modal,
+                    active: 'modal',
+                    msg: `${err.name}: ${err.message}`
+                });
+                
 				console.log(err);
 			}
 		}
@@ -74,8 +80,6 @@ function FolderForm({ flData }) {
 			...formState,
 			[name]: value
 		});
-
-		console.log(formState);
 	}
 
 	async function onSubmitHandler(event) {
@@ -195,8 +199,6 @@ function FolderForm({ flData }) {
 			setTimeout(() => {
 				navigate('/folders');
 			}, 2000);
-
-			console.log('you sir have won the internet');
 		} catch (err) {
 			setModal({
 				...modal,
