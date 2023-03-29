@@ -5,7 +5,7 @@ import ModalContext from '../../ModalContext.jsx';
 
 import AuthFailed from '../error_pages/AuthFailed.jsx';
 import Forbidden from '../error_pages/Forbidden.jsx';
-import FolderForm from '../../components/folders/FolderForm.jsx';
+import FolderFormWrapper from '../../components/folders/FolderFormWrapper.jsx';
 
 function EditFolder() {
 	const [flData, setFlData] = useState(null);
@@ -60,7 +60,7 @@ function EditFolder() {
 				<h2>Update Folder</h2>
 			</div>
 
-			{flData && <FolderForm flData={flData} />}
+			{flData && <FolderFormWrapper flData={flData} />}
 		</>
 	);
 }

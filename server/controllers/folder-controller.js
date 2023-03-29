@@ -63,7 +63,7 @@ const folderController = {
 				{ _id: user_id },
 				{ $push: { folders: _id } },
 				{ new: true }
-			).select('-password');
+			).select('_id username');
 
 			res.status(200).json({
 				folder: folderDbRes,
