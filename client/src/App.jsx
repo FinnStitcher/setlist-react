@@ -20,6 +20,7 @@ import NewSong from './pages/NewSong.jsx';
 import EditSong from './pages/EditSong.jsx';
 
 import SinglePlaylist from './pages/SinglePlaylist.jsx';
+import SingleUser from './pages/SingleUser.jsx';
 
 import Header from './components/Header.jsx';
 import Modal from './components/Modal';
@@ -73,6 +74,10 @@ function App() {
 							<Route
 								path="/playlists/:id"
 								element={<SinglePlaylist />}
+							/>
+							<Route
+								path="/users/:id"
+								element={<SingleUser />}
 							/>
 							<Route path="/login" element={<Login />} />
 							<Route path="/signup" element={<Signup />} />
