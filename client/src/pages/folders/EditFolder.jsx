@@ -27,7 +27,7 @@ function EditFolder() {
                 }
 
                 // check user ownership
-                if (user.username !== json.username) {
+                if (user.user_id !== json.uploadedBy) {
                     const forbidden = "edit someone else's folder";
                     return <Forbidden forbidden={forbidden} />;
                 }
@@ -57,10 +57,10 @@ function EditFolder() {
 	return (
 		<>
 			<div className="mb-4">
-				<h2 className="page-title">Update Playlist</h2>
+				<h2 className="page-title">Update Folder</h2>
 			</div>
 
-			<FolderForm flData={flData} />
+			{flData && <FolderForm flData={flData} />}
 		</>
 	);
 }

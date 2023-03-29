@@ -59,7 +59,7 @@ function EditPlaylist() {
 				<h2 className="page-title">Update Playlist</h2>
 			</div>
 
-			<PlaylistForm plData={plData} />
+			{plData && <PlaylistForm plData={plData} />}
 		</>
 	);
 }
