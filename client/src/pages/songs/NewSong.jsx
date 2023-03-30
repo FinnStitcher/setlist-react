@@ -10,9 +10,9 @@ function NewSong() {
 		title: "",
 		artist: "",
 		album: "",
-		year: "",
-		suggestions: []
+		year: ""
 	});
+    const [suggestions, setSuggestions] = useState([]);
 	const { user } = useContext(UserContext);
 	const { modal, setModal } = useContext(ModalContext);
 
@@ -34,10 +34,12 @@ function NewSong() {
 					throw new Error(message);
 				}
 
-				setFormState({
-                    ...formState,
-					suggestions: [...json]
-				});
+                setSuggestions([...json]);
+
+				// setFormState({
+                //     ...formState,
+				// 	suggestions: [...json]
+				// });
 			}
 
 			if (formState.title) {
@@ -127,8 +129,10 @@ function NewSong() {
                 artist: "",
                 album: "",
                 year: "",
-                suggestions: []
-            })
+                //suggestions: []
+            });
+
+            setSuggestions([]);
 		} catch (err) {
 			setModal({
 				...modal,
@@ -215,8 +219,8 @@ function NewSong() {
 				<h3 className="text-lg">Are you thinking of...?</h3>
 
 				<ul className="form-song-list">
-					{formState.suggestions[0] &&
-						formState.suggestions.map((element) => (
+					{suggestions[0] &&
+						suggestions.map((element) => (
 							<Song key={element._id} song={element} />
 						))}
 				</ul>
