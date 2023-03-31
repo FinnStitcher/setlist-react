@@ -25,7 +25,7 @@ const songController = {
 				return;
 			}
 
-			res.status(200).jsoN(songDbRes);
+			res.status(200).json(songDbRes);
 		} catch (err) {
 			console.log(err);
 			res.status(500).json(err);
@@ -125,7 +125,7 @@ const songController = {
 	},
 
 	async postSong(req, res) {
-		const { title, artist, album, year } = req.body;
+		const { title, artist, album, year, links } = req.body;
 		const { user_id } = req.session;
 
 		// confirm user is logged in
@@ -142,6 +142,7 @@ const songController = {
 				artist,
 				album,
 				year,
+                links,
 				uploadedBy: user_id
 			});
 
@@ -153,7 +154,7 @@ const songController = {
 	},
 
 	async putSong(req, res) {
-		const { title, artist, album, year } = req.body;
+		const { title, artist, album, year, links } = req.body;
 		const { id: songId } = req.params;
 		const { user_id } = req.session;
 
@@ -171,10 +172,11 @@ const songController = {
 					_id: songId
 				},
 				{
-					title: title,
-					artist: artist,
-					album: album,
-					year: year
+                    title,
+                    artist,
+                    album,
+                    year,
+                    links
 				},
 				{ new: true }
 			);
