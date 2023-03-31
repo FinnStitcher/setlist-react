@@ -12,7 +12,7 @@ function EditSong() {
 		artist: "",
 		album: "",
 		year: "",
-		search: ""
+        links: []
 	});
     const [search, setSearch] = useState("");
 	const [suggestions, setSuggestions] = useState([]);

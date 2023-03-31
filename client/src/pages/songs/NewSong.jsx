@@ -11,7 +11,8 @@ function NewSong() {
 		title: "",
 		artist: "",
 		album: "",
-		year: ""
+		year: "",
+        links: []
 	});
     const [suggestions, setSuggestions] = useState([]);
 	const { user } = useContext(UserContext);

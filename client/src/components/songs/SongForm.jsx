@@ -1,8 +1,36 @@
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import ModalContext from "../../ModalContext";
 
+import LinkFields from "./LinkFields.jsx";
+
 function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState }) {
+	const [linkCount, setLinkCount] = useState(0);
+
 	const { modal, setModal } = useContext(ModalContext);
+
+	function addLinkHandler() {
+		// check that number of links is within allowed limits
+		if (linkCount >= 4) {
+			console.log("cant add more");
+			return;
+		}
+
+		const key = "link-" + linkCount;
+
+		setLinkCount(linkCount + 1);
+
+		// add a link object to the form state
+		setFormState({
+			...formState,
+			links: {
+				...formState.links,
+				[key]: {
+					source: "",
+					href: ""
+				}
+			}
+		});
+	}
 
 	function onChangeHandler(event) {
 		const { name, value } = event.target;
@@ -51,7 +79,7 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 
 		try {
 			if (isEditing) {
-                const songId = clickedSongRef.current.id;
+				const songId = clickedSongRef.current.id;
 
 				// make database call
 				response = await fetch("/api/songs/" + songId, {
@@ -131,7 +159,7 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 			ref={isEditing ? formRef : null}
 			onSubmit={onSubmitHandler}
 		>
-			<label htmlFor="title" className="block text-lg mb-0.5">
+			<label htmlFor="title" className="form-label">
 				Title
 				<span className="required" title="Required">
 					*
@@ -145,7 +173,7 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 				onChange={onChangeHandler}
 			/>
 
-			<label htmlFor="artist" className="block text-lg mb-0.5">
+			<label htmlFor="artist" className="form-label">
 				Artist
 				<span className="required" title="Required">
 					*
@@ -159,7 +187,7 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 				onChange={onChangeHandler}
 			/>
 
-			<label htmlFor="album" className="block text-lg mb-0.5">
+			<label htmlFor="album" className="form-label">
 				Album
 			</label>
 			<input
@@ -170,7 +198,7 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 				onChange={onChangeHandler}
 			/>
 
-			<label htmlFor="year" className="block text-lg mb-0.5">
+			<label htmlFor="year" className="form-label">
 				Year
 			</label>
 			<input
@@ -181,6 +209,26 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 				value={formState.year}
 				onChange={onChangeHandler}
 			/>
+
+			<hr className="border-stone-400/50" />
+
+			<div>
+				<h3 className="form-label">Add Links</h3>
+
+				<button type="button" onClick={addLinkHandler}>
+					click to add
+				</button>
+
+				{linkCount > 0 &&
+					Object.entries(formState.links).map((element, index) => (
+						<LinkFields
+							key={index}
+							index={index}
+							formState={formState}
+							setFormState={setFormState}
+						/>
+					))}
+			</div>
 
 			<hr className="border-stone-400/50" />
 
