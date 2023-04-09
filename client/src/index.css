@@ -23,6 +23,14 @@
         @apply inline-block w-48 bg-stone-300 p-2 mr-1
     }
 
+    .btn-small {
+        @apply inline-block w-5 h-5 bg-stone-300 relative top-1
+    }
+
+    .btn-small span {
+        @apply block relative bottom-1.5
+    }
+
     .page-title {
         @apply mb-4
     }

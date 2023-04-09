@@ -58,7 +58,7 @@ function EditSong() {
 	}, [search]);
 
 	// double-clicking a song makes its data appear in the form
-	function onClickHandler(event) {
+	async function onClickHandler(event) {
 		const { detail, target } = event;
 
 		// only accept double clicks
@@ -67,41 +67,21 @@ function EditSong() {
 		}
 
 		clickedSongRef.current = target.closest("li");
-		const { current } = clickedSongRef;
+        const {id} = clickedSongRef.current;
 
-		// extract data
-		const title = current.children[0].textContent;
+        // find this song in the db
+        const response = await fetch('/api/songs/' + id);
+        const json = await response.json();
 
-		// innerHTML instead of textContent so we can tell if there's an album or not
-		const extraInfoArr = current.children[1].innerHTML.split(", ");
-
-		// artist is required, so extraInfoArr[0] will always be the artist name
-		const artist = extraInfoArr[0];
-
-		let year = null;
-		let album = null;
-
-		if (extraInfoArr.length === 3) {
-			year = extraInfoArr[1];
-			album = extraInfoArr[2];
-		} else if (extraInfoArr.length === 2) {
-			// check if the other piece of data in the array is the album (in italics) or the year
-			const secondItem = extraInfoArr[1];
-
-			if (secondItem.includes("<i>")) {
-				album = secondItem;
-			} else {
-				year = secondItem;
-			}
-		}
-		// if length === 1, there was only one item in the array, the artist, which has already been saved to a variable
+        const {title, artist, album, year, links} = json;
 
 		// update form state
 		setFormState({
 			title: title,
 			artist: artist,
 			album: album ? album.replace("<i>", "").replace("</i>", "") : "",
-			year: year ? year : ""
+			year: year ? year : "",
+            links: [...links]
 		});
 
 		setSuggestions([]);

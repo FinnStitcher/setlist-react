@@ -4,31 +4,28 @@ import ModalContext from "../../ModalContext";
 import LinkFields from "./LinkFields.jsx";
 
 function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState }) {
-	const [linkCount, setLinkCount] = useState(0);
 
 	const { modal, setModal } = useContext(ModalContext);
 
 	function addLinkHandler() {
 		// check that number of links is within allowed limits
-		if (linkCount >= 4) {
+		if (formState.links.length >= 4) {
+			// TODO: Modal
 			console.log("cant add more");
 			return;
 		}
 
-		const key = "link-" + linkCount;
-
-		setLinkCount(linkCount + 1);
-
 		// add a link object to the form state
 		setFormState({
 			...formState,
-			links: {
+			links: [
 				...formState.links,
-				[key]: {
+				{
 					source: "",
-					href: ""
+					href: "",
+					tempId: Math.ceil(Math.random() * 100)
 				}
-			}
+			]
 		});
 	}
 
@@ -44,7 +41,7 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 	async function onSubmitHandler(event) {
 		event.preventDefault();
 
-		const { title, artist, album, year } = formState;
+		const { title, artist, album, year, links } = formState;
 		const today = new Date();
 
 		// validate
@@ -68,11 +65,31 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 			return;
 		}
 
+		// make sure all links have both requisite values
+		links.forEach((element) => {
+			if (!element.source || !element.href) {
+				setModal({
+					...modal,
+					active: "modal",
+					msg: "Every link needs both fields filled out."
+				});
+
+				return;
+			}
+		});
+
 		const songObj = {
 			title: title,
 			artist: artist,
 			album: album,
-			year: parseInt(year)
+			year: parseInt(year),
+			// clean up link objects; not sending the temp ids
+			links: links.map((element) => {
+				return {
+					source: element.source,
+					href: element.href
+				};
+			})
 		};
 
 		let response = null;
@@ -95,7 +112,7 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 				if (!response.ok) {
 					const { message } = json;
 
-					throw Error(message);
+					throw new Error(message);
 				}
 
 				setModal({
@@ -108,7 +125,8 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 					title: "",
 					artist: "",
 					album: "",
-					year: ""
+					year: "",
+                    links: []
 				});
 			} else {
 				// make database call
@@ -124,8 +142,7 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 
 				if (!response.ok) {
 					const { message } = json;
-
-					throw Error(message);
+					throw new Error(message);
 				}
 
 				setModal({
@@ -138,7 +155,8 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 					title: "",
 					artist: "",
 					album: "",
-					year: ""
+					year: "",
+					links: []
 				});
 			}
 		} catch (err) {
@@ -213,16 +231,17 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 			<hr className="border-stone-400/50" />
 
 			<div>
-				<h3 className="form-label">Add Links</h3>
+				<h3 className="text-xl">
+					Links{" "}
+					<button type="button" className="btn-small" onClick={addLinkHandler}>
+						<span>+</span>
+					</button>
+				</h3>
 
-				<button type="button" onClick={addLinkHandler}>
-					click to add
-				</button>
-
-				{linkCount > 0 &&
-					Object.entries(formState.links).map((element, index) => (
+				{formState.links.length > 0 &&
+					formState.links.map((element, index) => (
 						<LinkFields
-							key={index}
+							key={element.tempId}
 							index={index}
 							formState={formState}
 							setFormState={setFormState}
