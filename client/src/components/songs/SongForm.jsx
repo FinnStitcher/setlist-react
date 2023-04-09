@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import ModalContext from "../../ModalContext";
 
 import LinkFields from "./LinkFields.jsx";

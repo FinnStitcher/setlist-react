@@ -62,4 +62,8 @@
     a:hover:not(.rectangle-btn):not(.nav-link a) {
         @apply text-stone-400 transition-colors
     }
+
+    .cursor-pointer {
+        cursor: pointer;
+    }
 }

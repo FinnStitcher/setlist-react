@@ -8,6 +8,7 @@ import Loading from "./Loading.jsx";
 
 import Header from "./components/layout/Header.jsx";
 import Modal from "./components/layout/Modal";
+import Iframe from "./components/layout/Iframe";
 
 function App() {
 	const [user, setUser] = useState(null);
@@ -30,6 +31,7 @@ function App() {
 					</main>
 
 					<Modal id="modal" />
+                    <Iframe />
 				</ModalContext.Provider>
 			</UserContext.Provider>
 		</BrowserRouter>
