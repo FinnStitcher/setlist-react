@@ -1,4 +1,5 @@
-import {useModalContext} from '../../hooks';
+import { Fragment } from "react";
+import { useModalContext } from "../../hooks";
 
 function Song({ song }) {
 	const { _id, title, artist, album, year, links } = song;
@@ -8,16 +9,16 @@ function Song({ song }) {
 	const { setModal } = useModalContext();
 
 	function ytModalHandler(event) {
-        const {href} = event.target.dataset;
-        
-        // turn that link into a youtube embed url
-        const embedArr = href.split("/watch?v=");
-        const embed = embedArr.join("/embed/");
+		const { href } = event.target.dataset;
 
-        setModal({
-            active: "yt-frame",
-            iframe: embed
-        })
+		// turn that link into a youtube embed url
+		const embedArr = href.split("/watch?v=");
+		const embed = embedArr.join("/embed/");
+
+		setModal({
+			active: "yt-frame",
+			iframe: embed
+		});
 	}
 
 	return (
@@ -43,26 +44,23 @@ function Song({ song }) {
 
 							if (isYtLink) {
 								return (
-									<>
+									<Fragment key={index}>
 										<a
-											key={index}
 											data-href={element.href}
 											onClick={ytModalHandler}
-                                            className="cursor-pointer"
+											className="cursor-pointer"
 										>
 											{element.source}
 										</a>
-										{index < links.length - 1 && <span>, </span>}
-									</>
+										{index < links.length - 1 && ", "}
+									</Fragment>
 								);
 							} else {
 								return (
-									<>
-										<a key={index} href={element.href}>
-											{element.source}
-										</a>
+									<Fragment key={index}>
+										<a href={element.href}>{element.source}</a>
 										{index < links.length - 1 && <span>, </span>}
-									</>
+									</Fragment>
 								);
 							}
 						})}

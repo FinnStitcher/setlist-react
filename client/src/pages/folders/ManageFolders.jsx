@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-import {useUserContext, useModalContext} from '../hooks';
+import {useUserContext, useModalContext} from '../../hooks';
 
 import AuthFailed from "../error_pages/AuthFailed.jsx";
 import FolderCanEdit from "../../components/folders/FolderCanEdit.jsx";

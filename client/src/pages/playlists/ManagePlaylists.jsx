@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-import {useUserContext, useModalContext} from '../hooks';
+import {useUserContext, useModalContext} from '../../hooks';
 
 import AuthFailed from "../error_pages/AuthFailed";
 import FolderSlim from "../../components/folders/FolderSlim";

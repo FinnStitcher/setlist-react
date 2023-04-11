@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-import {useUserContext, useModalContext} from '../hooks';
+import {useUserContext, useModalContext} from '../../hooks';
 
 import Song from "../../components/songs/Song";
 import SongForm from '../../components/songs/SongForm';

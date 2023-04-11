@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import {useUserContext, useModalContext} from '../hooks';
+import {useUserContext, useModalContext} from '../../hooks';
 
 import Song from "../../components/songs/Song.jsx";
 import Modal from '../../components/layout/Modal.jsx';

@@ -1,4 +1,4 @@
-import {useUserContext} from '../hooks';
+import {useUserContext} from '../../hooks';
 
 import AuthFailed from '../error_pages/AuthFailed.jsx';
 import PlaylistFormWrapper from '../../components/playlists/PlaylistFormWrapper.jsx';
