@@ -1,4 +1,5 @@
 const { User, Folder } = require("../models");
+const { signToken } = require("../utils/auth.js");
 
 require("dotenv").config();
 
@@ -153,18 +154,29 @@ const userController = {
 				{ uploadedBy: userDbRes._id, uploaderUsername: userDbRes.username }
 			);
 
-			// add user data to session
-			req.session.save(() => {
-				req.session.user_id = userDbRes._id;
-				req.session.username = userDbRes.username;
-				req.session.loggedIn = true;
+            const token = signToken(userDbRes._id, userDbRes.username);
 
-				res.status(201).json({
-					user: userDbRes,
-					session: req.session,
-					message: "You're logged in."
-				});
-			});
+            res.status(200).json({
+                user: {
+                    _id: userDbRes._id,
+                    username: userDbRes.username
+                },
+                token: token,
+                message: "User created. You're logged in."
+            });
+
+			// // add user data to session
+			// req.session.save(() => {
+			// 	req.session.user_id = userDbRes._id;
+			// 	req.session.username = userDbRes.username;
+			// 	req.session.loggedIn = true;
+
+			// 	res.status(201).json({
+			// 		user: userDbRes,
+			// 		session: req.session,
+			// 		message: "You're logged in."
+			// 	});
+			// });
 		} catch (err) {
 			// catch server errors
 			console.log(err);
@@ -199,18 +211,29 @@ const userController = {
 			}
 
 			// password was valid
-			// add user data to session
-			await req.session.save(() => {
-				req.session.user_id = dbRes._id.toString();
-				req.session.username = dbRes.username;
-				req.session.loggedIn = true;
 
-				res.status(200).json({
-					user: dbRes,
-					session: req.session,
-					message: "You're logged in."
-				});
-			});
+            const token = signToken(dbRes._id, dbRes.username);
+
+            res.status(200).json({
+                user: {
+                    _id: dbRes._id,
+                    username: dbRes.username
+                },
+                token: token,
+                message: "You're logged in."
+            });
+			// // add user data to session
+			// await req.session.save(() => {
+			// 	req.session.user_id = dbRes._id.toString();
+			// 	req.session.username = dbRes.username;
+			// 	req.session.loggedIn = true;
+
+			// 	res.status(200).json({
+			// 		user: dbRes,
+			// 		session: req.session,
+			// 		message: "You're logged in."
+			// 	});
+			// });
 		} catch (err) {
 			// catch server errors
 			console.log(err);

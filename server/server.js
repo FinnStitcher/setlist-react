@@ -1,7 +1,6 @@
 const express = require('express');
-const session = require('express-session');
+//const session = require('express-session');
 const mongoose = require('mongoose');
-const MongoStore = require('connect-mongo');
 const path = require('path');
 
 const morgan = require('morgan');
@@ -13,32 +12,12 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 1999;
 
-const sessionObj = {
-    name: process.env.SESSION_NAME,
-    secret: process.env.SECRET,
-    saveUninitialized: false,
-    resave: false,
-    store: MongoStore.create({
-        mongoUrl: process.env.MONGODB_URI || 'mongodb://localhost/setlist-app',
-        mongooseConnection: mongoose.connection,
-        collection: 'session',
-        ttl: parseInt(process.env.SESSION_LIFETIME) / 1000,
-        touchAfter: 60 * 60 * 24
-    }),
-    cookie: {
-        sameSite: true,
-        secure: false, // i would like to set this to true, but it kinda breaks everything
-        httpOnly: true,
-        maxAge: parseInt(process.env.SESSION_LIFETIME)
-    }
-};
-
 app.use(morgan('dev'));
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, '../client/dist')));
-app.use(session(sessionObj));
+//app.use(session(sessionObj));
 
 app.use(routes);
 
