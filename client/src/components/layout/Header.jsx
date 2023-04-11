@@ -1,11 +1,10 @@
-import { useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import UserContext from '../../UserContext.jsx';
-import ModalContext from '../../ModalContext.jsx';
+
+import {useUserContext, useModalContext} from '../../hooks';
 
 function Header() {
-	const { user, setUser } = useContext(UserContext);
-    const {setModal} = useContext(ModalContext);
+	const { user, setUser } = useUserContext();
+    const {setModal} = useModalContext();
 	const navigate = useNavigate();
 
 	async function logoutHandler() {
@@ -20,8 +19,6 @@ function Header() {
                 active: 'modal',
                 msg: `Something went wrong when logging you out.`
             });
-
-            console.log(response);
             
 			return;
 		}

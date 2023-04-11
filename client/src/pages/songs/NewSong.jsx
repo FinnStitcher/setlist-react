@@ -1,6 +1,6 @@
-import { useState, useEffect, useContext } from "react";
-import UserContext from "../../UserContext";
-import ModalContext from "../../ModalContext";
+import { useState, useEffect } from "react";
+
+import {useUserContext, useModalContext} from '../hooks';
 
 import Song from "../../components/songs/Song";
 import SongForm from '../../components/songs/SongForm';
@@ -15,8 +15,8 @@ function NewSong() {
         links: []
 	});
     const [suggestions, setSuggestions] = useState([]);
-	const { user } = useContext(UserContext);
-	const { modal, setModal } = useContext(ModalContext);
+	const { user } = useUserContext();
+	const { modal, setModal } = useModalContext();
 
 	// make searches as the user interacts with the form
 	useEffect(() => {

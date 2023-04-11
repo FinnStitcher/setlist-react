@@ -1,7 +1,6 @@
-import { useState, useEffect, useContext, useRef } from "react";
-import { Link } from "react-router-dom";
-import UserContext from "../../UserContext.jsx";
-import ModalContext from "../../ModalContext.jsx";
+import { useState, useEffect, useRef } from "react";
+
+import {useUserContext, useModalContext} from '../hooks';
 
 import AuthFailed from "../error_pages/AuthFailed.jsx";
 import FolderCanEdit from "../../components/folders/FolderCanEdit.jsx";
@@ -11,8 +10,8 @@ import Modal from "../../components/layout/Modal.jsx";
 function ManageFolders() {
 	const [folders, setFolders] = useState(null);
 
-	const { user } = useContext(UserContext);
-	const { modal, setModal } = useContext(ModalContext);
+	const { user } = useUserContext();
+	const { modal, setModal } = useModalContext();
 
 	const delBtnRef = useRef();
 	const delFolderRef = useRef();

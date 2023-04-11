@@ -1,7 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import UserContext from '../../UserContext.jsx';
-import ModalContext from '../../ModalContext.jsx';
+
+import {useUserContext, useModalContext} from '../hooks';
 
 import AuthFailed from '../error_pages/AuthFailed.jsx';
 import Forbidden from '../error_pages/Forbidden.jsx';
@@ -9,8 +9,8 @@ import FolderFormWrapper from '../../components/folders/FolderFormWrapper.jsx';
 
 function EditFolder() {
 	const [flData, setFlData] = useState(null);
-	const { user } = useContext(UserContext);
-	const { setModal } = useContext(ModalContext);
+	const { user } = useUserContext();
+	const { setModal } = useModalContext();
 	const { id: folderId } = useParams();
 
 	// get data

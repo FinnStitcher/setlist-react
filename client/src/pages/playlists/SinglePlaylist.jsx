@@ -1,7 +1,7 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import UserContext from "../../UserContext";
-import ModalContext from "../../ModalContext.jsx";
+
+import {useUserContext, useModalContext} from '../hooks';
 
 import Song from "../../components/songs/Song.jsx";
 import Modal from '../../components/layout/Modal.jsx';
@@ -9,8 +9,8 @@ import Modal from '../../components/layout/Modal.jsx';
 function SinglePlaylist() {
 	const [data, setData] = useState();
 	const { id: playlistId } = useParams();
-	const { user } = useContext(UserContext);
-	const { setModal } = useContext(ModalContext);
+	const { user } = useUserContext();
+	const { setModal } = useModalContext();
 
 	const belongsToThisUser = data?.uploadedBy === user?.user_id;
 

@@ -1,9 +1,10 @@
-import { useRef, useEffect, useContext } from "react";
+import { useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ModalContext from "../../ModalContext.jsx";
+
+import {useModalContext} from '../../hooks';
 
 function Modal({ children, id }) {
-	const { modal, setModal } = useContext(ModalContext);
+	const { modal, setModal } = useModalContext();
 	const modalRef = useRef();
 
 	const navigate = useNavigate();

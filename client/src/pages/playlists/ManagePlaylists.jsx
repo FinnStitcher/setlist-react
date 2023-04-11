@@ -1,7 +1,7 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import UserContext from "../../UserContext";
-import ModalContext from "../../ModalContext";
+
+import {useUserContext, useModalContext} from '../hooks';
 
 import AuthFailed from "../error_pages/AuthFailed";
 import FolderSlim from "../../components/folders/FolderSlim";
@@ -12,8 +12,8 @@ import Modal from "../../components/layout/Modal";
 function ManagePlaylists() {
 	const [folders, setFolders] = useState(null);
 
-	const { user } = useContext(UserContext);
-	const { modal, setModal } = useContext(ModalContext);
+	const { user } = useUserContext();
+	const { modal, setModal } = useModalContext();
 
 	const delBtnRef = useRef();
 	const delPlaylistRef = useRef();

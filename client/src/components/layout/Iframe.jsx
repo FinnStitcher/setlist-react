@@ -1,8 +1,9 @@
-import { useRef, useEffect, useContext } from "react";
-import ModalContext from "../../ModalContext.jsx";
+import { useRef, useEffect } from "react";
+
+import {useModalContext} from '../../hooks';
 
 function Iframe() {
-	const { modal, setModal } = useContext(ModalContext);
+	const { modal, setModal } = useModalContext();
 	const modalRef = useRef();
 
 	useEffect(() => {

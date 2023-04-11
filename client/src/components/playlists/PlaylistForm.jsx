@@ -1,11 +1,11 @@
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 
-import ModalContext from "../../ModalContext.jsx";
+import {useModalContext} from '../../hooks';
 
 import SongList from "../songs/SongList.jsx";
 
 function PlaylistForm({ plData, formState, setFormState }) {
-	const { modal, setModal } = useContext(ModalContext);
+	const { modal, setModal } = useModalContext();
 
 	// if we got data from the parent component, update state
 	useEffect(() => {

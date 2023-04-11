@@ -1,5 +1,6 @@
-import { useState, useContext } from 'react';
-import ModalContext from '../ModalContext.jsx';
+import { useState } from 'react';
+
+import {useModalContext} from '../hooks';
 
 function ReachOut() {
 	const [formState, setFormState] = useState({
@@ -9,7 +10,7 @@ function ReachOut() {
 		body: ''
 	});
 
-	const { modal, setModal } = useContext(ModalContext);
+	const { modal, setModal } = useModalContext();
 
 	function onChangeHandler(event) {
 		const { name, value } = event.target;

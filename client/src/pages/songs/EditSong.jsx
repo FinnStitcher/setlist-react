@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, useContext } from "react";
-import UserContext from "../../UserContext";
-import ModalContext from "../../ModalContext";
+import { useState, useEffect, useRef } from "react";
+
+import {useUserContext, useModalContext} from '../hooks';
 
 import Song from "../../components/songs/Song";
 import SongForm from '../../components/songs/SongForm';
@@ -17,8 +17,8 @@ function EditSong() {
     const [search, setSearch] = useState("");
 	const [suggestions, setSuggestions] = useState([]);
 
-	const { user } = useContext(UserContext);
-	const { modal, setModal } = useContext(ModalContext);
+	const { user } = useUserContext();
+	const { modal, setModal } = useModalContext();
 
 	const formRef = useRef();
 	const clickedSongRef = useRef();

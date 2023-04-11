@@ -1,11 +1,10 @@
-import { useContext } from 'react';
-import UserContext from '../../UserContext.jsx';
+import {useUserContext} from '../hooks';
 
 import AuthFailed from '../error_pages/AuthFailed.jsx';
 import PlaylistFormWrapper from '../../components/playlists/PlaylistFormWrapper.jsx';
 
 function NewPlaylist() {
-	const { user } = useContext(UserContext);
+	const { user } = useUserContext();
 
 	if (!user) {
 		return <AuthFailed />;

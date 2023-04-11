@@ -1,7 +1,7 @@
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import UserContext from '../../UserContext.jsx';
-import ModalContext from '../../ModalContext.jsx';
+
+import {useUserContext, useModalContext} from '../hooks';
 
 import AuthFailed from '../error_pages/AuthFailed.jsx';
 import Forbidden from '../error_pages/Forbidden.jsx';
@@ -9,8 +9,8 @@ import PlaylistFormWrapper from '../../components/playlists/PlaylistFormWrapper.
 
 function EditPlaylist() {
 	const [plData, setPlData] = useState(null);
-	const { user } = useContext(UserContext);
-	const { setModal } = useContext(ModalContext);
+	const { user } = useUserContext();
+	const { setModal } = useModalContext();
 	const { id: playlistId } = useParams();
 
 	// get data

@@ -1,12 +1,11 @@
-import { useContext } from "react";
-import ModalContext from "../../ModalContext";
+import {useModalContext} from '../../hooks';
 
 function Song({ song }) {
 	const { _id, title, artist, album, year, links } = song;
 
 	const displayLinks = window.location.pathname === "/playlists";
 
-	const { setModal } = useContext(ModalContext);
+	const { setModal } = useModalContext();
 
 	function ytModalHandler(event) {
         const {href} = event.target.dataset;

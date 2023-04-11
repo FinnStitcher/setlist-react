@@ -1,11 +1,10 @@
-import { useContext } from "react";
-import ModalContext from "../../ModalContext";
+import {useModalContext} from '../../hooks';
 
 import LinkFields from "./LinkFields.jsx";
 
 function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState }) {
 
-	const { modal, setModal } = useContext(ModalContext);
+	const { modal, setModal } = useModalContext();
 
 	function addLinkHandler() {
 		// check that number of links is within allowed limits

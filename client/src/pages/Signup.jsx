@@ -1,17 +1,14 @@
-import { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import UserContext from '../UserContext.jsx';
-import ModalContext from '../ModalContext.jsx';
+import { useState } from 'react';
+
+import {useUserContext, useModalContext} from '../hooks';
 
 function Signup() {
 	const [formState, setFormState] = useState({
 		username: '',
 		password: ''
 	});
-	const { setUser } = useContext(UserContext);
-	const { modal, setModal } = useContext(ModalContext);
-
-	const navigate = useNavigate();
+	const { setUser } = useUserContext();
+	const { modal, setModal } = useModalContext();
 
 	function onChangeHandler(event) {
 		const { name, value } = event.target;

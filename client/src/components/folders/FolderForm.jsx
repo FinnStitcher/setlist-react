@@ -1,13 +1,12 @@
-import { useEffect, useContext } from "react";
+import { useEffect } from "react";
 
-import UserContext from "../../UserContext.jsx";
-import ModalContext from "../../ModalContext.jsx";
+import {useUserContext, useModalContext} from '../../hooks';
 
 import PlaylistList from "../playlists/PlaylistList.jsx";
 
 function FolderForm({ flData, formState, setFormState }) {
-	const { user } = useContext(UserContext);
-	const { modal, setModal } = useContext(ModalContext);
+	const { user } = useUserContext();
+	const { modal, setModal } = useModalContext();
 
 	// get data and set state
 	useEffect(() => {

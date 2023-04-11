@@ -1,12 +1,13 @@
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import ModalContext from "../ModalContext.jsx";
+
+import {useModalContext} from '../hooks';
 
 import FolderSlim from '../components/folders/FolderSlim.jsx';
 
 function SingleUser() {
 	const [data, setData] = useState({});
-	const { setModal } = useContext(ModalContext);
+	const { setModal } = useModalContext();
 	const { id: userId } = useParams();
 
 	useEffect(() => {
