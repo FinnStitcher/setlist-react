@@ -8,23 +8,15 @@ function Header() {
 	const navigate = useNavigate();
 
 	async function logoutHandler() {
-		// make fetch request to log out the user
-		const response = await fetch('/api/users/logout', {
-			method: 'DELETE'
-		});
+        // TODO: Have the user confirm they want to log out
 
-		if (!response.ok) {
-            setModal({
-                ...modal,
-                active: 'modal',
-                msg: `Something went wrong when logging you out.`
-            });
-            
-			return;
-		}
+        // TODO: Display message confirming logout and redirect
 
 		// change context
 		setUser(null);
+
+        // clear local storage
+        localStorage.removeItem("setlist_token");
 
 		// redirect
 		navigate('/');

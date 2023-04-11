@@ -55,9 +55,12 @@ function Signup() {
 
 			// update context
 			setUser({
-				user_id: json.session.user_id,
-				username: json.session.username
+				user_id: json.user._id,
+				username: json.user.username
 			});
+
+            // save to local storage
+            localStorage.setItem("setlist_token", json.token);
 
 			setModal({
 				...modal,

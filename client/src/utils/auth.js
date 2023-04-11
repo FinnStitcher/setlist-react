@@ -7,7 +7,7 @@ class AuthService {
     }
 
     // add token to localStorage (login)
-    createToken(token) {
+    storeToken(token) {
         localStorage.setItem("setlist_token", token);
         window.location.assign('/');
     }
@@ -37,7 +37,7 @@ class AuthService {
     }
 
     // check if token exists and is not expired
-    isTokenValid(token) {
+    isTokenValid() {
         const token = this.getToken();
         const isExpired = isTokenExpired(token);
         

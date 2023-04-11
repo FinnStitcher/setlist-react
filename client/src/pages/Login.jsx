@@ -59,6 +59,9 @@ function Login() {
 				username: json.user.username
 			});
 
+            // save to local storage
+            localStorage.setItem("setlist_token", json.token);
+
 			setModal({
 				...modal,
 				active: 'modal',

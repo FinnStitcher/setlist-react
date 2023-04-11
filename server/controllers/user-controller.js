@@ -108,20 +108,6 @@ const userController = {
 		}
 	},
 
-	async getThisUserId(req, res) {
-		// if this function is called by someone not logged in, do nothing
-		// else, there should be a user_id attached to the session
-		// return that user id
-		const { loggedIn } = req.session;
-
-		if (!loggedIn) {
-			res.status(401).json({ message: "No session." });
-			return;
-		}
-
-		res.status(200).json(req.session.user_id);
-	},
-
 	async postUser(req, res) {
 		const { username, password } = req.body;
 
@@ -164,19 +150,6 @@ const userController = {
                 token: token,
                 message: "User created. You're logged in."
             });
-
-			// // add user data to session
-			// req.session.save(() => {
-			// 	req.session.user_id = userDbRes._id;
-			// 	req.session.username = userDbRes.username;
-			// 	req.session.loggedIn = true;
-
-			// 	res.status(201).json({
-			// 		user: userDbRes,
-			// 		session: req.session,
-			// 		message: "You're logged in."
-			// 	});
-			// });
 		} catch (err) {
 			// catch server errors
 			console.log(err);
@@ -222,41 +195,11 @@ const userController = {
                 token: token,
                 message: "You're logged in."
             });
-			// // add user data to session
-			// await req.session.save(() => {
-			// 	req.session.user_id = dbRes._id.toString();
-			// 	req.session.username = dbRes.username;
-			// 	req.session.loggedIn = true;
-
-			// 	res.status(200).json({
-			// 		user: dbRes,
-			// 		session: req.session,
-			// 		message: "You're logged in."
-			// 	});
-			// });
 		} catch (err) {
 			// catch server errors
 			console.log(err);
 			res.status(500).json(err);
 		}
-	},
-
-	logoutUser(req, res) {
-		// if logged in, destroy session
-		if (req.session.loggedIn) {
-			req.session.destroy((err) => {
-				if (err) {
-					throw err;
-				}
-
-				res.clearCookie(process.env.SESSION_NAME);
-				res.status(204).end();
-			});
-			return;
-		}
-
-		// unauthorized
-		res.status(401).end();
 	}
 };
 
