@@ -35,7 +35,7 @@ function Song({ song }) {
 				)}
 			</p>
 
-			{displayLinks && (
+			{displayLinks && links.length > 0 && (
 				<p className="text-neutral-700 font-normal">
 					Links:{" "}
 					{links &&

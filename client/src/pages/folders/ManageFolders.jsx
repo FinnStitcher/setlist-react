@@ -77,7 +77,8 @@ function ManageFolders() {
 				method: "DELETE",
 				headers: {
 					Accept: "application/json",
-					"Content-Type": "application/json"
+					"Content-Type": "application/json",
+                    "Authorization": "Bearer " + user.token
 				}
 			});
 			const json = await response.json();
@@ -97,6 +98,8 @@ function ManageFolders() {
 
 			// remove this playlist from the dom
 			delFolderRef.current.remove();
+
+            // TODO: Make its contents appear in unsorted
 		} catch (err) {
 			setModal({
 				...modal,

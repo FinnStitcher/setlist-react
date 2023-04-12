@@ -87,7 +87,8 @@ function FolderForm({ flData, formState, setFormState }) {
 					method: "PUT",
 					headers: {
 						Accept: "application/json",
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
+                        "Authorization": "Bearer " + user.token
 					},
 					body: JSON.stringify(folderObj)
 				});
@@ -97,7 +98,8 @@ function FolderForm({ flData, formState, setFormState }) {
 					method: "POST",
 					headers: {
 						Accept: "application/json",
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
+                        "Authorization": "Bearer " + user.token
 					},
 					body: JSON.stringify(folderObj)
 				});
@@ -118,7 +120,8 @@ function FolderForm({ flData, formState, setFormState }) {
 					method: "PUT",
 					headers: {
 						Accept: "application/json",
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
+                        "Authorization": "Bearer " + user.token
 					},
 					body: JSON.stringify({folderId: folderId})
 				});
@@ -137,7 +140,8 @@ function FolderForm({ flData, formState, setFormState }) {
 					method: "PUT",
 					headers: {
 						Accept: "application/json",
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
+                        "Authorization": "Bearer " + user.token
 					}
 				});
 				const updateJson = await updateResponse.json();

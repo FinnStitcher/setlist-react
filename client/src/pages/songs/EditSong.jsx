@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 
-import {useUserContext, useModalContext} from '../../hooks';
+import { useUserContext, useModalContext } from "../../hooks";
 
 import Song from "../../components/songs/Song";
-import SongForm from '../../components/songs/SongForm';
+import SongForm from "../../components/songs/SongForm";
 import AuthFailed from "../error_pages/AuthFailed";
 
 function EditSong() {
@@ -12,9 +12,9 @@ function EditSong() {
 		artist: "",
 		album: "",
 		year: "",
-        links: []
+		links: []
 	});
-    const [search, setSearch] = useState("");
+	const [search, setSearch] = useState("");
 	const [suggestions, setSuggestions] = useState([]);
 
 	const { user } = useUserContext();
@@ -30,7 +30,11 @@ function EditSong() {
 				// create query param with the search value
 				const query = `?title=${search}`;
 
-				const response = await fetch("/api/songs/search/user/title" + query);
+				const response = await fetch("/api/songs/search/user/title" + query, {
+					headers: {
+						"Authorization": "Bearer " + user.token
+					}
+				});
 				const json = await response.json();
 
 				if (!response.ok) {
@@ -67,13 +71,13 @@ function EditSong() {
 		}
 
 		clickedSongRef.current = target.closest("li");
-        const {id} = clickedSongRef.current;
+		const { id } = clickedSongRef.current;
 
-        // find this song in the db
-        const response = await fetch('/api/songs/' + id);
-        const json = await response.json();
+		// find this song in the db
+		const response = await fetch("/api/songs/" + id);
+		const json = await response.json();
 
-        const {title, artist, album, year, links} = json;
+		const { title, artist, album, year, links } = json;
 
 		// update form state
 		setFormState({
@@ -81,7 +85,7 @@ function EditSong() {
 			artist: artist,
 			album: album ? album.replace("<i>", "").replace("</i>", "") : "",
 			year: year ? year : "",
-            links: [...links]
+			links: [...links]
 		});
 
 		setSuggestions([]);
@@ -90,11 +94,11 @@ function EditSong() {
 		formRef.current.className = "block";
 	}
 
-    function onChangeHandler(event) {
-        const {value} = event.target;
+	function onChangeHandler(event) {
+		const { value } = event.target;
 
-        setSearch(value);
-    }
+		setSearch(value);
+	}
 
 	if (!user) {
 		return <AuthFailed />;
@@ -123,17 +127,21 @@ function EditSong() {
 
 				<ul className="form-song-list" onClick={onClickHandler}>
 					{suggestions[0] &&
-						suggestions.map((element) => (
-							<Song key={element._id} song={element} />
-						))}
+						suggestions.map((element) => <Song key={element._id} song={element} />)}
 				</ul>
 
 				<p>Double-click a song to copy its information into the form below.</p>
 			</div>
 
 			<hr />
-            
-            <SongForm isEditing={true} formRef={formRef} clickedSongRef={clickedSongRef} formState={formState} setFormState={setFormState} />
+
+			<SongForm
+				isEditing={true}
+				formRef={formRef}
+				clickedSongRef={clickedSongRef}
+				formState={formState}
+				setFormState={setFormState}
+			/>
 		</>
 	);
 }

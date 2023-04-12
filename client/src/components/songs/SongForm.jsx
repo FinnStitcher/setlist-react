@@ -1,9 +1,9 @@
-import {useModalContext} from '../../hooks';
+import { useUserContext, useModalContext } from "../../hooks";
 
 import LinkFields from "./LinkFields.jsx";
 
 function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState }) {
-
+	const { user } = useUserContext();
 	const { modal, setModal } = useModalContext();
 
 	function addLinkHandler() {
@@ -22,7 +22,7 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 				{
 					source: "",
 					href: "",
-					tempId: Math.ceil(Math.random() * 100)
+					tempId: Math.ceil(Math.random() * 1000)
 				}
 			]
 		});
@@ -102,7 +102,8 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 					method: "PUT",
 					headers: {
 						Accept: "application/json",
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
+						"Authorization": "Bearer " + user.token
 					},
 					body: JSON.stringify(songObj)
 				});
@@ -125,7 +126,7 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 					artist: "",
 					album: "",
 					year: "",
-                    links: []
+					links: []
 				});
 			} else {
 				// make database call
@@ -133,7 +134,8 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 					method: "POST",
 					headers: {
 						Accept: "application/json",
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
+						Authorization: "Bearer " + user.token
 					},
 					body: JSON.stringify(songObj)
 				});

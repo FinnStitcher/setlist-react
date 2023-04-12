@@ -1,4 +1,5 @@
 const { Song } = require('../models');
+const {checkToken} = require('../utils/auth.js');
 
 const songController = {
 	async getAllSongs(req, res) {
@@ -33,16 +34,18 @@ const songController = {
 	},
 
 	async getSongsByTitleThisUser(req, res) {
-		// making this route accept an id in the body for dev purposes
-		const { user_id } = req.session;
-		const { title } = req.query;
+		let { title } = req.query;
+        const {_id: userId} = checkToken(req, res);
 
-		if (!user_id) {
+		if (!userId) {
 			res.status(400).json({
 				message: 'Missing an ID to search with.'
 			});
 			return;
 		}
+
+        // pre-process to deal with any characters that have special regex meanings
+        title = title.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 
 		// convert search into regex
 		const searchRegex = title
@@ -51,7 +54,7 @@ const songController = {
 
 		try {
 			const songDbRes = await Song.find({
-				uploadedBy: user_id,
+				uploadedBy: userId,
 				title: searchRegex
 			});
 
@@ -68,6 +71,7 @@ const songController = {
 		}
 	},
 
+    // TODO remove this and update frontend to search by artist as well
 	async getSongsByTitle(req, res) {
         // used to find songs so the user can add them to a playlist
 
@@ -97,13 +101,18 @@ const songController = {
 
 	async getSongsByTitleAndArtist(req, res) {
         // used to find songs that might be duplicates of the one the user is trying to create
+        let {title, artist} = req.query;
+
+        // pre-process to deal with any characters that have special regex meanings
+        title = title.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+        artist = artist.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
 
 		// turn query params into regexps
-		const titleRegex = req.query.title
-			? new RegExp('\\b' + req.query.title, 'i')
+		const titleRegex = title
+			? new RegExp('\\b' + title, 'i')
 			: new RegExp('.');
-		const artistRegex = req.query.artist
-			? new RegExp('\\b' + req.query.artist, 'i')
+		const artistRegex = artist
+			? new RegExp('\\b' + artist, 'i')
 			: new RegExp('.');
 
 		try {
@@ -126,10 +135,10 @@ const songController = {
 
 	async postSong(req, res) {
 		const { title, artist, album, year, links } = req.body;
-		const { user_id } = req.session;
+        const {_id: userId} = checkToken(req, res);
 
 		// confirm user is logged in
-		if (!user_id) {
+		if (!userId) {
 			res.status(401).json({
 				message: 'You need to be logged in to do that.'
 			});
@@ -143,7 +152,7 @@ const songController = {
 				album,
 				year,
                 links,
-				uploadedBy: user_id
+				uploadedBy: userId
 			});
 
 			res.status(200).json(songDbRes);
@@ -156,10 +165,10 @@ const songController = {
 	async putSong(req, res) {
 		const { title, artist, album, year, links } = req.body;
 		const { id: songId } = req.params;
-		const { user_id } = req.session;
+        const {_id: userId} = checkToken(req, res);
 
 		// confirm user is logged in
-		if (!user_id) {
+		if (!userId) {
 			res.status(401).json({
 				message: 'You need to be logged in to do that.'
 			});

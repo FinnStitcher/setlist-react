@@ -1,5 +1,6 @@
-const { Folder, User } = require('../models');
-const { checkFolderOwnership } = require('../utils/utils.js');
+const { Folder, User } = require("../models");
+const { checkFolderOwnership } = require("../utils/utils.js");
+const { checkToken } = require("../utils/auth.js");
 
 const folderController = {
 	async getAllFolders(req, res) {
@@ -20,12 +21,12 @@ const folderController = {
 			const folderDbRes = await Folder.findOne({
 				_id: searchTerm
 			}).populate({
-				path: 'playlists',
-				select: '-__v'
+				path: "playlists",
+				select: "-__v"
 			});
 
 			if (!folderDbRes) {
-				res.status(404).json({ message: 'No folder with that ID.' });
+				res.status(404).json({ message: "No folder with that ID." });
 				return;
 			}
 
@@ -38,12 +39,12 @@ const folderController = {
 
 	async postFolder(req, res) {
 		const { name, playlists } = req.body;
-		const { user_id, username } = req.session;
+		const { _id: userId, username } = checkToken(req, res);
 
 		// confirm user is logged in
-		if (!user_id) {
+		if (!userId) {
 			res.status(401).json({
-				message: 'You need to be logged in to do that.'
+				message: "You need to be logged in to do that."
 			});
 			return;
 		}
@@ -52,29 +53,27 @@ const folderController = {
 			const folderDbRes = await Folder.create({
 				name,
 				playlists,
-                uploadedBy: user_id,
-                uploaderUsername: username
+				uploadedBy: userId,
+				uploaderUsername: username
 			});
 
 			const { _id } = folderDbRes;
 
 			// update relevant user profile
-			const userDbRes = await User.findOneAndUpdate(
-				{ _id: user_id },
+			await User.findOneAndUpdate(
+				{ _id: userId },
 				{ $push: { folders: _id } },
 				{ new: true }
-			).select('_id username');
+			).select("_id username");
 
-			res.status(200).json(
-				folderDbRes
-			);
+			res.status(200).json(folderDbRes);
 		} catch (err) {
 			console.log(err);
 
-			if (err.name === 'ValidatorError') {
+			if (err.name === "ValidatorError") {
 				res.status(400).json({
 					err,
-					message: 'A name is required.'
+					message: "A name is required."
 				});
 				return;
 			}
@@ -87,22 +86,18 @@ const folderController = {
 	async editFolder(req, res) {
 		const folderId = req.params.id;
 		const { name, playlists } = req.body;
-		const { loggedIn, user_id } = req.session;
+		const { _id: userId } = checkToken(req, res);
 
 		// check that user is logged in
-		if (!loggedIn) {
+		if (!userId) {
 			res.status(401).json({
-				message: 'You need to be logged in to do this.'
+				message: "You need to be logged in to do this."
 			});
 			return;
 		}
 
 		// check that user owns this folder
-		const belongsToThisUser = await checkFolderOwnership(
-			loggedIn,
-			user_id,
-			folderId
-		);
+		const belongsToThisUser = await checkFolderOwnership(userId, folderId);
 
 		if (!belongsToThisUser) {
 			res.status(401).json({
@@ -117,14 +112,14 @@ const folderController = {
 				{ _id: folderId },
 				{
 					name: name,
-					dateLastModified: new Date,
+					dateLastModified: new Date(),
 					playlists: [...playlists]
 				},
 				{ new: true }
 			);
 
 			if (!folderDbRes) {
-				res.status(404).json({ message: 'No folder with that ID.' });
+				res.status(404).json({ message: "No folder with that ID." });
 				return;
 			}
 
@@ -132,10 +127,10 @@ const folderController = {
 		} catch (err) {
 			console.log(err);
 
-			if (err.name === 'ValidatorError') {
+			if (err.name === "ValidatorError") {
 				res.status(400).json({
 					err,
-					message: 'A name is required.'
+					message: "A name is required."
 				});
 				return;
 			}
@@ -147,22 +142,18 @@ const folderController = {
 
 	async deleteFolder(req, res) {
 		const folderId = req.params.id;
-		const { loggedIn, user_id } = req.session;
+		const { _id: userId } = checkToken(req, res);
 
 		// check that user is logged in
-		if (!loggedIn) {
+		if (!userId) {
 			res.status(401).json({
-				message: 'You need to be logged in to do this.'
+				message: "You need to be logged in to do this."
 			});
 			return;
 		}
 
 		// check that user owns this folder
-		const belongsToThisUser = await checkFolderOwnership(
-			loggedIn,
-			user_id,
-			folderId
-		);
+		const belongsToThisUser = await checkFolderOwnership(userId, folderId);
 
 		if (!belongsToThisUser) {
 			res.status(401).json({
@@ -171,22 +162,21 @@ const folderController = {
 			return;
 		}
 
-        // make sure they aren't trying to delete their unsorted folder
-        try {
-            const thisUser = await User.findOne({_id: user_id});
-            const thisFolder = await Folder.findOne({_id: folderId});
-            const thisFolderIsUnsorted = thisFolder._id === thisUser.folders[0];
+		// make sure they aren't trying to delete their unsorted folder
+		try {
+			const thisFolder = await Folder.findOne({ _id: folderId });
+			const thisFolderIsUnsorted = thisFolder.isUnsorted;
 
-            if (thisFolderIsUnsorted) {
-                res.status(401).json({
-                    message: "You can't delete the Unsorted folder."
-                });
-                return;
-            }
-        } catch (err) {
+			if (thisFolderIsUnsorted) {
+				res.status(401).json({
+					message: "You can't delete the Unsorted folder."
+				});
+				return;
+			}
+		} catch (err) {
 			console.log(err);
 			res.status(500).json(err);
-        }
+		}
 
 		// attempt to delete
 		try {
@@ -195,32 +185,32 @@ const folderController = {
 			});
 
 			if (!folderDbRes) {
-				res.status(404).json({ message: 'No folder with that ID.' });
+				res.status(404).json({ message: "No folder with that ID." });
 				return;
 			}
 
 			// remove deleted folder from relevant user's profile
 			const userDbRes = await User.findOneAndUpdate(
-				{ _id: user_id },
+				{ _id: userId },
 				{ $pull: { folders: folderId } },
 				{ new: true }
-			).populate('folders');
+			).populate("folders");
 
 			// move playlists that were in this folder to the unsorted folder
 			// should always be the first item in the array
 			const unsortedFolderId = userDbRes.folders[0];
 			const playlistsToMove = folderDbRes.playlists;
 
-			const unsortedDbRes = await Folder.findOneAndUpdate(
+			await Folder.findOneAndUpdate(
 				{ _id: unsortedFolderId },
 				{ $addToSet: { playlists: { $each: [...playlistsToMove] } } },
 				{ new: true }
 			);
 
 			res.status(200).json({
-                deletedFolder: folderDbRes,
-                user: userDbRes
-            });
+				deletedFolder: folderDbRes,
+				user: userDbRes
+			});
 		} catch (err) {
 			console.log(err);
 			res.status(500).json(err);
