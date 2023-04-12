@@ -9,37 +9,35 @@ class AuthService {
     // add token to localStorage (login)
     storeToken(token) {
         localStorage.setItem("setlist_token", token);
-        window.location.assign('/');
     }
 
     // remove token from localStorage (logout)
     deleteToken() {
         localStorage.removeItem("setlist_token");
-        window.location.assign('/');
     }
 
     // get user data from token
     // will return username and _id
-    decodeToken() {
-        return decode(this.getToken());
+    decodeToken(token) {
+        return decode(token);
     }
 
     // check if token is expired
     isTokenExpired(token) {
         try {
-            const tokenData = this.decodeToken();
+            const tokenData = this.decodeToken(token);
+            // returns true if we are past the expiration time
             const isExpired = tokenData.exp < Date.now() / 1000;
 
             return isExpired;
         } catch {
-            return false;
+            return true;
         }
     }
 
     // check if token exists and is not expired
-    isTokenValid() {
-        const token = this.getToken();
-        const isExpired = isTokenExpired(token);
+    isTokenValid(token) {
+        const isExpired = this.isTokenExpired(token);
         
         if (isExpired || !token) {
             return false;
