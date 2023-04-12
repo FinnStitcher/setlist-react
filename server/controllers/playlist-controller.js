@@ -286,9 +286,7 @@ const playlistController = {
 				return;
 			}
 
-			const { uploadedBy: userId } = playlistDbRes;
-
-			// remove playlist from relevant user's profile
+			// remove playlist from this user's profile
 			const userDbRes = await User.findOneAndUpdate(
 				{ _id: userId },
 				{ $pull: { playlists: playlistId } },
