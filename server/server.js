@@ -2,7 +2,6 @@ const express = require('express');
 //const session = require('express-session');
 const mongoose = require('mongoose');
 const path = require('path');
-
 const morgan = require('morgan');
 
 const routes = require('./routes');
@@ -17,6 +16,7 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(express.static(path.join(__dirname, '../client/dist')));
+//app.use(authMiddleware);
 //app.use(session(sessionObj));
 
 app.use(routes);

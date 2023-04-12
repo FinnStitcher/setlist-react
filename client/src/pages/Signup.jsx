@@ -56,7 +56,8 @@ function Signup() {
 			// update context
 			setUser({
 				user_id: json.user._id,
-				username: json.user.username
+				username: json.user.username,
+                token: json.token
 			});
 
             // save to local storage

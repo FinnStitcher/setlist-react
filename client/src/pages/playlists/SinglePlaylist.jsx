@@ -59,7 +59,8 @@ function SinglePlaylist() {
 				method: "DELETE",
 				headers: {
 					Accept: "application/json",
-					"Content-Type": "application/json"
+					"Content-Type": "application/json",
+                    "Authorization": "Bearer " + user.token
 				}
 			});
 			const json = await response.json();

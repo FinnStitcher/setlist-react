@@ -1,7 +1,7 @@
 const {User} = require('../models');
 
-async function checkUserOwnership(loggedIn, userId, playlistId) {
-    if (!loggedIn) {
+async function checkUserOwnership(userId, playlistId) {
+    if (!userId) {
         return false;
     }
 
@@ -18,8 +18,8 @@ async function checkUserOwnership(loggedIn, userId, playlistId) {
     }
 };
 
-async function checkFolderOwnership(loggedIn, userId, folderId) {
-    if (!loggedIn) {
+async function checkFolderOwnership(userId, folderId) {
+    if (!userId) {
         return false;
     }
 

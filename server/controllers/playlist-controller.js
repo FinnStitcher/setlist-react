@@ -1,5 +1,6 @@
 const { Playlist, User, Folder } = require('../models');
 const { checkUserOwnership } = require('../utils/utils.js');
+const {checkToken} = require('../utils/auth.js');
 
 const playlistController = {
 	async getAllPlaylists(req, res) {
@@ -38,10 +39,11 @@ const playlistController = {
 
 	async postPlaylist(req, res) {
 		const { title, songs } = req.body;
-		const { user_id, username } = req.session;
+
+        const {_id: userId, username} = checkToken(req, res);
 
 		// confirm user is logged in
-		if (!user_id) {
+		if (!userId) {
 			res.status(401).json({
 				message: 'You need to be logged in to do that.'
 			});
@@ -52,7 +54,7 @@ const playlistController = {
 			const playlistDbRes = await Playlist.create({
 				title,
 				songs,
-                uploadedBy: user_id,
+                uploadedBy: userId,
                 uploaderUsername: username
 			});
 
@@ -60,7 +62,7 @@ const playlistController = {
 
 			// update relevant user profile
 			const userDbRes = await User.findOneAndUpdate(
-				{ _id: user_id },
+				{ _id: userId },
 				{ $push: { playlists: _id } },
 				{ new: true }
 			).populate({
@@ -101,10 +103,11 @@ const playlistController = {
 	async editPlaylist(req, res) {
 		const playlistId = req.params.id;
 		const { title, songs } = req.body;
-		const { loggedIn, user_id } = req.session;
+
+        const {_id: userId} = checkToken(req, res);
 
 		// check that user is logged in
-		if (!loggedIn) {
+		if (!userId) {
 			res.status(401).json({
 				message: 'You need to be logged in to do this.'
 			});
@@ -113,8 +116,7 @@ const playlistController = {
 
 		// check that user owns this playlist
 		const belongsToThisUser = await checkUserOwnership(
-			loggedIn,
-			user_id,
+			userId,
 			playlistId
 		);
 
@@ -199,8 +201,9 @@ const playlistController = {
 	},
 
 	async movePlaylistToUnsorted(req, res) {
-        const {user_id} = req.session;
 		const playlistId = req.params.id;
+
+        const {_id: userId} = checkToken(req, res);
 
         try {
             // check that playlist id is valid
@@ -215,7 +218,7 @@ const playlistController = {
 
             // get id of this user's unsorted folder
             const userFolderData = await User.findOne({
-                _id: user_id
+                _id: userId
             }).select('folders').populate({
                 path: 'folders',
                 select: '_id'
@@ -247,10 +250,11 @@ const playlistController = {
 
 	async deletePlaylist(req, res) {
 		const playlistId = req.params.id;
-		const { loggedIn, user_id } = req.session;
+
+        const {_id: userId} = checkToken(req, res);
 
 		// check that user is logged in
-		if (!loggedIn) {
+		if (!userId) {
 			res.status(401).json({
 				message: 'You need to be logged in to do this.'
 			});
@@ -259,8 +263,7 @@ const playlistController = {
 
 		// check that user owns this playlist
 		const belongsToThisUser = await checkUserOwnership(
-			loggedIn,
-			user_id,
+			userId,
 			playlistId
 		);
 
@@ -283,11 +286,11 @@ const playlistController = {
 				return;
 			}
 
-			const { uploadedBy: user_id } = playlistDbRes;
+			const { uploadedBy: userId } = playlistDbRes;
 
 			// remove playlist from relevant user's profile
 			const userDbRes = await User.findOneAndUpdate(
-				{ _id: user_id },
+				{ _id: userId },
 				{ $pull: { playlists: playlistId } },
 				{ new: true }
 			).populate('playlists');

@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 
-import {useModalContext} from '../../hooks';
+import {useUserContext, useModalContext} from '../../hooks';
 
 import SongList from "../songs/SongList.jsx";
 
 function PlaylistForm({ plData, formState, setFormState }) {
 	const { modal, setModal } = useModalContext();
+	const { user } = useUserContext();
 
 	// if we got data from the parent component, update state
 	useEffect(() => {
@@ -99,7 +100,8 @@ function PlaylistForm({ plData, formState, setFormState }) {
 					method: "PUT",
 					headers: {
 						Accept: "application/json",
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
+                        "Authorization": "Bearer " + user.token
 					},
 					body: JSON.stringify(playlistObj)
 				});
@@ -109,7 +111,8 @@ function PlaylistForm({ plData, formState, setFormState }) {
 					method: "POST",
 					headers: {
 						Accept: "application/json",
-						"Content-Type": "application/json"
+						"Content-Type": "application/json",
+                        "Authorization": "Bearer " + user.token
 					},
 					body: JSON.stringify(playlistObj)
 				});
