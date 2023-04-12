@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import {useUserContext, useModalContext} from '../../hooks';
+import {useUserContext, useModalContext, useFetch} from '../../hooks';
 
 import Song from "../../components/songs/Song";
 import SongForm from '../../components/songs/SongForm';
@@ -24,17 +24,9 @@ function NewSong() {
 			async function getSearchResults() {
 				// create query string
 				const query = `?title=${formState.title}&artist=${formState.artist}`;
+                const url = "/api/songs/search/title/artist" + query;
 
-				const response = await fetch(
-					"/api/songs/search/title/artist" + query
-				);
-				const json = await response.json();
-
-				if (!response.ok) {
-					const { message } = json;
-
-					throw new Error(message);
-				}
+                const json = await useFetch(url, "GET");
 
                 setSuggestions([...json]);
 			}

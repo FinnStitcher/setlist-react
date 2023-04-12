@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 
-import {useUserContext, useModalContext} from '../../hooks';
+import {useUserContext, useModalContext, useFetch} from '../../hooks';
 
 import AuthFailed from '../error_pages/AuthFailed.jsx';
 import Forbidden from '../error_pages/Forbidden.jsx';
@@ -17,15 +17,7 @@ function EditPlaylist() {
 	useEffect(() => {
 		async function getPlaylistData() {
             try {
-                const response = await fetch('/api/playlists/' + playlistId);
-                const json = await response.json();
-
-                if (!response.ok) {
-                    const { message } = json;
-
-                    throw Error(message);
-                }
-
+                const json = await useFetch(`/api/playlists/${playlistId}`, "GET");
                 // check user ownership
                 if (user.user_id !== json.uploadedBy) {
                     const forbidden = "edit someone else's playlist";

@@ -14,14 +14,9 @@ function FolderForm({ flData, formState, setFormState }) {
 			const { user_id } = user;
 
 			try {
-				const response = await fetch("/api/users/" + user_id + "/playlists/unsorted");
-				const json = await response.json();
+                const url = "/api/users/" + user_id + "/playlists/unsorted";
 
-				if (!response.ok) {
-					const { message } = json;
-
-					throw Error(message);
-				}
+                const json = await useFetch(url, "GET");
 
 				// include any data received from the parent component
 				setFormState({

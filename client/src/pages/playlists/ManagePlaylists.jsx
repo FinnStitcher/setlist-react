@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
-import {useUserContext, useModalContext} from '../../hooks';
+import {useUserContext, useModalContext, useFetch} from '../../hooks';
 
 import AuthFailed from "../error_pages/AuthFailed";
 import FolderSlim from "../../components/folders/FolderSlim";
@@ -26,14 +26,7 @@ function ManagePlaylists() {
 
 			async function getUserData() {
 				try {
-					const response = await fetch("/api/users/" + user_id);
-					const json = await response.json();
-
-					if (!response.ok) {
-						const { message } = json;
-
-						throw Error(message);
-					}
+                    const json = await useFetch(`/api/users/${user_id}`, "GET");
 
 					setFolders(json.folders);
 				} catch (err) {
@@ -81,25 +74,11 @@ function ManagePlaylists() {
 
 	async function deleteConfirmedHandler() {
 		// getting the id from the delete button
-		const playlistID = delBtnRef.current.getAttribute("data-id");
+		const playlistId = delBtnRef.current.getAttribute("data-id");
 
 		// make database call
 		try {
-			const response = await fetch("/api/playlists/" + playlistID, {
-				method: "DELETE",
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json",
-                    "Authorization": "Bearer " + user.token
-				}
-			});
-			const json = await response.json();
-
-			if (!response.ok) {
-				const { message } = json;
-
-				throw Error(message);
-			}
+            await useFetch(`/api/playlists/${playlistId}`, "DELETE", null, user.token);
 
 			// swap modals
 			setModal({

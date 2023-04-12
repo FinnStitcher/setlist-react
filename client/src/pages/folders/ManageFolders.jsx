@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-import {useUserContext, useModalContext} from '../../hooks';
+import {useUserContext, useModalContext, useFetch} from '../../hooks';
 
 import AuthFailed from "../error_pages/AuthFailed.jsx";
 import FolderCanEdit from "../../components/folders/FolderCanEdit.jsx";
@@ -22,14 +22,7 @@ function ManageFolders() {
 
 			const getUserData = async () => {
 				try {
-					const response = await fetch("/api/users/" + user_id);
-					const json = await response.json();
-
-					if (!response.ok) {
-						const { name, message } = json;
-
-						throw Error(name, message);
-					}
+                    const json = await useFetch(`/api/users/${user_id}`, "GET");
 
 					setFolders(json.folders);
 				} catch (err) {
@@ -69,25 +62,11 @@ function ManageFolders() {
 
 	async function deleteConfirmedHandler() {
 		// getting the id from the delete button
-		const folderID = delBtnRef.current.getAttribute("data-id");
+		const folderId = delBtnRef.current.getAttribute("data-id");
 
 		// make database call
 		try {
-			const response = await fetch("/api/folders/" + folderID, {
-				method: "DELETE",
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json",
-                    "Authorization": "Bearer " + user.token
-				}
-			});
-			const json = await response.json();
-
-			if (!response.ok) {
-				const { message } = json;
-
-				throw Error(message);
-			}
+            await useFetch(`/api/folders/${folderId}`, "DELETE", null, user.token);
 
 			// swap modals
 			setModal({
@@ -96,10 +75,22 @@ function ManageFolders() {
 				msg: "This folder was successfully deleted."
 			});
 
+            // move this folder's contents to Unsorted
+            const delFolderList = delFolderRef.current.childNodes[1].childNodes[1];
+            const unsortedFolderList = document.querySelector("#unsorted")
+
+            delFolderList.childNodes.forEach((element) => {
+                unsortedFolderList.append(element)
+            });
+
+            // delFolderBody.forEach(element => console.log(element));
+            
+            // for (let i = 0; i < delFolderContents.length; i++) {
+            //     console.log(delFolderContents[i]);
+            // }
+
 			// remove this playlist from the dom
 			delFolderRef.current.remove();
-
-            // TODO: Make its contents appear in unsorted
 		} catch (err) {
 			setModal({
 				...modal,

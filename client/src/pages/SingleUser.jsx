@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import {useModalContext} from '../hooks';
+import {useModalContext, useFetch} from '../hooks';
 
 import FolderSlim from '../components/folders/FolderSlim.jsx';
 
@@ -13,14 +13,7 @@ function SingleUser() {
 	useEffect(() => {
 		async function getData() {
 			try {
-				const response = await fetch("/api/users/" + userId);
-				const json = await response.json();
-
-				if (!response.ok) {
-					const { message } = json;
-
-					throw new Error(message);
-				}
+                const json = await useFetch(`/api/users/${userId}`, "GET");
 
 				setData({ ...json });
 			} catch (err) {

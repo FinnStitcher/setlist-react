@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import {useUserContext, useModalContext} from '../../hooks';
+import {useUserContext, useModalContext, useFetch} from '../../hooks';
 
 import Song from "../../components/songs/Song.jsx";
 import Modal from '../../components/layout/Modal.jsx';
@@ -18,14 +18,7 @@ function SinglePlaylist() {
 	useEffect(() => {
 		async function getData() {
 			try {
-				const response = await fetch("/api/playlists/" + playlistId);
-				const json = await response.json();
-
-				if (!response.ok) {
-					const { message } = json;
-
-					throw new Error(message);
-				}
+                const json = await useFetch(`/api/playlists/${playlistId}`, "GET");
 
 				setData({ ...json });
 			} catch (err) {
@@ -55,21 +48,7 @@ function SinglePlaylist() {
 	async function deleteConfirmedHandler() {
 		// make database call
 		try {
-			const response = await fetch("/api/playlists/" + playlistId, {
-				method: "DELETE",
-				headers: {
-					Accept: "application/json",
-					"Content-Type": "application/json",
-                    "Authorization": "Bearer " + user.token
-				}
-			});
-			const json = await response.json();
-
-			if (!response.ok) {
-				const { message } = json;
-
-				throw new Error(message);
-			}
+            await useFetch(`/api/playlists/${playlistId}`, "DELETE", null, user.token);
 
 			// swap modals
 			setModal({

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-import { useUserContext, useModalContext } from "../../hooks";
+import { useUserContext, useModalContext, useFetch } from "../../hooks";
 
 import Song from "../../components/songs/Song";
 import SongForm from "../../components/songs/SongForm";
@@ -29,19 +29,10 @@ function EditSong() {
 			async function getSearchResults() {
 				// create query param with the search value
 				const query = `?title=${search}`;
+                const url = "/api/songs/search/user/title" + query;
 
-				const response = await fetch("/api/songs/search/user/title" + query, {
-					headers: {
-						"Authorization": "Bearer " + user.token
-					}
-				});
-				const json = await response.json();
-
-				if (!response.ok) {
-					const { message } = json;
-
-					throw new Error(message);
-				}
+                // reads songs belonging to this user, so it need the token
+                const json = await useFetch(url, "GET", null, user.token);
 
 				setSuggestions([...json]);
 			}
@@ -74,8 +65,7 @@ function EditSong() {
 		const { id } = clickedSongRef.current;
 
 		// find this song in the db
-		const response = await fetch("/api/songs/" + id);
-		const json = await response.json();
+        const json = await useFetch(`/api/songs/${id}`, "GET");
 
 		const { title, artist, album, year, links } = json;
 
