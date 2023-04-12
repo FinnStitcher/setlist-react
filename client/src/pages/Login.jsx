@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import {useUserContext, useModalContext} from '../hooks';
+import { useUserContext, useModalContext, useFetch } from "../hooks";
 
 function Login() {
 	const [formState, setFormState] = useState({
-		username: '',
-		password: ''
+		username: "",
+		password: ""
 	});
 	const { setUser } = useUserContext();
 	const { modal, setModal } = useModalContext();
@@ -28,51 +28,36 @@ function Login() {
 		if (!username || !password) {
 			setModal({
 				...modal,
-				active: 'modal',
-				msg: 'A username and password are required.'
+				active: "modal",
+				msg: "A username and password are required."
 			});
 
 			return;
 		}
 
 		try {
-			const response = await fetch('/api/users/login', {
-				method: 'POST',
-				body: JSON.stringify(formState),
-				headers: {
-					Accept: 'application/json',
-					'Content-Type': 'application/json'
-				}
-			});
-			// returns session and user info
-			const json = await response.json();
-
-			if (!response.ok) {
-				const { message } = json;
-
-				throw Error(message);
-			}
+			const json = await useFetch("/api/users/login", "POST", formState); // no token
 
 			// update context
 			setUser({
 				user_id: json.user._id,
 				username: json.user.username,
-                token: json.token
+				token: json.token
 			});
 
-            // save to local storage
-            localStorage.setItem("setlist_token", json.token);
+			// save to local storage
+			localStorage.setItem("setlist_token", json.token);
 
 			setModal({
 				...modal,
-				active: 'modal',
+				active: "modal",
 				msg: "You're logged in! Redirecting...",
-				navTo: '/playlists'
+				navTo: "/playlists"
 			});
 		} catch (err) {
 			setModal({
 				...modal,
-				active: 'modal',
+				active: "modal",
 				msg: `${err.name}: ${err.message}`
 			});
 
@@ -88,7 +73,7 @@ function Login() {
 
 			<form id="user-form" onSubmit={onSubmitHandler}>
 				<label htmlFor="username" className="form-label">
-					Username{' '}
+					Username{" "}
 					<span className="required" title="Required">
 						*
 					</span>
@@ -102,7 +87,7 @@ function Login() {
 				/>
 
 				<label htmlFor="password" className="form-label">
-					Password{' '}
+					Password{" "}
 					<span className="required" title="Required">
 						*
 					</span>

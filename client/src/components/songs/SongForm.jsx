@@ -1,4 +1,4 @@
-import { useUserContext, useModalContext } from "../../hooks";
+import { useUserContext, useModalContext, useFetch } from "../../hooks";
 
 import LinkFields from "./LinkFields.jsx";
 
@@ -91,77 +91,36 @@ function SongForm({ isEditing, formRef, clickedSongRef, formState, setFormState 
 			})
 		};
 
-		let response = null;
+		const isEditing = window.location.pathname.includes("edit");
+
+		let json = null;
 
 		try {
 			if (isEditing) {
 				const songId = clickedSongRef.current.id;
+				const url = "/api/songs/" + songId;
 
-				// make database call
-				response = await fetch("/api/songs/" + songId, {
-					method: "PUT",
-					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-						"Authorization": "Bearer " + user.token
-					},
-					body: JSON.stringify(songObj)
-				});
-				const json = await response.json();
-
-				if (!response.ok) {
-					const { message } = json;
-
-					throw new Error(message);
-				}
-
-				setModal({
-					...modal,
-					active: "modal",
-					msg: "Your submission was a success!"
-				});
-
-				setFormState({
-					title: "",
-					artist: "",
-					album: "",
-					year: "",
-					links: []
-				});
+				json = await useFetch(url, "PUT", songObj, user.token);
 			} else {
-				// make database call
-				response = await fetch("/api/songs", {
-					method: "POST",
-					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-						Authorization: "Bearer " + user.token
-					},
-					body: JSON.stringify(songObj)
-				});
-				const json = await response.json();
-
-				if (!response.ok) {
-					const { message } = json;
-					throw new Error(message);
-				}
-
-				setModal({
-					...modal,
-					active: "modal",
-					msg: "Your submission was a success!"
-				});
-
-				setFormState({
-					title: "",
-					artist: "",
-					album: "",
-					year: "",
-					links: []
-				});
+				json = await useFetch("/api/songs", "POST", songObj, user.token);
 			}
+
+			// no error, moves forward
+
+			setModal({
+				...modal,
+				active: "modal",
+				msg: `Your ${isEditing ? "update" : "submission"} was a success!`
+			});
+
+			setFormState({
+				title: "",
+				artist: "",
+				album: "",
+				year: "",
+				links: []
+			});
 		} catch (err) {
-			// TODO: Better error handling
 			setModal({
 				...modal,
 				active: "modal",

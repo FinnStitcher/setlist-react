@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import {useUserContext, useModalContext} from '../../hooks';
+import {useUserContext, useModalContext, useFetch} from '../../hooks';
 
 import PlaylistList from "../playlists/PlaylistList.jsx";
 
@@ -74,83 +74,34 @@ function FolderForm({ flData, formState, setFormState }) {
 		};
 
 		// check - are we making an edit or a new folder?
-		let editingBoolean = window.location.pathname.includes("edit");
+		const editingBoolean = window.location.pathname.includes("edit");
 
-		let response = null;
+		let json = null;
 
 		try {
 			if (editingBoolean) {
-				const folderId = window.location.pathname.split("/")[2];
+				const folderId = window.location.pathname.split("/").pop();
+                const url = "/api/folders/" + folderId;
 
-				// make api call to update
-				response = await fetch("/api/folders/" + folderId, {
-					method: "PUT",
-					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-                        "Authorization": "Bearer " + user.token
-					},
-					body: JSON.stringify(folderObj)
-				});
+                json = await useFetch(url, "PUT", folderObj, user.token);
 			} else {
-				// make api call to create new
-				response = await fetch("/api/folders", {
-					method: "POST",
-					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-                        "Authorization": "Bearer " + user.token
-					},
-					body: JSON.stringify(folderObj)
-				});
-			}
-			const json = await response.json();
 
-			if (!response.ok) {
-				const { message } = json;
-
-				throw Error(message);
+                json = await useFetch("/api/folders", "POST", folderObj, user.token);
 			}
 
 			// remove selected playlists from any other folders
 			formState.selected.forEach(async (element) => {
 				const folderId = json._id;
+                const url = "/api/playlists/" + element._id + "/update-folders";
 
-				const updateResponse = await fetch("/api/playlists/" + element._id + "/update-folders", {
-					method: "PUT",
-					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-                        "Authorization": "Bearer " + user.token
-					},
-					body: JSON.stringify({folderId: folderId})
-				});
-				const updateJson = await updateResponse.json();
-
-				if (!response.ok) {
-					const { message } = updateJson;
-
-					throw Error(message);
-				}
+                await useFetch(url, "PUT", {folderId: folderId}, user.token);
 			});
 
 			// make sure deselected playlists are in Unsorted
 			formState.deselected.forEach(async (element) => {
-				const updateResponse = await fetch("/api/playlists/" + element._id + "/update-folders/unsorted", {
-					method: "PUT",
-					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-                        "Authorization": "Bearer " + user.token
-					}
-				});
-				const updateJson = await updateResponse.json();
+                const url = "/api/playlists/" + element._id + "/update-folders/unsorted";
 
-				if (!response.ok) {
-					const { message } = updateJson;
-
-					throw Error(message);
-				}
+                await useFetch(url, "PUT", null, user.token); // no body, so third param is null
 			});
 
 			setModal({

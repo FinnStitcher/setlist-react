@@ -1,13 +1,13 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-import {useModalContext} from '../hooks';
+import { useModalContext, useFetch } from "../hooks";
 
 function ReachOut() {
 	const [formState, setFormState] = useState({
-		name: '',
-		address: '',
-		subject: '',
-		body: ''
+		name: "",
+		address: "",
+		subject: "",
+		body: ""
 	});
 
 	const { modal, setModal } = useModalContext();
@@ -25,46 +25,28 @@ function ReachOut() {
 		event.preventDefault();
 
 		// validate data
-		if (
-			!formState.name ||
-			!formState.address ||
-			!formState.subject ||
-			!formState.body
-		) {
+		if (!formState.name || !formState.address || !formState.subject || !formState.body) {
 			setModal({
-                ...modal,
-				active: 'modal',
-				msg: 'All four email fields are required!'
+				...modal,
+				active: "modal",
+				msg: "All four email fields are required!"
 			});
 
 			return;
 		}
 
 		try {
-			const response = await fetch('/api/email', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify(formState)
-			});
-			const json = await response.json();
-
-			if (!response.ok) {
-				const { name, message } = json;
-
-				throw Error(name, message);
-			}
+			await useFetch("/api/email", "POST", formState); // no token
 
 			setModal({
-                ...modal,
-				active: 'modal',
+				...modal,
+				active: "modal",
 				msg: "Your email was sent! I'll get back to you as soon as I can."
 			});
 		} catch (err) {
 			setModal({
-                ...modal,
-				active: 'modal',
+				...modal,
+				active: "modal",
 				msg: `${err.name}: ${err.message}`
 			});
 
@@ -86,23 +68,21 @@ function ReachOut() {
 					</h3>
 
 					<p>
-						Did you find a bug? Do you have a great idea for the
-						future of the website? Is there a quirk of the UI that's
-						making it hard to use? You can reach out to me at{' '}
+						Did you find a bug? Do you have a great idea for the future of the website?
+						Is there a quirk of the UI that's making it hard to use? You can reach out
+						to me at{" "}
 						<a
 							className="text-amber-700 underline"
 							href="mailto:fpsetlistdev@gmail.com"
 						>
 							fpsetlistdev@gmail.com
 						</a>
-						. Alternatively, you can fill out the form below, and
-						it'll get to me.
+						. Alternatively, you can fill out the form below, and it'll get to me.
 					</p>
 
 					<p className="mb-2">
-						If you have a bug report, please give a{' '}
-						<em>detailed description</em> of the issue and when it
-						happened, so it's easy for me to diagnose!
+						If you have a bug report, please give a <em>detailed description</em> of the
+						issue and when it happened, so it's easy for me to diagnose!
 					</p>
 
 					<form
@@ -177,15 +157,15 @@ function ReachOut() {
 						</h3>
 
 						<p>
-							You can also file bug reports on Setlist's{' '}
+							You can also file bug reports on Setlist's{" "}
 							<a
 								className="text-amber-700 underline"
 								href="https://github.com/FinnStitcher/setlist-react/issues"
 							>
 								Github Issues
-							</a>{' '}
-							page. This is also where to go if you want to see a
-							little bit of what's planned for the future.
+							</a>{" "}
+							page. This is also where to go if you want to see a little bit of what's
+							planned for the future.
 						</p>
 					</section>
 
@@ -196,14 +176,14 @@ function ReachOut() {
 						</h3>
 
 						<p>
-							Setlist is run by a single developer. If you like
-							what I do here, consider{' '}
+							Setlist is run by a single developer. If you like what I do here,
+							consider{" "}
 							<a
 								className="text-amber-700 underline"
 								href="https://ko-fi.com/finnphillips"
 							>
 								tipping me on Ko-Fi
-							</a>{' '}
+							</a>{" "}
 							to pay for the cost of hosting.
 						</p>
 					</section>

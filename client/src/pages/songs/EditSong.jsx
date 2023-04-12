@@ -136,7 +136,6 @@ function EditSong() {
 			<hr />
 
 			<SongForm
-				isEditing={true}
 				formRef={formRef}
 				clickedSongRef={clickedSongRef}
 				formState={formState}

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-import {useUserContext, useModalContext} from '../../hooks';
+import { useUserContext, useModalContext, useFetch } from "../../hooks";
 
 import SongList from "../songs/SongList.jsx";
 
@@ -24,15 +24,9 @@ function PlaylistForm({ plData, formState, setFormState }) {
 			async function getSearchResults() {
 				// create query param with the search value
 				const query = `?title=${formState.search}`;
+                const url = "/api/songs/search/title" + query;
 
-				const response = await fetch("/api/songs/search/title" + query);
-				const json = await response.json();
-
-				if (!response.ok) {
-					const { message } = json;
-
-					throw Error(message);
-				}
+                const json = await useFetch(url, "GET"); // no body or token
 
 				setFormState({
 					...formState,
@@ -80,56 +74,33 @@ function PlaylistForm({ plData, formState, setFormState }) {
 		}
 
 		// create object to send to db
-        // timestamps handled on backend
+		// timestamps handled on backend
 		const playlistObj = {
 			title: formState.title,
 			songs: formState.selected.map((el) => el._id)
 		};
 
 		// check - are we making an edit or a new playlist?
-		let editingBoolean = window.location.pathname.includes("edit");
-
-		let response = null;
+		const editingBoolean = window.location.pathname.includes("edit");
 
 		try {
 			if (editingBoolean) {
-				const playlistId = window.location.pathname.split("/")[2];
+				const playlistId = window.location.pathname.split("/").pop();
+                const url = "/api/playlists/" + playlistId;
 
-				// make api call to update
-				response = await fetch("/api/playlists/" + playlistId, {
-					method: "PUT",
-					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-                        "Authorization": "Bearer " + user.token
-					},
-					body: JSON.stringify(playlistObj)
-				});
+                await useFetch(url, "PUT", playlistObj, user.token);
 			} else {
-				// make api call to create new
-				response = await fetch("/api/playlists", {
-					method: "POST",
-					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-                        "Authorization": "Bearer " + user.token
-					},
-					body: JSON.stringify(playlistObj)
-				});
+                await useFetch("/api/playlists", "POST", playlistObj, user.token);
 			}
 
-			const json = await response.json();
-
-			if (!response.ok) {
-				const { message } = json;
-
-				throw Error(message);
-			}
+            // no errors, moves forward
 
 			setModal({
 				...modal,
 				active: "modal",
-				msg: `Success! Your playlist has been ${editingBoolean ? "updated" : "created"}. Redirecting...`,
+				msg: `Success! Your playlist has been ${
+					editingBoolean ? "updated" : "created"
+				}. Redirecting...`,
 				navTo: "/playlists"
 			});
 		} catch (err) {
@@ -152,7 +123,13 @@ function PlaylistForm({ plData, formState, setFormState }) {
 						*
 					</span>
 				</label>
-				<input id="title" name="title" className="form-control" value={formState.title} onChange={onChangeHandler} />
+				<input
+					id="title"
+					name="title"
+					className="form-control"
+					value={formState.title}
+					onChange={onChangeHandler}
+				/>
 			</div>
 
 			<hr />
@@ -167,7 +144,14 @@ function PlaylistForm({ plData, formState, setFormState }) {
 				<label htmlFor="search" className="block mb-0.5">
 					Search:
 				</label>
-				<input id="search" name="search" className="form-control" autoComplete="off" value={formState.search} onChange={onChangeHandler} />
+				<input
+					id="search"
+					name="search"
+					className="form-control"
+					autoComplete="off"
+					value={formState.search}
+					onChange={onChangeHandler}
+				/>
 
 				<SongList id="deselected" items={formState.deselected} />
 			</div>
