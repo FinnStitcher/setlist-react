@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 
+import { useDateTime } from '../../hooks';
+
 import Song from "../songs/Song.jsx";
 import EditButton from "../generic/EditButton";
 import DeleteButton from "../generic/DeleteButton";
 
 function PlaylistCanEdit({ playlist }) {
-	const { _id, title, songs } = playlist;
+	const { _id, title, songs, dateCreated, dateLastModified } = playlist;
 
 	function togglePlaylist(e) {
 		const { target } = e;
@@ -43,6 +45,7 @@ function PlaylistCanEdit({ playlist }) {
 				</div>
 
 				<div className="pl-3 py-2.5">
+                    
 					<ul className="divide-y space-y-1.5">
 						{songs[0] ? (
 							songs.map((element) => (
@@ -55,7 +58,9 @@ function PlaylistCanEdit({ playlist }) {
 
 					<hr />
 
-					<p className="-mt-2">
+                    <p className="-mt-1.5 mb-1.5">Created {useDateTime(dateCreated)}. Last modified {useDateTime(dateLastModified)}.</p>
+
+					<p className="">
 						<Link to={`/playlists/${_id}`}>
 							Link to this playlist.
 						</Link>

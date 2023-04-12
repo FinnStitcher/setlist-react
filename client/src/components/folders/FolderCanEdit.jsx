@@ -1,9 +1,11 @@
+import { useDateTime } from '../../hooks';
+
 import PlaylistSlim from "../playlists/PlaylistSlim";
 import EditButton from "../generic/EditButton";
 import DeleteButton from "../generic/DeleteButton";
 
 function FolderCanEdit({ folder }) {
-	const { _id, name, playlists, isUnsorted } = folder;
+	const { _id, name, playlists, isUnsorted, dateLastModified } = folder;
 
 	function toggleFolder(e) {
 		const { target } = e;
@@ -59,6 +61,10 @@ function FolderCanEdit({ folder }) {
 							<p>This folder is empty.</p>
 						)}
 					</ul>
+
+					<hr />
+
+                    <p className="-mt-1.5 mb-1.5">Last modified {useDateTime(dateLastModified)}.</p>
 				</div>
 			</div>
 		</article>

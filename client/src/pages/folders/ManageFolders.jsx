@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-import {useUserContext, useModalContext, useFetch} from '../../hooks';
+import { useUserContext, useModalContext, useFetch } from "../../hooks";
 
 import AuthFailed from "../error_pages/AuthFailed.jsx";
 import FolderCanEdit from "../../components/folders/FolderCanEdit.jsx";
@@ -22,7 +22,7 @@ function ManageFolders() {
 
 			const getUserData = async () => {
 				try {
-                    const json = await useFetch(`/api/users/${user_id}`, "GET");
+					const json = await useFetch(`/api/users/${user_id}`, "GET");
 
 					setFolders(json.folders);
 				} catch (err) {
@@ -66,7 +66,7 @@ function ManageFolders() {
 
 		// make database call
 		try {
-            await useFetch(`/api/folders/${folderId}`, "DELETE", null, user.token);
+			await useFetch(`/api/folders/${folderId}`, "DELETE", null, user.token);
 
 			// swap modals
 			setModal({
@@ -75,19 +75,13 @@ function ManageFolders() {
 				msg: "This folder was successfully deleted."
 			});
 
-            // move this folder's contents to Unsorted
-            const delFolderList = delFolderRef.current.childNodes[1].childNodes[1];
-            const unsortedFolderList = document.querySelector("#unsorted")
+			// move this folder's contents to Unsorted
+			const delFolderList = delFolderRef.current.childNodes[1].childNodes[1];
+			const unsortedFolderList = document.querySelector("#unsorted");
 
-            delFolderList.childNodes.forEach((element) => {
-                unsortedFolderList.append(element)
-            });
-
-            // delFolderBody.forEach(element => console.log(element));
-            
-            // for (let i = 0; i < delFolderContents.length; i++) {
-            //     console.log(delFolderContents[i]);
-            // }
+			delFolderList.childNodes.forEach((element) => {
+				unsortedFolderList.append(element);
+			});
 
 			// remove this playlist from the dom
 			delFolderRef.current.remove();
@@ -118,16 +112,11 @@ function ManageFolders() {
 
 			<section id="container" onClick={deleteHandler}>
 				{folders &&
-					folders.map((element) => (
-						<FolderCanEdit key={element._id} folder={element} />
-					))}
+					folders.map((element) => <FolderCanEdit key={element._id} folder={element} />)}
 			</section>
 
 			<Modal id="conf-del-modal">
-				<button
-					className="block font-semibold mt-0.5"
-					onClick={deleteConfirmedHandler}
-				>
+				<button className="block font-semibold mt-0.5" onClick={deleteConfirmedHandler}>
 					Yes, I want to delete it
 				</button>
 			</Modal>

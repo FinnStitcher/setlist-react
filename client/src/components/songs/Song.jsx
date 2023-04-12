@@ -22,7 +22,7 @@ function Song({ song }) {
 	}
 
 	return (
-		<li className="my-0" id={_id}>
+		<li className="my-0 pt-1.5" id={_id}>
 			<p className="font-medium">{title}</p>
 
 			<p className="text-neutral-700 font-normal">
