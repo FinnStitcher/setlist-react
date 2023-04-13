@@ -97,9 +97,7 @@ const userController = {
 				return;
 			}
 
-			// folders[0] should always be 'Unsorted'
-			// might benefit from some error handling here later
-			const unsortedFolder = dbRes.folders[0];
+			const [unsortedFolder] = dbRes.folders.filter(element => element.isUnsorted);
 
 			res.status(200).json(unsortedFolder);
 		} catch (err) {

@@ -16,7 +16,6 @@ const FolderSchema = new Schema(
             type: Date,
             default: new Date,
             required: true
-            // install luxon and make a dateFormat util
         },
         playlists: [{
             type: Schema.Types.ObjectId,
@@ -38,6 +37,11 @@ const FolderSchema = new Schema(
         }
     }
 );
+
+FolderSchema.methods.updateTimestamp = function() {
+    // update the value of dateLastModified
+    this.dateLastModified = new Date;
+}
 
 const Folder = model('Folder', FolderSchema);
 

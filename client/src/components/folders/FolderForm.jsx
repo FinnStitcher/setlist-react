@@ -14,9 +14,7 @@ function FolderForm({ flData, formState, setFormState }) {
 			const { user_id } = user;
 
 			try {
-                const url = "/api/users/" + user_id + "/playlists/unsorted";
-
-                const json = await useFetch(url, "GET");
+                const json = await useFetch(`/api/users/${user_id}/playlists/unsorted`, "GET");
 
 				// include any data received from the parent component
 				setFormState({
@@ -76,28 +74,21 @@ function FolderForm({ flData, formState, setFormState }) {
 		try {
 			if (editingBoolean) {
 				const folderId = window.location.pathname.split("/").pop();
-                const url = "/api/folders/" + folderId;
 
-                json = await useFetch(url, "PUT", folderObj, user.token);
+                json = await useFetch(`/api/folders/${folderId}`, "PUT", folderObj, user.token);
 			} else {
 
                 json = await useFetch("/api/folders", "POST", folderObj, user.token);
 			}
 
-			// remove selected playlists from any other folders
-			formState.selected.forEach(async (element) => {
-				const folderId = json._id;
-                const url = "/api/playlists/" + element._id + "/update-folders";
+            // update this user's unsorted folder to contain any deselected playlists
+            
+            // get id of unsorted folder
+            const {_id: unsortedFolderId} = await useFetch(`/api/users/${user.user_id}/playlists/unsorted`, "GET");
+            const deselectedIds = {playlists: formState.deselected.map((el) => el._id)};
 
-                await useFetch(url, "PUT", {folderId: folderId}, user.token);
-			});
-
-			// make sure deselected playlists are in Unsorted
-			formState.deselected.forEach(async (element) => {
-                const url = "/api/playlists/" + element._id + "/update-folders/unsorted";
-
-                await useFetch(url, "PUT", null, user.token); // no body, so third param is null
-			});
+            // update it
+            await useFetch(`/api/folders/${unsortedFolderId}`, "PUT", deselectedIds, user.token);
 
 			setModal({
 				...modal,

@@ -11,13 +11,11 @@ const PlaylistSchema = new Schema(
             type: Date,
             default: new Date,
             required: true
-            // TODO: install luxon and make a dateFormat util
         },
         dateLastModified: {
             type: Date,
             default: new Date,
             required: true
-            // TODO: install luxon and make a dateFormat util
         },
         songs: [{
             type: Schema.Types.ObjectId,
@@ -41,6 +39,11 @@ const PlaylistSchema = new Schema(
         id: false
     }
 );
+
+PlaylistSchema.methods.updateTimestamp = function() {
+    // update the value of dateLastModified
+    this.dateLastModified = new Date;
+}
 
 const Playlist = model('Playlist', PlaylistSchema);
 
