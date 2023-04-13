@@ -112,7 +112,6 @@ const folderController = {
 				{ _id: folderId },
 				{
 					name: name,
-					dateLastModified: new Date(),
 					playlists: [...playlists]
 				},
 				{ new: true }

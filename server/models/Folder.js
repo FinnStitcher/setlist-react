@@ -38,10 +38,11 @@ const FolderSchema = new Schema(
     }
 );
 
-FolderSchema.methods.updateTimestamp = function() {
-    // update the value of dateLastModified
-    this.dateLastModified = new Date;
-}
+FolderSchema.pre('findOneAndUpdate', function(next) {
+    this.set({dateLastModified: new Date});
+
+    next();
+});
 
 const Folder = model('Folder', FolderSchema);
 

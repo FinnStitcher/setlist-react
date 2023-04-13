@@ -133,7 +133,6 @@ const playlistController = {
 				{ _id: playlistId },
 				{
 					title: title,
-					dateLastModified: new Date,
 					songs: [...songs]
 				},
 				{ new: true }

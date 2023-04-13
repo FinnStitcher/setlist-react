@@ -40,10 +40,11 @@ const PlaylistSchema = new Schema(
     }
 );
 
-PlaylistSchema.methods.updateTimestamp = function() {
-    // update the value of dateLastModified
-    this.dateLastModified = new Date;
-}
+PlaylistSchema.pre('findOneAndUpdate', function(next) {
+    this.set({dateLastModified: new Date});
+
+    next();
+});
 
 const Playlist = model('Playlist', PlaylistSchema);
 
