@@ -25,7 +25,7 @@ function PlaylistCanEdit({ playlist }) {
 				</div>
 
 				<div className="pl-3 py-2.5">
-					<ul className="divide-y space-y-1.5">
+					<ul className="list-spacing">
 						{songs[0] ? (
 							songs.map((element) => <Song key={element._id} song={element} />)
 						) : (

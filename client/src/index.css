@@ -55,8 +55,12 @@
         list-style: none;
     }
 
-    .form-song-list {
-        @apply bg-stone-200 pl-3 py-2.5 divide-y space-y-1.5 min-h-12 mb-2 lg:w-3/5
+    .form-list {
+        @apply bg-stone-200 pl-3 py-2.5 min-h-12 mb-2 lg:w-3/5
+    }
+
+    .list-spacing {
+        @apply divide-y space-y-1.5
     }
 
     .pl-title {
@@ -79,6 +83,10 @@
 
     .arrow-rotate {
         transform: rotate(180deg) translateY(-3px);
+    }
+
+    .fl-body {
+        @apply border border-stone-300 mb-3
     }
 
     hr {

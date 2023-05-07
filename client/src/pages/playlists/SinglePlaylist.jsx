@@ -106,7 +106,7 @@ function SinglePlaylist() {
 				</p>
 
 				<div className="border-2 border-stone-300 pl-3 py-2.5">
-					<ul className="divide-y space-y-1.5">
+					<ul className="list-spacing">
 						{data.songs[0] ? data.songs.map((element) => (
 							<Song key={element._id} song={element} />
 						)) : <p>This playlist is empty.</p>}

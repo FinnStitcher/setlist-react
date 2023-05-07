@@ -63,7 +63,7 @@ function NewSong() {
 			<div>
 				<h3 className="text-lg">Are you thinking of...?</h3>
 
-				<ul className="form-song-list">
+				<ul className="form-list list-spacing">
 					{suggestions[0] &&
 						suggestions.map((element) => (
 							<Song key={element._id} song={element} />

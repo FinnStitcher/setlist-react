@@ -10,7 +10,7 @@ function FolderCanEdit({ folder }) {
 	const { _id, name, playlists, isUnsorted, dateLastModified } = folder;
 
 	return (
-		<article className="border border-stone-300 mb-3">
+		<article className="fl-body">
 			<div
 				className="fl-title no-border"
 				onClick={toggleFolder}
@@ -30,7 +30,7 @@ function FolderCanEdit({ folder }) {
 				)}
 
 				<div className="pl-3 py-2.5">
-					<ul className="divide-y space-y-1.5" id={isUnsorted ? "unsorted" : null}>
+					<ul className="list-spacing" id={isUnsorted ? "unsorted" : null}>
 						{playlists[0] ? (
 							playlists.map((element) => (
 								<PlaylistSlim

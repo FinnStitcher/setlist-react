@@ -115,7 +115,7 @@ function EditSong() {
 					onChange={onChangeHandler}
 				/>
 
-				<ul className="form-song-list" onClick={onClickHandler}>
+				<ul className="form-list list-spacing" onClick={onClickHandler}>
 					{suggestions[0] &&
 						suggestions.map((element) => <Song key={element._id} song={element} />)}
 				</ul>

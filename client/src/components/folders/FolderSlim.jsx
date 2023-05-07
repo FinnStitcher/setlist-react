@@ -6,7 +6,7 @@ function FolderSlim({ folder }) {
     const {name, playlists} = folder;
 
     return (
-        <section className="border border-stone-300 mb-3">
+        <article className="fl-body">
             <div className="fl-title" onClick={toggleFolder}>
                 <h3>{name}</h3>
 
@@ -18,7 +18,7 @@ function FolderSlim({ folder }) {
                     <PlaylistCanEdit key={element._id} playlist={element} />
                 )) : <p>This folder is empty.</p>}
             </div>
-        </section>
+        </article>
     )
 };
 

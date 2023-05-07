@@ -15,7 +15,7 @@ function SongList({ id, items }) {
 			items={items}
 			strategy={verticalListSortingStrategy}
 		>
-			<ul className="form-song-list" id={id} ref={setNodeRef}>
+			<ul className="form-list list-spacing" id={id} ref={setNodeRef}>
                 {items.map(item => {
                     const {_id, title, artist, album, year} = item;
 
