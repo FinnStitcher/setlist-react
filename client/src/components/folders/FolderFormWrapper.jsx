@@ -14,6 +14,7 @@ function FolderFormWrapper({ flData }) {
 		deselected: []
 	});
 	const [activeId, setActiveId] = useState("");
+    const [activeData, setActiveData] = useState({});
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -28,16 +29,16 @@ function FolderFormWrapper({ flData }) {
 				sensors={sensors}
 				collisionDetection={closestCorners}
 				onDragStart={(e) => {
-					handleDragStart(e, setActiveId);
+					handleDragStart(e, setActiveId, setActiveData);
 				}}
 				onDragOver={(e) => {
 					handleDragOver(e, formState, setFormState);
 				}}
-				onDragEnd={(e) => handleDragEnd(e, formState, setFormState, setActiveId)}
+				onDragEnd={(e) => handleDragEnd(e, formState, setFormState, setActiveId, setActiveData)}
 			>
 				<FolderForm flData={flData} formState={formState} setFormState={setFormState} />
 
-				<DragOverlay>{activeId ? <PlaylistDraggable id={activeId} /> : null}</DragOverlay>
+				<DragOverlay>{activeId ? <PlaylistDraggable id={activeId} title={activeData.title} trackNumber={activeData.songs.length} /> : null}</DragOverlay>
 			</DndContext>
 		</>
 	);

@@ -8,7 +8,8 @@ function SongDraggable({id, title, artist, album, year}) {
 
 	const style = {
 		transform: CSS.Transform.toString(transform),
-		transition
+		transition,
+        background: "rgba(231, 229, 228, 0.5)"
 	};
 
 	return (

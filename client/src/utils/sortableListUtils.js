@@ -30,6 +30,8 @@ export function handleDragStart(event, setActiveId, setActiveData) {
     const { id } = active;
     
     const activeListItemData = active.data.current.sortable.items.find(el => el._id === id);
+
+    console.log(activeListItemData);
     
     setActiveId(id);
     setActiveData(activeListItemData);
