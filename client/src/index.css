@@ -15,6 +15,10 @@
         @apply mr-5 flex-initial hover:text-stone-200 transition-colors
     }
 
+    h1 a {
+        @apply hover:text-stone-200 transition-colors
+    }
+
     .modal {
         @apply w-full sm:w-3/5 md:w-2/5 mt-40 sm:mt-52 md:mt-64 rounded-sm p-2 outline outline-2 outline-offset-4 outline-stone-500 bg-stone-500 text-stone-100
     }
@@ -63,24 +67,29 @@
         @apply border-b border-stone-300 px-2 py-2 flex justify-between sm:justify-start
     }
 
-    .fl-arrow {
+    .no-border {
+        border: 0;
+    }
+
+    .arrow {
         @apply ml-2 md:ml-4;
-        transition: transform 0.4s
+        transition: transform 0.4s;
+        transform: rotate(0deg) translateY(0px);
+    }
+
+    .arrow-rotate {
+        transform: rotate(180deg) translateY(-3px);
     }
 
     hr {
         @apply my-4 border-stone-400
     }
 
-    a:hover:not(.rectangle-btn):not(.nav-link a) {
+    a:hover:not(.rectangle-btn):not(.nav-link a):not(h1 a) {
         @apply text-stone-400 transition-colors
     }
 
     .cursor-pointer {
         cursor: pointer;
-    }
-
-    .no-border {
-        border: 0;
     }
 }
