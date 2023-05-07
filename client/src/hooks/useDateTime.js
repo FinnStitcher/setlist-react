@@ -5,7 +5,7 @@ function useDateTime(isoDate) {
     const luxonDate = DateTime.fromISO(isoDate);
 
     // parse into locale string
-    const formattedDate = luxonDate.toLocaleString(DateTime.DATETIME_MED);
+    const formattedDate = luxonDate.toLocaleString(DateTime.DATE_MED);
 
     return formattedDate;
 };

@@ -25,11 +25,14 @@ function findContainer(id, state) {
     return targetContainer;
 }
 
-export function handleDragStart(event, setActive) {
+export function handleDragStart(event, setActiveId, setActiveData) {
     const { active } = event;
     const { id } = active;
-
-    setActive(id);
+    
+    const activeListItemData = active.data.current.sortable.items.find(el => el._id === id);
+    
+    setActiveId(id);
+    setActiveData(activeListItemData);
 };
 
 export function handleDragOver(event, state, setState) {
@@ -111,7 +114,7 @@ export function handleDragOver(event, state, setState) {
 
 };
 
-export function handleDragEnd(event, state, setState, setActive) {
+export function handleDragEnd(event, state, setState, setActiveId, setActiveData) {
     const { active, over } = event;
     const { id: activeId } = active;
     const { id: overId } = over;
@@ -149,5 +152,6 @@ export function handleDragEnd(event, state, setState, setActive) {
         });
     }
 
-    setActive(null);
+    setActiveId(null);
+    setActiveData({});
 }

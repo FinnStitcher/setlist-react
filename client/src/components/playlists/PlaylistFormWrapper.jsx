@@ -14,6 +14,7 @@ function PlaylistFormWrapper({plData}) {
 		deselected: []
 	});
 	const [activeId, setActiveId] = useState("");
+    const [activeData, setActiveData] = useState({});
 
 	const sensors = useSensors(
 		useSensor(PointerSensor),
@@ -28,16 +29,16 @@ function PlaylistFormWrapper({plData}) {
 				sensors={sensors}
 				collisionDetection={closestCorners}
 				onDragStart={(e) => {
-					handleDragStart(e, setActiveId);
+					handleDragStart(e, setActiveId, setActiveData);
 				}}
 				onDragOver={(e) => {
 					handleDragOver(e, formState, setFormState);
 				}}
-				onDragEnd={(e) => handleDragEnd(e, formState, setFormState, setActiveId)}
+				onDragEnd={(e) => handleDragEnd(e, formState, setFormState, setActiveId, setActiveData)}
 			>
 				<PlaylistForm plData={plData} formState={formState} setFormState={setFormState} />
 
-				<DragOverlay>{activeId ? <SongDraggable id={activeId} /> : null}</DragOverlay>
+				<DragOverlay>{activeId ? <SongDraggable id={activeId} title={activeData.title} artist={activeData.artist} album={activeData.album} year={activeData.year} /> : null}</DragOverlay>
 			</DndContext>
 		</>
 	);
