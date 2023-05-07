@@ -17,15 +17,11 @@ function FolderCanEdit({ folder }) {
 
 		if (folderBody.matches(".hidden")) {
 			folderBody.className = "block";
-
-			arrow.textContent = "▲";
+            arrow.style.transform = "rotate(0deg) translateY(0px)";
 		} else if (folderBody.matches(".block")) {
 			folderBody.className = "hidden";
-
-			arrow.textContent = "▼";
+            arrow.style.transform = "rotate(180deg) translateY(-3px)";
 		}
-
-		// TODO: animate it to rotate rather than just swapping
 	}
 
 	return (

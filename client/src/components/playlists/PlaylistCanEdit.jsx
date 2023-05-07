@@ -19,15 +19,11 @@ function PlaylistCanEdit({ playlist }) {
 
 		if (playlistBody.matches(".hidden")) {
 			playlistBody.className = "block";
-
-			arrow.textContent = "▲";
+            arrow.style.transform = "rotate(0deg) translateY(0px)";
 		} else if (playlistBody.matches(".block")) {
 			playlistBody.className = "hidden";
-
-			arrow.textContent = "▼";
+            arrow.style.transform = "rotate(180deg) translateY(-3px)";
 		}
-
-		// TODO: animate it to rotate rather than just swapping
 	}
 
 	return (

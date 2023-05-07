@@ -47,12 +47,25 @@
         @apply block w-full md:w-96 border border-amber-600/50
     }
 
+    li {
+        list-style: none;
+    }
+
     .form-song-list {
         @apply bg-stone-200 pl-3 py-2.5 divide-y space-y-1.5 min-h-12 mb-2 lg:w-3/5
     }
 
     .pl-title {
         @apply bg-stone-300 p-1.5 flex justify-between sm:justify-start
+    }
+
+    .fl-title {
+        @apply border-b border-stone-300 px-2 py-2 flex justify-between sm:justify-start
+    }
+
+    .fl-arrow {
+        @apply ml-2 md:ml-4;
+        transition: transform 0.4s
     }
 
     hr {
@@ -66,8 +79,8 @@
     .cursor-pointer {
         cursor: pointer;
     }
-}
 
-li {
-    list-style: none;
+    .no-border {
+        border: 0;
+    }
 }
